@@ -1,0 +1,18 @@
+GET http://localhost:5000/users
+
+####
+
+POST  http://localhost:5000/auth/register 
+Content-Type: application/json
+
+{
+    "firstName": "Luca",
+    "lastName":"Rossi",
+    "email": "lucarossi@gmail.com",
+    "password": "acabbdkash",
+    "phoneNumber":237409823,
+    "address":{
+        "number": 2,
+        "street": "C.da Frontuccia "
+    }
+}
