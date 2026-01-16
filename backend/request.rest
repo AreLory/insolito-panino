@@ -6,13 +6,24 @@ POST  http://localhost:5000/auth/register
 Content-Type: application/json
 
 {
-    "firstName": "Luca",
-    "lastName":"Rossi",
-    "email": "lucarossi@gmail.com",
+    "firstName": "Marco",
+    "lastName":"Maariani",
+    "email": "omosesfs@gmail.com",
     "password": "acabbdkash",
-    "phoneNumber":237409823,
+    "phoneNumber":23563,
     "address":{
-        "number": 2,
+        "number": 45,
         "street": "C.da Frontuccia "
     }
+}
+
+
+####
+
+POST  http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+    "email": "omosesfs@gmail.com",
+    "password": "acabbdkash"
 }
