@@ -1,25 +1,26 @@
-import express  from "express";
-import { getUsers ,createUser, userLogin, userLogout, getCurrentUser, updateUser } from "../controllers/userController";
+import express from "express";
+import {
+  getUsers,
+  createUser,
+  userLogin,
+  userLogout,
+  getCurrentUser,
+  updateUser,
+} from "../controllers/userController";
 import { authMiddleware } from "../middlewares/authMiddleware";
 
-const router = express.Router()
-
+const router = express.Router();
 
 // ! For USERS
 
-//Register
-router.post('/auth/register', createUser);
-//login
-router.post('/auth/login', userLogin)
-//logout
-router.post('/auth/logout', authMiddleware ,userLogout)
-// Get /me
-router.get('/users/me', authMiddleware , getCurrentUser)
-//update
-router.patch('/users/me', authMiddleware, updateUser)
+router.post("/auth/register", createUser);
+router.post("/auth/login", userLogin);
+router.post("/auth/logout", authMiddleware, userLogout);
+
+router.get("/users/me", authMiddleware, getCurrentUser);
+router.patch("/users/me", authMiddleware, updateUser);
+
 // ! For ADMIN
+router.get("/users", getUsers);
 
-//Get Users
-router.get('/users', getUsers)
-
-export default router
+export default router;

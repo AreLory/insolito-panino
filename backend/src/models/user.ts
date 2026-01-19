@@ -1,5 +1,5 @@
-import mongoose, {Schema} from "mongoose";
-import type IUser from "../interfaces/IUser"
+import {Schema, model} from "mongoose";
+import type IUser from "../types/IUser"
 
 const UserSchema: Schema = new Schema({
   firstName: { type: String, required: true },
@@ -13,4 +13,4 @@ const UserSchema: Schema = new Schema({
   },
 });
 
-export default mongoose.model<IUser>('User', UserSchema)
+export default model<IUser>('User', UserSchema)

@@ -7,25 +7,27 @@ if (!jwtSecret) {
   throw new Error("JWT is not defined");
 }
 
-console.log("JWT:", process.env.JWT);
 
 
 import express from "express";
 import mongoose from "mongoose";
 
 import userRouter from "./routes/userRoute";
-
-
+import ordersRouter from "./routes/ordersRoute";
+import productsRouter from "./routes/productsRoute";
+import extrasRouter from "./routes/extrasRoute";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use(userRouter);
+app.use(ordersRouter);
+app.use(productsRouter);
+app.use(extrasRouter);
 
 
 // Server + DB
@@ -44,11 +46,3 @@ async function startServer() {
 }
 
 startServer();
-
-
-
-const users = [{name: 'name'}]
-// Get Users
-app.get(  '/users' , (req, res) => {
-    res.json(users)
-})

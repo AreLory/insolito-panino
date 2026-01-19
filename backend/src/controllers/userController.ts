@@ -1,7 +1,7 @@
-import IUser from "../interfaces/IUser";
+import IUser from "../types/IUser";
 import User from "../models/user";
 
-import e, { Request, Response } from "express";
+import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -17,7 +17,7 @@ export const createUser = async (req: Request, res: Response) => {
       email,
       password,
       phoneNumber,
-      address: { street, number },
+      address: {street, number}
     } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -109,7 +109,6 @@ export const updateUser = async (req:Request, res: Response) => {
       if (req.body[key] !== undefined) change[key] = req.body[key];
     }
 
-    // hash password se presente
     if (change.password) {
       change.password = await bcrypt.hash(change.password, 10);
     }
@@ -127,7 +126,7 @@ export const updateUser = async (req:Request, res: Response) => {
 
 
 
-
+// ! Admin only
 // Get Users
 export const getUsers = async (req: Request, res: Response) => {
   try {
