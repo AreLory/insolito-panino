@@ -18,7 +18,7 @@ router.delete("/orders/:id", deleteOrder);
 
 //todo: only status and time update
 router.get("/orders", getAllOrders);
-router.post("/orders/:id", updateOrder);
+router.patch("/orders/:id", updateOrder);
 
 
 export default router;
