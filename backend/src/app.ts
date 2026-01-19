@@ -1,9 +1,21 @@
+import * as dotenv from "dotenv";
+dotenv.config();
+
+
+const jwtSecret = process.env.JWT
+if (!jwtSecret) {
+  throw new Error("JWT is not defined");
+}
+
+console.log("JWT:", process.env.JWT);
+
+
 import express from "express";
 import mongoose from "mongoose";
-import * as dotenv from "dotenv";
+
 import userRouter from "./routes/userRoute";
 
-dotenv.config();
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
