@@ -1,19 +1,33 @@
 import { Schema, Types, model } from "mongoose";
 import { IOrder, IOrderItem } from "../types/IOrders";
 
-const OrderItemSchema = new Schema<IOrderItem>({
+const OrderItemSchema = new Schema({
   product: { type: Schema.Types.ObjectId, ref: "Products" },
-  name: { type: String, required: true },
-  price: { type: Number, required: true },
+
+  name: { type: String, required: true }, 
+    size: {
+    label: String, 
+    meatWeight: Number,
+  },
+
+  price: { type: Number, required: true }, 
   quantity: { type: Number, required: true, min: 1 },
 
-  options: [{ type: String }],
+  removedIngredients: [{ type: String }],
+  extras: [
+    {
+      name: String,
+      price: Number,
+    },
+  ],
 });
 
 const OrdersSchema = new Schema<IOrder>(
   {
-    user: { type: Schema.Types.ObjectId, ref: "Users" },
-    items: {type: [OrderItemSchema],validate: v => v.length > 0 },
+    user: { type: Schema.Types.ObjectId, ref: "Users", required: true },
+
+    items: { type: [OrderItemSchema], validate: (v) => v.length > 0 },
+
     status: {
       type: String,
       enum: [
@@ -24,6 +38,7 @@ const OrdersSchema = new Schema<IOrder>(
         "completed",
         "canceled",
       ],
+      default: "pending"
     },
     subtotal: { type: Number, required: true },
     total: { type: Number, required: true },
@@ -36,14 +51,14 @@ const OrdersSchema = new Schema<IOrder>(
     paymentStatus: {
       type: String,
       enum: ["unpaid", "paid", "refunded"],
-      required: true,
+      default: "unpaid"
     },
     orderType: {
       type: String,
       enum: ["take_away", "dine_in", "delivery"],
       required: true,
     },
-    notes: {type:String}
+    notes: { type: String },
   },
   { timestamps: true },
 );

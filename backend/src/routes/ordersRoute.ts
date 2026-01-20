@@ -6,17 +6,17 @@ import {
   getOrder,
   updateOrder,
 } from "../controllers/ordersController";
+import { authMiddleware } from "../middlewares/authMiddleware";
 const router = express.Router();
 
 // ! User
 
-router.post("/orders", createOrder);
+router.post("/orders",authMiddleware, createOrder);
 router.get("/orders/:id", getOrder);
 router.delete("/orders/:id", deleteOrder);
 
 // ! Admin only
 
-//todo: only status and time update
 router.get("/orders", getAllOrders);
 router.patch("/orders/:id", updateOrder);
 
