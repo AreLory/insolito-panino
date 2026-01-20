@@ -11,6 +11,8 @@ import { Route, HashRouter, Routes } from "react-router";
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
 import Order from "./pages/Order";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
 
@@ -19,7 +21,7 @@ function App() {
     <HashRouter>
     <Routes>
       <Route path="/" element={<Home />}/>
-      <Route path="/menu" element={<Menu />} />
+      <Route path="/menu" element={<Register />} />
       <Route path="/order" element={<Order />} />
     </Routes>
     </HashRouter>
