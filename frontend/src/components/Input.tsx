@@ -14,8 +14,8 @@ export default function Input({
   type: string
 }) {
   return (
-    <div>
-      <label className="block mb-2.5 text-sm font-medium text-heading">
+    <div className="mb-1 w-full">
+      <label className="block mb-2.5 text-xs font-medium text-heading m-1">
         {label}
       </label>
       <input
@@ -25,7 +25,7 @@ export default function Input({
         }
         type={type}
         id={label}
-        className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
+        className="border border-primary text-sm rounded-md focus:ring-accent focus:border-accent block w-full px-3 py-2 shadow-xs shadow-shade placeholder:text-body h-8"
         placeholder={label}
         required={required}
       />

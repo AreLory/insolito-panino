@@ -7,24 +7,38 @@
 // todo: Axios
 // todo: User Feedback
 import { Route, HashRouter, Routes } from "react-router";
+import { useState } from "react";
+import { useAuth } from "./context/AuthContext";
+
 // Pages
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
 import Order from "./pages/Order";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Profile from "./pages/Profile";
+import UpdateProfile from "./pages/UpdateProfile";
+// Components
+import BottomNav from "./components/Navbar";
 
 function App() {
+  const { isAuthenticated } = useAuth();
 
   return (
     <>
-    <HashRouter>
-    <Routes>
-      <Route path="/" element={<Home />}/>
-      <Route path="/menu" element={<Register />} />
-      <Route path="/order" element={<Order />} />
-    </Routes>
-    </HashRouter>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={isAuthenticated ? <Home /> : <Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/profile/update" element={<UpdateProfile />} />
+          <Route path="/menu" element={<Menu/>} />
+          <Route path="/order" element={isAuthenticated ? <Order /> : <Login />} />
+          <Route path='/profile' element={isAuthenticated ? <Profile /> : <Login />}/>
+        </Routes>
+        <div className="justify-center flex">
+          <BottomNav />
+        </div>
+      </HashRouter>
     </>
   );
 }

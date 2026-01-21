@@ -6,7 +6,7 @@ import API_BASE_URL from "../config/api";
 import Input from "../components/Input";
 import { redirect } from "react-router";
 
-export default function Register() {
+export default function UpdateProfile() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -79,7 +79,7 @@ export default function Register() {
         onSubmit={userRegister}
         className="flex flex-col items-center  bg-white p-4 rounded-lg w-[60vw] max-w-[600px] "
       >
-        <h1 className="text-lg text-shade font-bold">Welcome</h1>
+        <h1 className="text-lg text-shade font-bold">Update User</h1>
         <div className="grid gap-x-6 mb-6 md:grid-cols-2">
           {fields.map((field) => (
             <Input
@@ -101,8 +101,7 @@ export default function Register() {
           >
             {loading ? "Loading..." : "Submit"}
           </button>
-          <Link className="text-accent" 
-      to={'/'}>Already have an account? Login Here</Link>
+
       </form>
     </div>
   );

@@ -6,14 +6,16 @@
 
 // ** Components
 import BottomNav from "../components/Navbar"
+import { useAuth } from "../context/AuthContext"
 
 const Home = ()=> {
-
+  const {logout} = useAuth()
   return (
     <div className="w-screen h-screen justify-center flex flex-col items-center">
       
       Hi from HomePage
-      <BottomNav />
+      <button onClick={logout}>LOGOUT</button>
+      
     </div>
   )
 }

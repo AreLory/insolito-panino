@@ -3,8 +3,13 @@ import React, { useState } from "react";
 import BottomNav from "../components/Navbar";
 import axios from "axios";
 import API_BASE_URL from "../config/api";
+import Input from "../components/Input";
+import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router";
 
 const Login = () => {
+  const {login} = useAuth()
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -13,59 +18,52 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/login`, {
-        email,
-        password,
-      });
-      console.log(response.data);
+      await login(email, password)
     } catch (error: any) {
       console.log("Login error status:", error?.response?.status);
-      console.log("Login error body:", error?.response?.data ?? error?.message ?? error);
+      console.log(
+        "Login error body:",
+        error?.response?.data ?? error?.message ?? error,
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="justify-center flex">
+    <div className="justify-center items-center flex flex-col h-[80vh]">
       <form
         onSubmit={userLogin}
-        className="flex flex-col items-center bg-amber-200 rounded-lg"
+        className="flex flex-col items-center  bg-white p-4 rounded-lg w-[60vw] max-w-[600px]  "
       >
-        <h1 className="text-2xl">Welcome Back</h1>
-        <div>
-          <label className="block mb-2.5 text-sm font-medium text-heading">
-            Email
-          </label>
-          <input
+        <h1 className="text-lg text-shade font-bold">Welcome Back</h1>
+        <div className="w-full md:px-8">
+          <Input
+            key={"email"}
+            label={"Email"}
+            onChange={setEmail}
             value={email}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setEmail(e.target.value)
-            }
-            type="email"
-            id="email"
-            className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
-            placeholder="nomecognome123@example.com"
-            required
+            required={true}
+            type={"email"}
           />
         </div>
-        <div>
-          <label className="block mb-2.5 text-sm font-medium text-heading">
-            Password
-          </label>
-          <input
+        <div className="w-full md:px-8">
+          <Input
+            key={"pword"}
+            label={"Password"}
+            onChange={setPassword}
             value={password}
-            onChange={(e: any) => setPassword(e.target.value)}
-            type="password"
-            id="password"
-            className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
-            placeholder="password"
-            required
+            required={true}
+            type={"password"}
           />
         </div>
-        <button type="submit">Submit</button>
+        <button className="bg-shade rounded-lg w-22 h-10 text-white shadow-xs shadow-primary hover:bg-accent hover:cursor-pointer"
+        type="submit">Submit</button>
       </form>
-      <BottomNav />
+      <Link className="text-accent" 
+      to={'/register'}>Don't have an account? Register Here</Link>
+
+      
     </div>
   );
 };

@@ -15,9 +15,8 @@ export default function BottomNav() {
   const itemWidth = 90 / navItems.length;
 
   return (
-    <div className="absolute bottom-0 bg-gray-900 w-[90vw] h-20 text-white flex rounded-lg overflow-hidden">
+    <div className="fixed bottom-0 bg-gray-900 w-[90vw] h-20 text-white flex rounded-lg overflow-hidden">
       
-      {/* Indicatore animato */}
       <span
         className="absolute top-0 h-full bg-amber-700 transition-all duration-500 ease-in-out"
         style={{
@@ -26,7 +25,6 @@ export default function BottomNav() {
         }}
       />
 
-      {/* Link */}
       {navItems.map((item, index) => (
         <Link
           key={item.path}
