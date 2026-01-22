@@ -15,10 +15,10 @@ export default function BottomNav() {
   const itemWidth = 90 / navItems.length;
 
   return (
-    <div className="fixed bottom-0 bg-gray-900 w-[90vw] h-20 text-white flex rounded-lg overflow-hidden">
+    <div className="fixed bottom-0 bg-primary w-[90vw] h-20 text-white flex rounded-lg overflow-hidden">
       
       <span
-        className="absolute top-0 h-full bg-amber-700 transition-all duration-500 ease-in-out"
+        className="absolute top-0 h-full bg-secondary transition-all duration-500 ease-in-out"
         style={{
           width: `${itemWidth}vw`,
           left: `${activeIndex * itemWidth}vw`,
@@ -30,7 +30,7 @@ export default function BottomNav() {
           key={item.path}
           to={item.path}
           className={`relative z-10 flex-1 flex items-center justify-center transition-colors duration-300 ${
-            location.pathname === item.path ? "text-white font-semibold" : "text-gray-400"
+            location.pathname === item.path ? "text-primary font-semibold" : "text-white"
           }`}
         >
           {item.label}

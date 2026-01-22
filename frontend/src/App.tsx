@@ -17,7 +17,6 @@ import Order from "./pages/Order";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
-import UpdateProfile from "./pages/UpdateProfile";
 // Components
 import BottomNav from "./components/Navbar";
 
@@ -30,7 +29,6 @@ function App() {
         <Routes>
           <Route path="/" element={isAuthenticated ? <Home /> : <Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile/update" element={<UpdateProfile />} />
           <Route path="/menu" element={<Menu/>} />
           <Route path="/order" element={isAuthenticated ? <Order /> : <Login />} />
           <Route path='/profile' element={isAuthenticated ? <Profile /> : <Login />}/>
