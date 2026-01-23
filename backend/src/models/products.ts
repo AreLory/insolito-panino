@@ -6,7 +6,7 @@ export interface IProductDocument extends IProduct, Document {}
 
 const IngredientSchema = new Schema<IIngredient>({
   name: { type: String, required: true },
-  removable: { type: Boolean, default: false }
+  removable: { type: Boolean, default: true }
 });
 
 const SizeSchema = new Schema<ISize>({

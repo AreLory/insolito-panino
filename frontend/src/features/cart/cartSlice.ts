@@ -1,42 +1,63 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { ICartState } from "../../types/ICartState";
-import type { IProducts } from "../../types/IProducts";
+import type { ICartItem, ICartState } from "../../types/ICartState";
+
+export const getCartItemKey = (item: ICartItem) =>
+  `${item.id}-${item.selectedSize?.label || ""}-${(
+    item.selectedIngredients || []
+  )
+    .slice()
+    .sort()
+    .join(",")}`;
 
 const initialState: ICartState = {
-  products: [],
-  quantityById: {},
+  items: [],
 };
 
-export const cartSlice = createSlice({
+const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addToCart: (state, action: PayloadAction<IProducts>) => {
-      const product = action.payload;
+    addToCart(state, action: PayloadAction<ICartItem>) {
+      const newItem = action.payload;
 
-      if (!state.quantityById[product.id]) {
-        state.products.push(product);
-        state.quantityById[product.id] = 1;
+      const key = getCartItemKey(newItem);
+
+      const existingItem = state.items.find(
+        (item) => getCartItemKey(item) === key,
+      );
+
+      if (existingItem) {
+        existingItem.quantity += newItem.quantity || 1;
       } else {
-        state.quantityById[product.id]++;
+        state.items.push({ ...newItem, quantity: newItem.quantity || 1 });
       }
     },
-    removeFromCart: (state, action: PayloadAction<string>) => {
-      const productId = action.payload;
 
-      if (!state.quantityById[productId]) return;
+    removeFromCart(
+      state,
+      action: PayloadAction<{ key: string; quantity?: number }>,
+    ) {
+      const { key, quantity } = action.payload;
 
-      state.quantityById[productId]--;
-      
-      if (state.quantityById[productId] === 0) {
-        delete state.quantityById[productId];
-        state.products = state.products.filter((p) => p.id !== productId);
+      const index = state.items.findIndex(
+        (item) => getCartItemKey(item) === key,
+      );
+
+      if (index === -1) return;
+
+      if (quantity && state.items[index].quantity > quantity) {
+        state.items[index].quantity -= quantity;
+      } else {
+        state.items.splice(index, 1);
       }
     },
-    clearCart: () => {return initialState;},
+
+    clearCart(state) {
+      state.items = [];
+    },
   },
 });
 
-export const {addToCart, removeFromCart, clearCart} = cartSlice.actions
+export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
 
-export default cartSlice.reducer
+export default cartSlice.reducer;
