@@ -7,7 +7,6 @@
 // todo: Axios
 // todo: User Feedback
 import { Route, HashRouter, Routes } from "react-router";
-import { useState } from "react";
 import { useAuth } from "./context/AuthContext";
 
 // Pages
