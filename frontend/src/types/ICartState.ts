@@ -4,7 +4,7 @@ export interface ICartItem {
   basePrice: number;
   selectedSize?: { label: string; price: number };
   selectedIngredients?: string[];
-  quantity: number;
+  quantity?:number
 }
 
 export interface ICartState {

@@ -29,7 +29,7 @@ export default function Profile() {
     number: user.address.number || "",
   },
 });
-  // Fetch user info on component mount
+  
   const getInfo = async () => {
     try {
       const profileInfo = await api.get("/users/me");

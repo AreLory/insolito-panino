@@ -5,7 +5,8 @@ import { Request, Response } from "express";
 //Products List
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const products = await Products.find();
+    const category = req.query.category as string|undefined;
+    const products = await Products.find(category? {category: category} : {});
     res.status(200).json(products);
   } catch (error) {
     if (error instanceof Error) {

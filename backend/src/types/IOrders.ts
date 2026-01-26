@@ -1,35 +1,43 @@
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 import { IProduct } from "./IProducts";
 import IUser from "./IUser";
 
 
 export interface IOrder extends Document {
-  created: Date;
-
-  user: IUser;
+  user: Types.ObjectId | IUser;
 
   items: IOrderItem[];
 
   status: OrderStatus;
 
-  subtotal: number;
   total: number;
 
   paymentMethod: PaymentMethod;
-
   paymentStatus: PaymentStatus;
 
-  orderType: OrderType; 
-  notes:String;
+  orderType: OrderType;
+  notes?: string;
+
 }
 
 export interface IOrderItem {
-  product: IProduct;
+  product: Types.ObjectId | IProduct;
+
   name: string;
+
+  size: {
+    label: string;
+    meatWeight?: number;
+  };
+
   price: number;
   quantity: number;
 
-  options?: string[];
+  removedIngredients?: string[];
+  extras?: {
+    name: string;
+    price: number;
+  }[];
 }
 
 export enum OrderStatus {

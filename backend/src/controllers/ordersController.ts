@@ -1,4 +1,4 @@
-import { IOrder } from "../types/IOrders";
+import { IOrder, IOrderItem } from "../types/IOrders";
 import Orders from "../models/orders";
 import { Request, Response } from "express";
 import Products from "../models/products";
@@ -36,83 +36,84 @@ export const createOrder = async (req: Request, res: Response) => {
   try {
     const { items, paymentMethod, orderType, notes } = req.body;
 
+    console.log("📦 Creating order - userId:", req.userId);
+    console.log("📦 Items received:", JSON.stringify(items, null, 2));
+
+    if (!req.userId) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+
     if (!items || items.length === 0) {
       return res.status(400).json({ message: "Empty order" });
     }
+
+    console.log("🔍 Looking for products with IDs:", items.map((i: any) => i.id));
+
     const products = await Products.find({
-      _id: { $in: items.map((item: { productId: string }) => item.productId) },
+      _id: { $in: items.map((item: { id: string }) => item.id) },
     });
 
-    let subtotal = 0;
+    console.log("✅ Found products:", products.length);
 
     const orderItems = items.map(
       (item: {
-        productId: string;
-        sizeId: string;
+        id: string;
+        name: string;
+        basePrice: number;
+        selectedSize?: { label: string; price: number };
+        selectedIngredients?: string[];
         quantity: number;
-        removedIngredients?: string[];
-        extras?: { name: string; price: number }[];
       }) => {
-        const product = products.find((p: any) => p._id.equals(item.productId));
-
-        console.log("ITEM IDS:", items.map((i: { productId: string }) => i.productId));
-console.log("PRODUCTS FOUND:", products.map((p: any) => p._id.toString()));
+        const product = products.find((p: any) => p._id.equals(item.id));
 
         if (!product) {
-          throw new Error("Prodotto non valido");
+          throw new Error(`Prodotto non valido: ${item.id}`);
         }
 
-        const size = product.sizes?.find(
-          (s: any) => s._id.toString() === item.sizeId,
-        );
-        if (!size) {
-          throw new Error("Size non valida");
+        if (!item.selectedSize) {
+          throw new Error(`Size non valida per ${item.name}`);
         }
 
         if (item.quantity < 1) {
           throw new Error("Quantità non valida");
         }
 
-
-        let unitPrice = size.price;
-
-        if (item.extras?.length) {
-          unitPrice += item.extras.reduce((sum, e) => sum + e.price, 0);
-        }
-
-        
-        const itemTotal = unitPrice * item.quantity;
-        subtotal += itemTotal;
+        let unitPrice = item.selectedSize.price;
 
         return {
           product: product._id,
-          name: `${product.name} (${size.label})`,
+          name: `${product.name} (${item.selectedSize.label})`,
+          size: {
+            label: item.selectedSize.label,
+          },
           price: unitPrice,
           quantity: item.quantity,
-          removedIngredients: item.removedIngredients,
-          extras: item.extras,
+          removedIngredients: item.selectedIngredients,
         };
       },
     );
+    const total = orderItems.reduce(
+          (sum:number, item:IOrderItem) => sum + item.price * item.quantity,
+          0,
+        );
 
-    const total = subtotal;
-      // ! Remove user id when auth is implemented
     const newOrder: IOrder = new Orders({
-      // user: req.userId,
-      user: "696e025992b843876ea73948",
+      user: req.userId,
       items: orderItems,
-      subtotal,
-      total,
       paymentMethod,
       paymentStatus: "unpaid",
       orderType,
       notes,
       status: "pending",
+      total,
     });
 
+    console.log("💾 Saving order...");
     await newOrder.save();
+    console.log("✅ Order created:", newOrder._id);
     res.status(201).json(newOrder);
   } catch (error) {
+    console.error("❌ Error creating order:", error);
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });
     } else {
@@ -120,7 +121,6 @@ console.log("PRODUCTS FOUND:", products.map((p: any) => p._id.toString()));
     }
   }
 };
-
 // Delete Order
 export const deleteOrder = async (req: Request, res: Response) => {
   try {

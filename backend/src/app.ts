@@ -7,8 +7,6 @@ if (!jwtSecret) {
   throw new Error("JWT is not defined");
 }
 
-//todo: auth middleware implementation in oredersRoute.ts
-
 import express from "express";
 import mongoose from "mongoose";
 const cors = require("cors");
@@ -19,9 +17,19 @@ import productsRouter from "./routes/productsRoute";
 import extrasRouter from "./routes/extrasRoute";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:3000",
+    "http://127.0.0.1:5173"
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -5,9 +5,9 @@ const OrderItemSchema = new Schema({
   product: { type: Schema.Types.ObjectId, ref: "Products" },
 
   name: { type: String, required: true }, 
-    size: {
-    label: String, 
-    meatWeight: Number,
+  size: {
+    label: { type: String, required: true },
+    meatWeight: { type: Number },
   },
 
   price: { type: Number, required: true }, 
@@ -40,7 +40,7 @@ const OrdersSchema = new Schema<IOrder>(
       ],
       default: "pending"
     },
-    subtotal: { type: Number, required: true },
+    
     total: { type: Number, required: true },
 
     paymentMethod: {
@@ -50,7 +50,7 @@ const OrdersSchema = new Schema<IOrder>(
     },
     paymentStatus: {
       type: String,
-      enum: ["unpaid", "paid", "refunded"],
+      enum: ['unpaid', "paid", "refunded"],
       default: "unpaid"
     },
     orderType: {

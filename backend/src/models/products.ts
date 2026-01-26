@@ -18,8 +18,7 @@ const SizeSchema = new Schema<ISize>({
 const ProductsSchema = new Schema<IProductDocument>({
   name: { type: String, required: true },
   category: { 
-    type: String, 
-    enum: ['burger', 'panino', 'wrap', 'fries', 'fried', 'arrosticini', 'vegetarian'], 
+    type: [String], 
     required: true 
   },
   basePrice: { type: Number, required: true },

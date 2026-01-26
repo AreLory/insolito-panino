@@ -12,6 +12,7 @@ export const authMiddleware = (
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
+        console.log("⚠️ Missing authorization header");
         return res.status(401).json({error: 'Missing token'})
     }
 
@@ -24,8 +25,10 @@ export const authMiddleware = (
         ) as JwtPayload;
 
         req.userId = decoded.id
+        console.log("✅ Auth successful for user:", req.userId);
         next()
     } catch (error) {
+        console.error("❌ Invalid token:", error);
         res.status(401).json({error:'Invalid token'})
     }
 }

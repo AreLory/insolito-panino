@@ -2,7 +2,7 @@ import { Document, Types } from "mongoose";
 
 export  interface IProduct extends Document {
     name: string;
-    category: 'burger' | 'panino' | 'wrap' | 'fries' | 'fried' | 'arrosticini' | 'vegetarian';
+    category: string[]
     basePrice: number;           
     sizes?: ISize[];             
     ingredients: IIngredient[];  
@@ -22,4 +22,3 @@ export  interface IIngredient {
     name: string;
     removable?: boolean;
 }
-
