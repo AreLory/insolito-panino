@@ -18,6 +18,7 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 // Components
 import BottomNav from "./components/Navbar";
+import OrderHistory from "./pages/OrderHistory";
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -29,8 +30,9 @@ function App() {
           <Route path="/" element={isAuthenticated ? <Home /> : <Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/menu" element={<Menu/>} />
-          <Route path="/order" element={isAuthenticated ? <Order /> : <Login />} />
+          <Route path="/cart" element={isAuthenticated ? <Order /> : <Login />} />
           <Route path='/profile' element={isAuthenticated ? <Profile /> : <Login />}/>
+          <Route path="/order-history" element={isAuthenticated? <OrderHistory/> : <Login/>}/>
         </Routes>
         <div className="justify-center flex">
           <BottomNav />

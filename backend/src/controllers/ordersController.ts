@@ -2,6 +2,7 @@ import { IOrder, IOrderItem } from "../types/IOrders";
 import Orders from "../models/orders";
 import { Request, Response } from "express";
 import Products from "../models/products";
+import mongoose, { Types } from "mongoose";
 
 //Orders List
 export const getAllOrders = async (req: Request, res: Response) => {
@@ -30,13 +31,35 @@ export const getOrder = async (req: Request, res: Response) => {
     }
   }
 };
+//Get my orders
+export const getMyOrders = async (req: Request, res: Response) => {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.userId);
+    const orders = await Orders.find({ user: userId });
+    if (orders.length === 0) {
+      return res.status(404).json({ error: "order not found" });
+    }
+    console.log({
+      userId: req.userId,
+      isObjectId: req.userId instanceof Types.ObjectId,
+    });
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error("🔥 GET MY ORDERS ERROR:", error);
+    if (error instanceof Error) {
+      return res.status(500).json({ error: error.message });
+    }
+    return res.status(500).json({ error: "Unknown error" });
+  }
+};
 
 //Create Order
 export const createOrder = async (req: Request, res: Response) => {
   try {
     const { items, paymentMethod, orderType, notes } = req.body;
+    const userId = new mongoose.Types.ObjectId(req.userId);
 
-    console.log("📦 Creating order - userId:", req.userId);
+    console.log("📦 Creating order - userId:", userId);
     console.log("📦 Items received:", JSON.stringify(items, null, 2));
 
     if (!req.userId) {
@@ -47,7 +70,10 @@ export const createOrder = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Empty order" });
     }
 
-    console.log("🔍 Looking for products with IDs:", items.map((i: any) => i.id));
+    console.log(
+      "🔍 Looking for products with IDs:",
+      items.map((i: any) => i.id),
+    );
 
     const products = await Products.find({
       _id: { $in: items.map((item: { id: string }) => item.id) },
@@ -93,9 +119,9 @@ export const createOrder = async (req: Request, res: Response) => {
       },
     );
     const total = orderItems.reduce(
-          (sum:number, item:IOrderItem) => sum + item.price * item.quantity,
-          0,
-        );
+      (sum: number, item: IOrderItem) => sum + item.price * item.quantity,
+      0,
+    );
 
     const newOrder: IOrder = new Orders({
       user: req.userId,

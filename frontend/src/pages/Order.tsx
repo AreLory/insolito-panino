@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import CartItem from '../components/CartItem'
 import { useDispatch, useSelector } from 'react-redux'

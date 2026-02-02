@@ -4,8 +4,8 @@ import { Link, useLocation } from "react-router";
 const navItems = [
   { label: "Home", path: "/" },
   { label: "Menu", path: "/menu" },
-  { label: "Ordina", path: "/order" },
-  { label: "Chi siamo", path: "/about-us" },
+  { label: "Carrello", path: "/cart" },
+  { label: "Cronologia Ordini", path: "/order-history" },
   { label: "Profilo", path: "/profile" },
 ];
 
