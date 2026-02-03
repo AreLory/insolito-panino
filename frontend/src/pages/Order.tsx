@@ -31,11 +31,12 @@ export default function Order() {
 
   
   return (
-    <div className='w-screen h-screen justify-center flex flex-col items-center mb-20'>
-      <button onClick={()=>dispatch(clearCart())}>CLEAR ALL</button>
+    <div className='w-screen h-screen  flex flex-col items-center bg-white'>
+      <h2 className='text-xl my-4'>My Cart</h2>
       <CartItem />
       Total: {total}
       <button onClick={createOrder} disabled={!cart.length}>Submit</button>
+      <button onClick={()=>dispatch(clearCart())}>CLEAR ALL</button>
     </div>
   )
 }

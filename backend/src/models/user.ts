@@ -1,16 +1,12 @@
-import {Schema, model} from "mongoose";
-import type IUser from "../types/IUser"
+import { Schema, model } from "mongoose";
+import type IUser from "../types/IUser";
 
 const UserSchema: Schema = new Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
+  fullName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   phoneNumber: Number,
-  address: {
-    street: String,
-    number: Number,
-  },
+  address: String,
 });
 
-export default model<IUser>('User', UserSchema)
+export default model<IUser>("User", UserSchema);

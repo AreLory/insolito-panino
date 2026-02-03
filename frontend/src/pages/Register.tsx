@@ -7,8 +7,7 @@ import Input from "../components/Input";
 import { redirect } from "react-router";
 
 export default function Register() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -18,15 +17,9 @@ export default function Register() {
 
   const fields = [
     {
-      label: "First Name",
-      value: firstName,
-      setter: setFirstName,
-      required: true,
-    },
-    {
-      label: "Last Name",
-      value: lastName,
-      setter: setLastName,
+      label: "Full Name",
+      value: fullName,
+      setter: setFullName,
       required: true,
     },
     { label: "Email", value: email, setter: setEmail, required: true },
@@ -43,11 +36,6 @@ export default function Register() {
       setter: setPhoneNumber,
     },
     { label: "Street Name (optional)", value: street, setter: setStreet },
-    {
-      label: "House Number (optional)",
-      value: numberAddress,
-      setter: setNumberAddress,
-    },
   ];
 
   const userRegister = async (e: React.FormEvent) => {
@@ -55,17 +43,13 @@ export default function Register() {
     setLoading(true);
     try {
       const response = await axios.post(`${API_BASE_URL}/auth/register`, {
-        firstName,
-        lastName,
+        fullName,
         phoneNumber,
-        address: {
-          street,
-          number: numberAddress,
-        },
+        street,
         email,
         password,
       });
-      redirect('/')
+      redirect("/");
     } catch (error) {
       console.log(error);
     } finally {
@@ -74,13 +58,18 @@ export default function Register() {
   };
 
   return (
-    <div className="justify-center items-center flex flex-col h-[90vh]">
+    <div className="items-center flex flex-col h-screen">
+      <div className="h-30 flex items-center flex-col mt-10">
+        <h1 className="text-3xl text-shade font-bold">Welcome!</h1>
+        <p className="p-6 text-gray-500 text-center">
+          Sign up to explore your favourites Burgers and exclusive features
+        </p>
+      </div>
       <form
         onSubmit={userRegister}
-        className="flex flex-col items-center  bg-white p-4 rounded-lg w-[60vw] max-w-[600px] "
+        className="flex flex-col items-center  bg-white p-4 rounded-lg w-full max-w-[600px]  "
       >
-        <h1 className="text-lg text-shade font-bold">Welcome</h1>
-        <div className="grid gap-x-6 mb-6 md:grid-cols-2">
+        <div className="w-full md:grid md:gap-x-6 md:mb-6 md:grid-cols-2">
           {fields.map((field) => (
             <Input
               key={field.label}
@@ -91,19 +80,22 @@ export default function Register() {
               type={field.type || "text"}
             />
           ))}
-
-          
         </div>
-        <button
+        <div className="mt-10 w-full">
+          <button
+            className="bg-shade rounded-full w-full h-12 text-white shadow-xs shadow-primary hover:bg-accent hover:cursor-pointer"
             type="submit"
-            disabled={loading}
-            className="bg-shade rounded-lg w-22 h-10 text-white shadow-xs shadow-primary hover:bg-accent hover:cursor-pointer"
           >
-            {loading ? "Loading..." : "Submit"}
+            Register
           </button>
-          <Link className="text-accent" 
-      to={'/'}>Already have an account? Login Here</Link>
+        </div>
       </form>
+      <p className="text-accent">
+        You already have an account?{" "}
+        <a href="/#/" className="underline cursor-pointer">
+          Login Here
+        </a>
+      </p>
     </div>
   );
 }

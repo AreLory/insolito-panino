@@ -26,7 +26,7 @@ export default function CartItemCard({item}:{item:ICartItem}) {
   return (
     <div
       key={getCartItemKey(item)}
-      className="bg-white rounded-lg p-2 flex min-h-40 mb-2"
+      className={`bg-white border rounded shadow flex p-2 max-w-xl ${ showIng ? '':'max-h-44'}`}
     >
       <div className="flex object-cover w-[30%]">
         <img src={img1} alt="panino" className="w-full" />

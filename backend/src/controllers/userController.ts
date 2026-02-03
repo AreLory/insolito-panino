@@ -5,37 +5,34 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const jwtSecret = process.env.JWT
-
+const jwtSecret = process.env.JWT;
 
 // Register
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const {
-      firstName,
-      lastName,
-      email,
-      password,
-      phoneNumber,
-      address: {street, number}
-    } = req.body;
+    const { fullName, email, password, phoneNumber, address } = req.body;
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ error: "User already exists" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser: IUser = new User({
-      firstName,
-      lastName,
+      fullName,
       email,
       password: hashedPassword,
       phoneNumber,
-      address: {
-        street,
-        number,
-      },
+      street,
     });
-
     await newUser.save();
-    res.status(201).send();
+    const token = jwt.sign({ id: user._id }, jwtSecret, { expiresIn: "1h" });
+
+    res.status(201).send({
+      message: "Registration successful",
+      token,
+    });
   } catch (error) {
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });
@@ -60,13 +57,8 @@ export const userLogin = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    const token = jwt.sign(
-      {id: user._id},
-      jwtSecret,
-      {expiresIn: '1h'}
-    )
+    const token = jwt.sign({ id: user._id }, jwtSecret, { expiresIn: "1h" });
     res.status(200).json({ message: "Login successful", token });
-
   } catch (error) {
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });
@@ -84,12 +76,11 @@ export const userLogout = async (req: Request, res: Response) => {
 // GET /users/me
 export const getCurrentUser = async (req: Request, res: Response) => {
   try {
-    const user = await User.findById(req.userId).select('-password');
+    const user = await User.findById(req.userId).select("-password");
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
     res.status(200).json(user);
-
   } catch (error) {
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });
@@ -100,9 +91,9 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 };
 
 // Update Profile
-export const updateUser = async (req:Request, res: Response) => {
-  try{
-    const allowedUpdates = ['firstName', 'lastName', 'phoneNumber', 'address', 'password'];
+export const updateUser = async (req: Request, res: Response) => {
+  try {
+    const allowedUpdates = ["fullName", "phoneNumber", "address", "password"];
     const change: any = {};
 
     for (const key of allowedUpdates) {
@@ -113,18 +104,20 @@ export const updateUser = async (req:Request, res: Response) => {
       change.password = await bcrypt.hash(change.password, 10);
     }
 
-    const user = await User.findByIdAndUpdate(req.userId, { $set: change }, { new: true }).select('-password');
+    const user = await User.findByIdAndUpdate(
+      req.userId,
+      { $set: change },
+      { new: true },
+    ).select("-password");
     res.status(200).json(user);
-  }catch (error) {
+  } catch (error) {
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });
     } else {
       res.status(500).json({ error: "Server error" });
     }
   }
-}
-
-
+};
 
 // ! Admin only
 // Get Users

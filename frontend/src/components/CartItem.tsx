@@ -7,10 +7,10 @@ import CartItemCard from "./CartItemCard";
 export default function CartItem() {
  const cartItems = useSelector(selectCartItems);
   return (
-    <>
+    <div className="">
       {cartItems?.map((item: ICartItem) => (
        <CartItemCard item={item}/>
       ))}
-    </>
+    </div>
   );
 }

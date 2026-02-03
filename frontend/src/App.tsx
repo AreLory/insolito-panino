@@ -6,7 +6,7 @@
 // todo: User session management
 // todo: Axios
 // todo: User Feedback
-import { Route, HashRouter, Routes } from "react-router";
+import { Route, HashRouter, Routes, useLocation } from "react-router";
 import { useAuth } from "./context/AuthContext";
 
 // Pages
@@ -19,27 +19,41 @@ import Profile from "./pages/Profile";
 // Components
 import BottomNav from "./components/Navbar";
 import OrderHistory from "./pages/OrderHistory";
+import Product from "./pages/Product";
 
-function App() {
+
+function AppLayout() {
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
+
+
+  const hideBottomNavRoutes = ["/product"];
+
+  const hideBottomNav = hideBottomNavRoutes.some((path) =>
+    location.pathname.startsWith(path)
+  );
 
   return (
     <>
-      <HashRouter>
-        <Routes>
-          <Route path="/" element={isAuthenticated ? <Home /> : <Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/menu" element={<Menu/>} />
-          <Route path="/cart" element={isAuthenticated ? <Order /> : <Login />} />
-          <Route path='/profile' element={isAuthenticated ? <Profile /> : <Login />}/>
-          <Route path="/order-history" element={isAuthenticated? <OrderHistory/> : <Login/>}/>
-        </Routes>
-        <div className="justify-center flex">
-          <BottomNav />
-        </div>
-      </HashRouter>
+      <Routes>
+        <Route path="/" element={isAuthenticated ? <Home /> : <Login />} />
+        <Route path="/product/:id" element={<Product />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/menu" element={<Menu />} />
+        <Route path="/cart" element={isAuthenticated ? <Order /> : <Login />} />
+        <Route path="/profile" element={isAuthenticated ? <Profile /> : <Login />} />
+        <Route path="/order-history" element={isAuthenticated ? <OrderHistory /> : <Login />} />
+      </Routes>
+
+      {!hideBottomNav && <BottomNav />}
     </>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <HashRouter>
+      <AppLayout />
+    </HashRouter>
+  );
+}

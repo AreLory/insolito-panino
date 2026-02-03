@@ -1,13 +1,9 @@
-import { Document } from "mongoose"
+import { Document } from "mongoose";
 
 export default interface IUser extends Document {
-  firstName: string;
-  lastName: string;
+  fullName: string;
   email: string;
   password: string;
   phoneNumber: number;
-  address: {
-    street: string;
-    number: number;
-  };
+  address: string;
 }

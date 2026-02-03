@@ -21,7 +21,7 @@ export default function Input({
         }
         type={type}
         id={label}
-        className="border border-primary text-sm rounded-md focus:ring-accent focus:border-accent block w-full px-3 py-2 shadow-xs shadow-shade placeholder:text-body h-8"
+        className="border border-primary text-sm rounded-full focus:ring-accent focus:border-accent block w-full px-6 py-2 shadow-xs shadow-shade placeholder:text-body h-12"
         placeholder={value || label}
         required={required}
         readOnly={readonly}

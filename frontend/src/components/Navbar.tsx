@@ -1,21 +1,29 @@
 // todo: Links to Home, Menu, Order
 import { Link, useLocation } from "react-router";
+import homeGray from '../assets/img/home-gray.svg'
+import homeYellow from '../assets/img/home-yellow.svg'
+import cartGray from '../assets/img/cart-gray.png'
+import cartYellow from '../assets/img/cart-yellow.png'
+import menuGray from '../assets/img/menu-gray.png'
+import menuYellow from '../assets/img/menu-yellow.png'
+import accountGray from '../assets/img/account-gray.png'
+import accountYellow from '../assets/img/account-yellow.png'
 
 const navItems = [
-  { label: "Home", path: "/" },
-  { label: "Menu", path: "/menu" },
-  { label: "Carrello", path: "/cart" },
-  { label: "Cronologia Ordini", path: "/order-history" },
-  { label: "Profilo", path: "/profile" },
+  { label: "Home", path: "/", icon: homeGray, altIcon: homeYellow},
+  { label: "Menu", path: "/menu", icon: menuGray ,altIcon: menuYellow },
+  { label: "Carrello", path: "/cart", icon: cartGray, altIcon: cartYellow },
+  // { label: "Cronologia Ordini", path: "/order-history" },
+  { label: "Profilo", path: "/profile", icon: accountGray, altIcon: accountYellow },
 ];
 
 export default function BottomNav() {
   const location = useLocation();
   const activeIndex = navItems.findIndex(item => item.path === location.pathname);
-  const itemWidth = 90 / navItems.length;
+  const itemWidth = 100 / navItems.length;
 
   return (
-    <div className="fixed bottom-0 bg-primary w-[90vw] h-20 text-white flex rounded-lg overflow-hidden">
+    <div className="fixed bg-white bottom-0 w-screen h-20 text-primary flex overflow-hidden">
       
       <span
         className="absolute top-0 h-full bg-secondary transition-all duration-500 ease-in-out"
@@ -25,15 +33,15 @@ export default function BottomNav() {
         }}
       />
 
-      {navItems.map((item, index) => (
+      {navItems.map((item) => (
         <Link
           key={item.path}
           to={item.path}
           className={`relative z-10 flex-1 flex items-center justify-center transition-colors duration-300 ${
-            location.pathname === item.path ? "text-primary font-semibold" : "text-white"
+            location.pathname === item.path ? "text-primary font-semibold border-t" : "text-primary "
           }`}
         >
-          {item.label}
+          <img className="size-12" src={location.pathname === item.path ? item.icon: item.altIcon} alt={item.label} />
         </Link>
       ))}
     </div>

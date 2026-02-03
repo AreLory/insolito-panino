@@ -15,7 +15,6 @@ const Home = ()=> {
       
       Hi from HomePage
       <button onClick={logout}>LOGOUT</button>
-      
     </div>
   )
 }

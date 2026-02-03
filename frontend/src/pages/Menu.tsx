@@ -1,16 +1,19 @@
 import { useState } from "react";
 import BottomNav from "../components/Navbar";
 import ProductList from "../components/ProductList";
+import noImg from '../assets/img/noImg.png'
 
 export default function Menu() {
   const categories = [
     {
       label: 'Burger',
-      value: "burger"
+      value: "burger",
+      img: noImg
     },
     {
       label: 'Pulled Pork',
-      value: "pulled"
+      value: "pulled",
+      img: noImg,
     },
     {
       label: 'Cotoletta',
@@ -41,21 +44,25 @@ export default function Menu() {
 
   return (
     <div className="w-screen h-screen flex flex-col">
-      <div className="flex gap-2 mt-2 fixed top-0  w-full overflow-x-scroll h-14">
+      <div className="flex flex-col gap-2 pt-2 pb-1 w-full overflow-x-scroll md:justify-center mt-6 items-center bg-white">
+        <h1 className="text-xl font-bold">Categories</h1>
+        <div className="flex flex-row w-full sm:overflow-auto md:justify-center">
         {categories.map((cat) => (
           <button
             key={cat.value}
             onClick={() => setCategory(cat)}
-            className={`px-2 py-1 border rounded cursor-pointer min-w-20 max-w-30 ${
-              selectedCategory.label == cat.label ? "bg-accent text-white" : ""
+            className={`px-2 py-1  rounded cursor-pointer text-primary min-w-20 max-w-30 w-16 text-xs shadow ml-3 ${
+              selectedCategory.label == cat.label ? "bg-primary text-white transition-colors" : ""
             }`}
           >
-            {cat.label}
+            <img src={cat.img} alt={''} />
+            <p>{cat.label}</p>
           </button>
         ))}
+        </div>
       </div>
-      <div className="mt-17">
-        <ProductList category={selectedCategory.value} />
+      <div className="mt-2">
+        <ProductList category={selectedCategory} />
       </div>
     </div>
   );

@@ -2,41 +2,38 @@ import { useEffect, useState } from "react";
 import { api } from "../config/axios";
 import type IProfile from "../types/IProfile";
 import Input from "../components/Input";
+import { useAuth } from "../context/AuthContext";
 
 export default function Profile() {
+  const {logout} = useAuth()
+  
   const [user, setUser] = useState<IProfile | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  
   const [form, setForm] = useState<IProfile>({
-    firstName: "",
-    lastName: "",
+    fullName: "",
     email: "",
     phoneNumber: "",
-    address: {
-      street: "",
-      number: "",
-    },
+    address: "",
   });
 
   const mapUserToForm = (user: IProfile) => ({
-  firstName: user.firstName,
-  lastName: user.lastName,
-  email: user.email,
-  phoneNumber: user.phoneNumber || "",
-  address: {
-    street: user.address.street || "",
-    number: user.address.number || "",
-  },
-});
-  
+    fullName: user.fullName,
+    email: user.email,
+    phoneNumber: user.phoneNumber || "",
+    address: user.address || "",
+  });
+
   const getInfo = async () => {
     try {
       const profileInfo = await api.get("/users/me");
-      const { firstName, lastName, email, phoneNumber, address }: IProfile =
+      const { fullName, email, phoneNumber, address }: IProfile =
         profileInfo.data;
 
-      setUser({ firstName, lastName, email, phoneNumber, address });
+      setUser({ fullName, email, phoneNumber, address });
     } catch (error) {
       console.log("Error", error);
     }
@@ -44,7 +41,6 @@ export default function Profile() {
   useEffect(() => {
     getInfo();
   }, []);
-
 
   useEffect(() => {
     if (!user) return;
@@ -54,71 +50,57 @@ export default function Profile() {
 
   const fields = [
     {
-      label: "First Name",
-      name: "firstName",
-      value: form.firstName,
+      label: "Full Name",
+      name: "fullName",
+      value: form.fullName,
       required: true,
     },
     {
-      label: "Last Name",
-      name: "lastName",
-      value: form.lastName,
+      label: "Email",
+      name: "email",
+      value: form.email,
+      type: "email",
       required: true,
     },
-    { label: "Email", name: "email", value: form.email, type: 'email', required: true },
     {
-      label: "Password",
-      name: "password",
-      value: password,
-      type: "password",
-    },
-    {
-      label: "Phone Number (optional)",
+      label: "Phone Number",
       name: "phoneNumber",
       value: form.phoneNumber,
+      optional: true,
     },
     {
-      label: "Street Name (optional)",
-      name: "street",
-      value: form.address.street,
-    },
-    {
-      label: "House Number (optional)",
-      name: "number",
-      value: form.address.number,
+      label: "Address",
+      name: "address",
+      value: form.address,
+      optional: true,
     },
   ];
 
   const handleChange = (field: string, value: string) => {
-    if (field === "street" || field === "number") {
-      setForm((prevForm) => ({
-        ...prevForm,
-        address: {
-          ...prevForm.address,
-          [field]: value,
-        },
-      }));
-    } else {
-      setForm((prevForm) => ({
-        ...prevForm,
-        [field]: value,
-      }));
-    }
+    setForm((prevForm) => ({
+      ...prevForm,
+      [field]: value,
+    }));
   };
 
   const updateUser = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { firstName, lastName, email, phoneNumber, address } = form;
-      const { street, number: numberAddress } = address;
+      const { fullName, email, phoneNumber, address } = form;
+      if (password || confirmPassword) {
+        if (password !== confirmPassword) {
+          alert("Passwords do not match");
+          setLoading(false);
+          return;
+        }
+      }
 
       const payload: any = {
-        firstName,
-        lastName,
+        fullName,
         email,
         phoneNumber,
-        address: { street, number: numberAddress },
+        address,
       };
 
       if (password.trim() !== "") {
@@ -133,65 +115,104 @@ export default function Profile() {
       setLoading(false);
     }
   };
+
   return (
-    <div className="justify-center items-center flex flex-col h-[90vh]">
+    <div className="items-center flex flex-col h-screen">
+      <div className="h-30 flex items-center flex-col mt-10">
+        <h1 className="text-3xl text-shade font-bold">Welcome!</h1>
+        <p className="p-6 text-gray-500 text-center">
+          Sign up to explore your favourites Burgers and exclusive features
+        </p>
+      </div>
       <form
         onSubmit={updateUser}
-        className="flex flex-col items-center  bg-white p-4 rounded-lg w-[60vw] max-w-150 "
+        className="flex flex-col items-center  bg-white p-4 rounded-lg w-full max-w-[600px]  "
       >
-        <h1 className="text-lg text-shade font-bold">
-          {isEditing ? "Update User" : "Your Profile"}
-        </h1>
-        <div className="grid gap-x-6 mb-6 md:grid-cols-2">
-          {fields.map((field) => (
-            <Input
-              key={field.label}
-              label={field.label}
-              onChange={(v) => handleChange(field.name, v)}
-              value={field.value}
-              required={field.required}
-              type={field.type || "text"}
-              readonly={!isEditing}
-            />
-          ))}
+        <div className="w-full">
+          <div className="w-full  md:grid md:gap-x-6 md:mb-6 md:grid-cols-2">
+            {fields.map((field) => (
+              <Input
+                key={field.label}
+                label={`${field.label} ${field.optional ? "(optional)" : ""}`}
+                onChange={(v) =>
+                  field.name === "password"
+                    ? setPassword(v)
+                    : handleChange(field.name, v)
+                }
+                value={field.value}
+                required={field.required}
+                type={field.type || "text"}
+                readonly={!isEditing}
+              />
+            ))}
+            {isEditing && (
+              <div className="mt-2">
+                <Input
+                  label="Password (optional)"
+                  type="password"
+                  value={password}
+                  onChange={(v) => setPassword(v)}
+                />
+                <p className="text-sm text-gray-400 mb-2">
+                  Leave blank to keep current password
+                </p>
+                <Input
+                  label="Confirm Password"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(v) => setConfirmPassword(v)}
+                />
+              </div>
+            )}
+          </div>
+          {isEditing && (
+            <div className="mt-6">
+              <button
+                type="submit"
+                className="bg-shade rounded-full w-full h-12 text-white shadow-xs shadow-primary hover:bg-accent hover:cursor-pointer"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (!user) return;
+                  setForm(mapUserToForm(user));
+                  setPassword("");
+                  setIsEditing(false);
+                }}
+                className="mt-2 bg-secondary rounded-full w-full h-12 text-white shadow-xs shadow-primary hover:bg-accent hover:cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+          {!isEditing && (
+            <div className="mt-6">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsEditing(true);
+                }}
+                className="bg-accent rounded-full w-full h-12 text-white shadow-xs shadow-primary hover:bg-accent hover:cursor-pointer"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  logout()
+                }}
+                className="bg-shade rounded-full mt-2 w-full h-12 text-white shadow-xs shadow-primary hover:bg-accent hover:cursor-pointer"
+              >
+                Log out
+              </button>
+            </div>
+          )}
         </div>
-
-        {!isEditing && (
-          <button
-            type="button"
-            onClick={() => setIsEditing(true)}
-            className="bg-shade rounded-lg w-22 h-10 text-white shadow-xs shadow-primary hover:bg-accent hover:cursor-pointer"
-          >
-            Edit
-          </button>
-        )}
-
-        {isEditing && (
-          <button
-            type="submit"
-            className="bg-shade rounded-lg w-22 h-10 text-white shadow-xs shadow-primary hover:bg-accent hover:cursor-pointer"
-          >
-            Save
-          </button>
-        )}
-          
-        {isEditing && (
-          <button
-            type="button"
-            onClick={() => {
-              if (!user) return;
-              setForm(mapUserToForm(user));
-              setPassword("");
-              setIsEditing(false);
-            }}
-            className="bg-secondary mt-1 rounded-lg w-22 h-10 text-primary hover:text-white shadow-xs shadow-primary hover:bg-accent hover:cursor-pointer"
-          >
-            Cancel
-          </button>
-        )}
-
-        {loading && <p>Updating...</p>}
       </form>
+
+      {loading && <p>Updating...</p>}
     </div>
   );
 }
