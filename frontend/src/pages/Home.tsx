@@ -5,7 +5,7 @@
 
 
 // ** Components
-import BottomNav from "../components/Navbar"
+import BottomNav from "../components/BottomNav"
 import { useAuth } from "../context/AuthContext"
 
 const Home = ()=> {

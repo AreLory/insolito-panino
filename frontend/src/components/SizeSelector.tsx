@@ -2,7 +2,7 @@ import type { ISize } from "../types/IProducts";
 
 interface Props {
   sizes: ISize[];
-  selectedSize?: ISize;
+  selectedSize?: ISize | null;
   onSelectSize: (size: ISize) => void;
 }
 

@@ -1,6 +1,6 @@
 // todo: Registrazione (nome, email, password), Login, Logout
 import React, { useState } from "react";
-import BottomNav from "../components/Navbar";
+import BottomNav from "../components/BottomNav";
 import axios from "axios";
 import API_BASE_URL from "../config/api";
 import Input from "../components/Input";

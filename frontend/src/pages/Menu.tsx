@@ -1,5 +1,5 @@
 import { useState } from "react";
-import BottomNav from "../components/Navbar";
+import BottomNav from "../components/BottomNav";
 import ProductList from "../components/ProductList";
 import noImg from '../assets/img/noImg.png'
 

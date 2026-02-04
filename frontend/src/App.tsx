@@ -17,7 +17,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 // Components
-import BottomNav from "./components/Navbar";
+import BottomNav from "./components/BottomNav";
 import OrderHistory from "./pages/OrderHistory";
 import Product from "./pages/Product";
 
