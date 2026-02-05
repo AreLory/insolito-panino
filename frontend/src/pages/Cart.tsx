@@ -1,6 +1,6 @@
 import { clearCart } from "../features/cart/cartSlice";
 
-import type { ICartItem } from "../types/ICartState";
+import type { ICartItem } from "../types/cart";
 import CartItemCard from "../components/CartItemCard";
 import { Link } from "react-router";
 import trashImg from "../assets/img/trash.png";

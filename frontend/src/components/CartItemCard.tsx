@@ -1,11 +1,11 @@
 //Hooks
-import { useProductCart } from "../hook/useProductCart";
+import { useProductCart } from "../hooks/useProductCart";
 import { useState } from "react";
 
 import { getCartItemKey } from "../features/cart/cartSlice";
 //interfaces
-import type { ICartItem } from "../types/ICartState";
-import type { IProducts } from "../types/IProducts";
+import type { ICartItem } from "../types/cart";
+import type { IProducts } from "../types/products";
 
 //components
 import CartCountingControls from "./CartCountingControls";

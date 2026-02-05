@@ -1,4 +1,4 @@
-import type { ISize } from "../types/IProducts";
+import type { ISize } from "../types/products";
 
 interface Props {
   sizes: ISize[];

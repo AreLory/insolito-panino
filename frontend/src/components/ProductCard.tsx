@@ -1,4 +1,4 @@
-import type { IProducts, } from "../types/IProducts";
+import type { IProducts, } from "../types/products";
 
 import { Link } from "react-router";
 interface Props {

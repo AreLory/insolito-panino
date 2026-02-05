@@ -5,7 +5,7 @@ import { selectCartItems } from "../features/cart/cartSelector";
 import { getCartItemKey, addToCart, removeFromCart } from "../features/cart/cartSlice";
 
 //interfaces
-import type {IProducts, ISize } from "../types/IProducts";
+import type {IProducts, ISize } from "../types/products";
 
 
 

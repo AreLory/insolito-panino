@@ -1,4 +1,4 @@
-import type { ICartState } from "./ICartState";
+import type { ICartState } from "./cart";
 
 export interface IOrder{
     user: any,

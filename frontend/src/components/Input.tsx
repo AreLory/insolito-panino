@@ -1,5 +1,5 @@
 import React from "react";
-import type IInputProps from "../types/IInputProps";
+import type IInputProps from "../types/input";
 
 export default function Input({
   label,

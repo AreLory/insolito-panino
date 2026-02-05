@@ -1,5 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
-import type { ICartItem } from "../../types/ICartState";
+import type { ICartItem } from "../../types/cart";
 
 export const selectCartItems = (state:any) => {
     if (!state?.cart?.items) return [];

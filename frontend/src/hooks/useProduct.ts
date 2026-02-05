@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { IProducts } from "../types/IProducts";
+import type { IProducts } from "../types/products";
 import API_BASE_URL from "../config/api";
 import axios from "axios";
 

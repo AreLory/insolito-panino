@@ -1,12 +1,12 @@
 //Hooks
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useProduct } from "../hook/useProduct";
-import { useProductCart } from "../hook/useProductCart";
+import { useProduct } from "../hooks/useProduct";
+import { useProductCart } from "../hooks/useProductCart";
 import { Link, useParams } from "react-router";
 
 //Interfaces
-import type { ISize } from "../types/IProducts";
+import type { ISize } from "../types/products";
 
 //Components
 import AddToCartBar from "../components/AddToCartBar";

@@ -1,4 +1,4 @@
-import type { IIngredient } from "../types/IProducts"
+import type { IIngredient } from "../types/products"
 import Checkbox from "./Checkbox"
 
 interface Props {

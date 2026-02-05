@@ -5,7 +5,7 @@ import axios from "axios";
 import API_BASE_URL from "../config/api";
 
 //interfaces
-import type { IProducts } from "../types/IProducts";
+import type { IProducts } from "../types/products";
 //components
 import ProductCard from "./ProductCard";
 

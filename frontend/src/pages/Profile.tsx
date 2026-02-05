@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../config/axios";
 //Interfaces
-import type IProfile from "../types/IProfile";
+import type IProfile from "../types/profile";
 import Input from "../components/Input";
 
 

@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { ICartItem, ICartState } from "../../types/ICartState";
+import type { ICartItem, ICartState } from "../../types/cart";
 
 export const getCartItemKey = (item: ICartItem) =>
   `${item.id}-${item.selectedSize?.label || ""}-${(

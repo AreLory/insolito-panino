@@ -8,7 +8,7 @@ import Select from "../components/Select";
 import { Link } from "react-router";
 
 //Interfaces
-import type { IOrder } from "../types/IOrder";
+import type { IOrder } from "../types/order";
 
 import {
   selectCartTotal,
