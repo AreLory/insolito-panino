@@ -1,17 +1,25 @@
+//Hooks
 import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import { api } from "../config/axios";
+//Interfaces
 import type IProfile from "../types/IProfile";
 import Input from "../components/Input";
-import { useAuth } from "../context/AuthContext";
+
+
+
+
 
 export default function Profile() {
   const {logout} = useAuth()
   
   const [user, setUser] = useState<IProfile | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  
+  
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
   
   const [form, setForm] = useState<IProfile>({
     fullName: "",

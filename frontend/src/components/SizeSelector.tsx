@@ -16,8 +16,9 @@ export default function SizeSelector({
       <div className="flex w-full justify-around">
         {sizes.map((size) => (
           <div
-            className={`border w-full h-18 flex flex-col items-center cursor-pointer ${
-              selectedSize?.label === size.label ? "bg-accent text-white" : ""
+            className={`rounded-lg w-full flex flex-col items-center cursor-pointer ${
+              selectedSize?.label === size.label ? "scale-90 shadow-inner"
+                : "shadow-xl border-b-4 border border-primary"
             }`}
             onClick={() => onSelectSize(size)}
             key={size.label}

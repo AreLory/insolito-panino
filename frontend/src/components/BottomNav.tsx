@@ -1,5 +1,5 @@
-// todo: Links to Home, Menu, Order
 import { Link, useLocation } from "react-router";
+//assets/img
 import homeGray from '../assets/img/home-gray.svg'
 import homeYellow from '../assets/img/home-yellow.svg'
 import cartGray from '../assets/img/cart-gray.png'
@@ -13,7 +13,6 @@ const navItems = [
   { label: "Home", path: "/", icon: homeGray, altIcon: homeYellow},
   { label: "Menu", path: "/menu", icon: menuGray ,altIcon: menuYellow },
   { label: "Carrello", path: "/cart", icon: cartGray, altIcon: cartYellow },
-  // { label: "Cronologia Ordini", path: "/order-history" },
   { label: "Profilo", path: "/profile", icon: accountGray, altIcon: accountYellow },
 ];
 

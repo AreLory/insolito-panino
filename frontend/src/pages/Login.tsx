@@ -1,11 +1,11 @@
-// todo: Registrazione (nome, email, password), Login, Logout
+//Hooks
 import React, { useState } from "react";
-import BottomNav from "../components/BottomNav";
-import axios from "axios";
-import API_BASE_URL from "../config/api";
-import Input from "../components/Input";
 import { useAuth } from "../context/AuthContext";
-import { Link } from "react-router";
+
+//Component
+import Input from "../components/Input";
+
+
 
 const Login = () => {
   const { login } = useAuth();

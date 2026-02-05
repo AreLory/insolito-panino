@@ -1,10 +1,11 @@
+//Hooks
 import React, { useState } from "react";
-import axios from "axios";
-import { Link } from "react-router";
 
+import axios from "axios";
 import API_BASE_URL from "../config/api";
-import Input from "../components/Input";
 import { redirect } from "react-router";
+//Components
+import Input from "../components/Input";
 
 export default function Register() {
   const [fullName, setFullName] = useState("");
@@ -12,7 +13,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [street, setStreet] = useState("");
-  const [numberAddress, setNumberAddress] = useState("");
+
   const [loading, setLoading] = useState(false);
 
   const fields = [
@@ -67,7 +68,7 @@ export default function Register() {
       </div>
       <form
         onSubmit={userRegister}
-        className="flex flex-col items-center  bg-white p-4 rounded-lg w-full max-w-[600px]  "
+        className="flex flex-col items-center  bg-white p-4 rounded-lg w-full max-w-150  "
       >
         <div className="w-full md:grid md:gap-x-6 md:mb-6 md:grid-cols-2">
           {fields.map((field) => (

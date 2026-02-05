@@ -12,7 +12,7 @@ export default function CartCountingControls({quantity, onRemoveFromCart, onAddT
       >
         -
       </button>
-      <h3 className="size-8 border text-center ">x {quantity}</h3>
+      <h3 className="size-8 border text-center "> {quantity.toString().padStart(2, '0')}</h3>
       <button
         onClick={onAddToCart}
         className="bg-blue-100 border border-l-0 rounded-r-lg size-8"

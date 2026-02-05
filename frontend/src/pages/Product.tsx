@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useProduct } from "../hook/useProduct";
 import { useProductCart } from "../hook/useProductCart";
-import { Link, useParams } from "react-router"; // ✅ react-router-dom corretto
+import { Link, useParams } from "react-router";
 
 //Interfaces
 import type { ISize } from "../types/IProducts";
@@ -13,6 +13,10 @@ import AddToCartBar from "../components/AddToCartBar";
 import IngredientSelector from "../components/IngredientSelector";
 import SizeSelector from "../components/SizeSelector";
 import CartCountingControls from "../components/CartCountingControls";
+
+//Assets/img
+import cartImg from '../assets/img/cart-gray.png'
+import arrowLeft from '../assets/img/arrow-left.png'
 
 export default function Product() {
   const { id } = useParams<{ id: string }>();
@@ -48,9 +52,13 @@ export default function Product() {
     <div className="w-screen flex md:justify-center">
       <div className="w-full md:max-w-4xl md:w-4xl">
         <div className="flex w-full justify-between px-3">
-          <Link to={"/menu"}>{"<-"}</Link>
+          <Link to={"/menu"} className="size-10 p-1">
+          <img src={arrowLeft} alt="back" />
+          </Link>
           <h1 className="text-xl font-semibold">Dettagli Prodotto</h1>
-          <Link to={"/"}>{"Home"}</Link>
+          <Link to={"/cart"} className="size-10 p-1">
+          <img src={cartImg} alt="cart" />
+          </Link>
         </div>
 
         <div className="flex h-70 justify-center items-center">

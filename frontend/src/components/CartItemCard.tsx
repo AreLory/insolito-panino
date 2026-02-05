@@ -1,10 +1,16 @@
+//Hooks
 import { useProductCart } from "../hook/useProductCart";
-import img1 from "../config/data";
 import { useState } from "react";
-import type { ICartItem } from "../types/ICartState";
-import CartCountingControls from "./CartCountingControls";
+
 import { getCartItemKey } from "../features/cart/cartSlice";
+//interfaces
+import type { ICartItem } from "../types/ICartState";
 import type { IProducts } from "../types/IProducts";
+
+//components
+import CartCountingControls from "./CartCountingControls";
+//assets/img
+import crossIcon from '../assets/img/cross.png'
 
 export default function CartItemCard({ item }: { item: ICartItem }) {
   const [showIng, setShowIng] = useState(false);
@@ -23,7 +29,7 @@ export default function CartItemCard({ item }: { item: ICartItem }) {
     quantity: item.quantity,
   };
 
-  const { cartItem, quantity, addOne, removeOne } = useProductCart(
+  const { cartItem, quantity, addOne, removeOne, removeAll } = useProductCart(
     productForHook,
     item.selectedSize,
     item.selectedIngredients,
@@ -44,7 +50,7 @@ export default function CartItemCard({ item }: { item: ICartItem }) {
     >
       <div className="flex w-[30%]">
         <img
-          src={img1}
+          // src={}
           alt="panino"
           className="size-30 rounded-2xl"
         />
@@ -56,8 +62,10 @@ export default function CartItemCard({ item }: { item: ICartItem }) {
           <h4 onClick={handleShowIng} className="text-sm mt-2 underline cursor-pointer">Show Details</h4>
         </div>
         <div className="flex flex-col w-[50%]">
-          <div className="flex justify-end w-auto items-center pr-2 ">
-          <button>x</button>
+          <div className="flex justify-end w-auto items-center p-2 ">
+          <button className="size-4" onClick={removeAll}>
+            <img src={crossIcon} alt="X" />
+          </button>
           </div>
           <div
             className={`flex flex-col items-centrer p-2 ${showIng ? "" : "collapse"}`}

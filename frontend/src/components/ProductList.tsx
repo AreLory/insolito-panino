@@ -1,14 +1,18 @@
-import axios from "axios";
-import API_BASE_URL from "../config/api";
-import ProductCard from "./ProductCard";
-import type { IProducts } from "../types/IProducts";
+//Hooks
 import { useEffect, useState } from "react";
 
-export default function ProductList({
-  category,
-}: {
+import axios from "axios";
+import API_BASE_URL from "../config/api";
+
+//interfaces
+import type { IProducts } from "../types/IProducts";
+//components
+import ProductCard from "./ProductCard";
+
+interface Props {
   category: { label: string; value: string };
-}) {
+}
+export default function ProductList({ category }: Props) {
   const [productList, setProductList] = useState<IProducts[]>([]);
 
   const getProductList = async () => {

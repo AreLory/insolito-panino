@@ -1,7 +1,12 @@
+//Hooks
 import { useDispatch, useSelector } from "react-redux";
+
 import { selectCartItems } from "../features/cart/cartSelector";
 import { getCartItemKey, addToCart, removeFromCart } from "../features/cart/cartSlice";
+
+//interfaces
 import type {IProducts, ISize } from "../types/IProducts";
+
 
 
 export function useProductCart(
@@ -45,5 +50,11 @@ export function useProductCart(
     dispatch(removeFromCart({ key, quantity: 1 }));
   };
 
-  return { cartItem, quantity: cartItem?.quantity ?? 0, addOne, removeOne };
+  const removeAll = ()=>{
+    if(!cartItem)return;
+    const key = getCartItemKey(cartItem)
+    dispatch(removeFromCart({key:key, quantity: cartItem.quantity}))
+  }
+
+  return { cartItem, quantity: cartItem?.quantity ?? 0, addOne, removeOne, removeAll };
 }

@@ -12,14 +12,15 @@ import { useAuth } from "./context/AuthContext";
 // Pages
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
-import Order from "./pages/Order";
+import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
+import Product from "./pages/Product";
+import Checkout from "./pages/Checkout";
 // Components
 import BottomNav from "./components/BottomNav";
-import OrderHistory from "./pages/OrderHistory";
-import Product from "./pages/Product";
+
 
 
 function AppLayout() {
@@ -27,7 +28,7 @@ function AppLayout() {
   const location = useLocation();
 
 
-  const hideBottomNavRoutes = ["/product"];
+  const hideBottomNavRoutes = ["/product", '/checkout'];
 
   const hideBottomNav = hideBottomNavRoutes.some((path) =>
     location.pathname.startsWith(path)
@@ -40,9 +41,9 @@ function AppLayout() {
         <Route path="/product/:id" element={<Product />} />
         <Route path="/register" element={<Register />} />
         <Route path="/menu" element={<Menu />} />
-        <Route path="/cart" element={isAuthenticated ? <Order /> : <Login />} />
+        <Route path="/cart" element={isAuthenticated ? <Cart /> : <Login />} />
         <Route path="/profile" element={isAuthenticated ? <Profile /> : <Login />} />
-        <Route path="/order-history" element={isAuthenticated ? <OrderHistory /> : <Login />} />
+        <Route path="/checkout" element={isAuthenticated ? <Checkout/> : <Login/>}/>
       </Routes>
 
       {!hideBottomNav && <BottomNav />}

@@ -1,5 +1,4 @@
 import type { IProducts, } from "../types/IProducts";
-import img1 from "../config/data";
 
 import { Link } from "react-router";
 interface Props {
@@ -15,8 +14,7 @@ export default function ProductCard({ item }: Props) {
     >
       <div className="flex justify-center h-34">
         <img
-          src={img1}
-          // src={item.imageUrl}
+          src={item.imageUrl}
           alt={item.name}
           className="object-cover rounded size-34"
         />
