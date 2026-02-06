@@ -1,13 +1,13 @@
 
 
 export  interface IProducts {
-    id: string
+    _id: string
     name: string;
     category: 'burger' | 'panino' | 'wrap' | 'fries' | 'fried' | 'arrosticini' | 'vegetarian';
     basePrice: number;           
     sizes?: ISize[];             
     ingredients: IIngredient[];  
-    extras?: string[] ;          
+    extras: { name: string; price: number }[];  
     imageUrl?: string;           
     available?: boolean;         
     description?: string;        

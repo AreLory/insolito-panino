@@ -1,20 +1,22 @@
-// todo: Navbar (fixed bottom)
-// todo: Menu
-// todo: Cart
-// todo: Orders
+// Hooks
+
+import OrderCard from "../components/OrderCard"
+
+// Components
 
 
-// ** Components
-import BottomNav from "../components/BottomNav"
-import { useAuth } from "../context/AuthContext"
 
 const Home = ()=> {
-  const {logout} = useAuth()
+
+  
   return (
     <div className="w-screen h-screen justify-center flex flex-col items-center">
+      <OrderCard />
+       {/* Menu Focus*/}
+       {/* Novità */}
+       {/* About us + footer  */}
       
-      Hi from HomePage
-      <button onClick={logout}>LOGOUT</button>
+      
     </div>
   )
 }

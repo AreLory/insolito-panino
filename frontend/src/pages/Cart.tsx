@@ -31,7 +31,7 @@ export default function Cart() {
         />
         <div className="w-full max-w-2xl h-[65vh] overflow-y-auto rounded-2xl py-4">
           {cart?.map((item: ICartItem) => (
-            <CartItemCard item={item} key={item.id}/>
+            <CartItemCard item={item} key={item._id}/>
           ))}
         </div>
         {cart.length > 0 && (

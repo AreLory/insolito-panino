@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 //Components
 import MiniNavBar from "../components/MiniNavBar";
 import Select from "../components/Select";
-import { Link } from "react-router";
+
 
 //Interfaces
 import type { IOrder } from "../types/order";
@@ -26,6 +26,7 @@ import bankImg from "../assets/img/bank.png";
 import takeAwayImg from "../assets/img/take-away.png";
 import dineInImg from "../assets/img/holding-hand-dinner.png";
 import deliveryImg from "../assets/img/delivery-man.png";
+import type { ICartItem } from "../types/cart";
 
 export default function Checkout() {
   const cart = useSelector(selectCartItems);
@@ -71,12 +72,23 @@ export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState(paymentMethodsList[0]);
   const [orderType, setOrderType] = useState(orderTypesList[0]);
 
-  const submitOrder = async () => {
+  const submitOrder = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
+      const formattedItems = cart.map((item:ICartItem) => ({
+        _id: item._id,
+        name: item.name,
+        unitPrice: item.unitPrice,
+        quantity: item.quantity,
+        selectedSize: item.selectedSize,
+        removedIngredients: item.removedIngredients,
+        extras: item.extras,
+      }));
+
       const order = await api.post<IOrder>("/orders", {
-        items: cart,
-        paymentMethod,
-        orderType,
+        items: formattedItems,
+        paymentMethod: paymentMethod.value,
+        orderType: orderType.value,
         notes,
       });
       console.log("✅ Order created:", order.data);
@@ -89,6 +101,7 @@ export default function Checkout() {
       );
     }
   };
+
 
   return (
     <div className="w-screen h-screen flex justify-center bg-white">
@@ -128,13 +141,13 @@ export default function Checkout() {
               </div>
             </div>
             <div className="h-20 py-4 px-8 mb-2 flex w-full">
-              <Link
-                to={"/checkout"}
+              <button
+                type="submit"
                 aria-disabled={!cart.length}
                 className="bg-secondary rounded-full m-1 flex-2 text-center"
               >
                 Submit Order
-              </Link>
+              </button>
             </div>
           </div>
         </form>

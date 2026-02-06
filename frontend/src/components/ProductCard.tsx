@@ -9,7 +9,7 @@ export default function ProductCard({ item }: Props) {
 
   return (
     <Link
-      to={`/product/${item.id}`}
+      to={`/product/${item._id}`}
       className={` rounded shadow flex flex-col cursor-pointer p-2 max-w-38 w-full max-h-60 `}
     >
       <div className="flex justify-center h-34">

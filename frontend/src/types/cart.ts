@@ -1,10 +1,16 @@
 export interface ICartItem {
-  id: string;                // id prodotto
+  _id: string;
   name: string;
-  basePrice: number;
-  selectedSize?: { label: string; price: number };
-  selectedIngredients?: string[];
-  quantity?:number
+  unitPrice: number;
+
+  selectedSize: {
+    label: string;
+    price: number;
+  } | null;
+
+  removedIngredients: string[];
+  extras: { name: string; price: number }[];
+  quantity: number;
 }
 
 export interface ICartState {

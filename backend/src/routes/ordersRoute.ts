@@ -3,7 +3,7 @@ import {
   createOrder,
   deleteOrder,
   getAllOrders,
-  getMyOrders,
+  getMyLastOrder,
   getOrder,
   updateOrder,
 } from "../controllers/ordersController";
@@ -13,7 +13,7 @@ const router = express.Router();
 // ! User
 
 router.post("/orders",authMiddleware, createOrder);
-router.get("/orders/me",authMiddleware, getMyOrders);
+router.get("/orders/me",authMiddleware, getMyLastOrder);
 router.get("/orders/:id", getOrder);
 router.delete("/orders/:id", deleteOrder);
 

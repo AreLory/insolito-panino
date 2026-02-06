@@ -1,13 +1,31 @@
-import type { ICartState } from "./cart";
+export interface IOrderItem {
+  _id: string;
+  name: string;
+  unitPrice: number;
+  quantity: number;
 
-export interface IOrder{
-    user: any,
-    items: ICartState
-    status:string,
-    subtotal:number,
-    total:number,
-    paymentMethod:string,
-    paymentStatus:string,
-    orderType:string,
-    notes:string
+  selectedSize: {
+    label: string;
+    price: number;
+  } | null;
+
+  removedIngredients: string[];
+  extras: { name: string; price: number }[];
+}
+
+export interface IOrder {
+  user: string;
+
+  items: IOrderItem[];
+
+  status: "pending" | "confirmed" | "in_preparation" | "ready" | "completed" | "canceled";
+
+  total: number;
+
+  paymentMethod: "cash" | "card" | "online";
+  paymentStatus: "unpaid" | "paid" | "refunded";
+
+  orderType: "take_away" | "dine_in" | "delivery";
+
+  notes?: string;
 }

@@ -2,8 +2,8 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { ICartItem, ICartState } from "../../types/cart";
 
 export const getCartItemKey = (item: ICartItem) =>
-  `${item.id}-${item.selectedSize?.label || ""}-${(
-    item.selectedIngredients || []
+  `${item._id}-${item.selectedSize?.label || ""}-${(
+    item.removedIngredients || []
   )
     .slice()
     .sort()

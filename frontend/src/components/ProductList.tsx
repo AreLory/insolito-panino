@@ -40,7 +40,7 @@ export default function ProductList({ category }: Props) {
 
       <div className="flex gap-2 flex-wrap justify-center p-4">
         {productList?.map((product: IProducts) => (
-          <ProductCard item={product} key={product.id} />
+          <ProductCard item={product} key={product._id} />
         ))}
       </div>
     </div>

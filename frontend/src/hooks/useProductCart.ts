@@ -6,39 +6,47 @@ import { getCartItemKey, addToCart, removeFromCart } from "../features/cart/cart
 
 //interfaces
 import type {IProducts, ISize } from "../types/products";
+import type { ICartItem } from "../types/cart";
+
 
 
 
 export function useProductCart(
   item: IProducts | null,
   selectedSize: ISize | null,
-  selectedIngredients: string[]
+  removedIngredients: string[]
 ) {
   const dispatch = useDispatch();
-  const cartItems = useSelector(selectCartItems);
+  const cartItems: ICartItem[] = useSelector(selectCartItems);
 
   if (!item) {
-    return { cartItem: null, quantity: 0, addOne: () => {}, removeOne: () => {} };
+    return { cartItem: null, quantity: 0, addOne: () => {}, removeOne: () => {}, removeAll: () => {} };
   }
 
-  const selectedItem = {
-    id: item.id,
+
+  const selectedItem: ICartItem = {
+    _id: item._id,
     name: item.name,
-    basePrice: item.basePrice,
-    selectedSize,
-    selectedIngredients,
+    unitPrice: item.basePrice,
+    selectedSize: selectedSize
+      ? { label: selectedSize.label, price: selectedSize.price }
+      : undefined,
+    removedIngredients: removedIngredients ?? [],
+    quantity: 1,
+    extras: item.extras ?? [],
   };
 
   const cartItem = cartItems.find(
-    (i) => getCartItemKey(i) === getCartItemKey(selectedItem)
+    (i) =>
+      i._id === selectedItem._id &&
+      i.selectedSize?.label === selectedItem.selectedSize?.label &&
+      JSON.stringify(i.removedIngredients) === JSON.stringify(selectedItem.removedIngredients)
   );
 
   const addOne = () => {
     dispatch(
       addToCart({
-        ...item,
-        selectedSize: selectedSize || undefined,
-        selectedIngredients,
+        ...selectedItem,
         quantity: 1,
       })
     );
@@ -46,15 +54,23 @@ export function useProductCart(
 
   const removeOne = () => {
     if (!cartItem) return;
-    const key = getCartItemKey(cartItem);
-    dispatch(removeFromCart({ key, quantity: 1 }));
+    dispatch(
+      removeFromCart({
+        key: getCartItemKey(cartItem),
+        quantity: 1,
+      })
+    );
   };
 
-  const removeAll = ()=>{
-    if(!cartItem)return;
-    const key = getCartItemKey(cartItem)
-    dispatch(removeFromCart({key:key, quantity: cartItem.quantity}))
-  }
+  const removeAll = () => {
+    if (!cartItem) return;
+    dispatch(
+      removeFromCart({
+        key: getCartItemKey(cartItem),
+        quantity: cartItem.quantity,
+      })
+    );
+  };
 
   return { cartItem, quantity: cartItem?.quantity ?? 0, addOne, removeOne, removeAll };
 }

@@ -31,19 +31,19 @@ export const getOrder = async (req: Request, res: Response) => {
     }
   }
 };
-//Get my orders
-export const getMyOrders = async (req: Request, res: Response) => {
+//Get my last orders
+export const getMyLastOrder = async (req: Request, res: Response) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.userId);
-    const orders = await Orders.find({ user: userId });
-    if (orders.length === 0) {
+    const order = await Orders.findOne({ user: userId }).sort({ created: -1 });
+    if (!order) {
       return res.status(404).json({ error: "order not found" });
     }
     console.log({
       userId: req.userId,
       isObjectId: req.userId instanceof Types.ObjectId,
     });
-    res.status(200).json(orders);
+    res.status(200).json(order);
   } catch (error) {
     console.error("🔥 GET MY ORDERS ERROR:", error);
     if (error instanceof Error) {
@@ -56,90 +56,91 @@ export const getMyOrders = async (req: Request, res: Response) => {
 //Create Order
 export const createOrder = async (req: Request, res: Response) => {
   try {
-    const { items, paymentMethod, orderType, notes } = req.body;
-    const userId = new mongoose.Types.ObjectId(req.userId);
-
-    console.log("📦 Creating order - userId:", userId);
-    console.log("📦 Items received:", JSON.stringify(items, null, 2));
-
     if (!req.userId) {
       return res.status(401).json({ error: "User not authenticated" });
     }
+
+    const { items, paymentMethod, orderType, notes } = req.body;
 
     if (!items || items.length === 0) {
       return res.status(400).json({ message: "Empty order" });
     }
 
-    console.log(
-      "🔍 Looking for products with IDs:",
-      items.map((i: any) => i.id),
-    );
+    const productIds = items.map((i: any) => i._id);
 
     const products = await Products.find({
-      _id: { $in: items.map((item: { id: string }) => item.id) },
+      _id: { $in: productIds },
     });
 
-    console.log("✅ Found products:", products.length);
+    if (products.length !== productIds.length) {
+      return res.status(400).json({ error: "Invalid product in order" });
+    }
 
-    const orderItems = items.map(
-      (item: {
-        id: string;
-        name: string;
-        basePrice: number;
-        selectedSize?: { label: string; price: number };
-        selectedIngredients?: string[];
-        quantity: number;
-      }) => {
-        const product = products.find((p: any) => p._id.equals(item.id));
+    const orderItems: IOrderItem[] = items.map((item: any) => {
+      const product = products.find((p) =>
+        p._id.equals(item._id)
+      );
 
-        if (!product) {
-          throw new Error(`Prodotto non valido: ${item.id}`);
+      if (!product) {
+        throw new Error(`Invalid product: ${item._id}`);
+      }
+
+      if (item.quantity < 1) {
+        throw new Error("Invalid quantity");
+      }
+
+      let unitPrice = product.basePrice;
+
+      let selectedSize = null;
+      if (item.selectedSize) {
+        const size = product.sizes?.find(
+          (s: any) => s.label === item.selectedSize.label
+        );
+
+        if (!size) {
+          throw new Error(`Invalid size for ${product.name}`);
         }
 
-        if (!item.selectedSize) {
-          throw new Error(`Size non valida per ${item.name}`);
-        }
-
-        if (item.quantity < 1) {
-          throw new Error("Quantità non valida");
-        }
-
-        let unitPrice = item.selectedSize.price;
-
-        return {
-          product: product._id,
-          name: `${product.name} (${item.selectedSize.label})`,
-          size: {
-            label: item.selectedSize.label,
-          },
-          price: unitPrice,
-          quantity: item.quantity,
-          removedIngredients: item.selectedIngredients,
+        unitPrice += size.price;
+        selectedSize = {
+          label: size.label,
+          price: size.price,
         };
-      },
-    );
+      }
+
+      return {
+        product: product._id,
+        name: product.name,
+        unitPrice,
+        quantity: item.quantity,
+        selectedSize,
+        removedIngredients: item.removedIngredients ?? [],
+        extras: item.extras ?? [],
+      };
+    });
+
     const total = orderItems.reduce(
-      (sum: number, item: IOrderItem) => sum + item.price * item.quantity,
-      0,
+      (sum, item) => sum + item.unitPrice * item.quantity,
+      0
     );
 
-    const newOrder: IOrder = new Orders({
+    const newOrder = new Orders({
       user: req.userId,
       items: orderItems,
+      total,
       paymentMethod,
       paymentStatus: "unpaid",
       orderType,
       notes,
       status: "pending",
-      total,
     });
 
-    console.log("💾 Saving order...");
     await newOrder.save();
-    console.log("✅ Order created:", newOrder._id);
+
     res.status(201).json(newOrder);
   } catch (error) {
     console.error("❌ Error creating order:", error);
+
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });
     } else {
@@ -147,6 +148,7 @@ export const createOrder = async (req: Request, res: Response) => {
     }
   }
 };
+
 // Delete Order
 export const deleteOrder = async (req: Request, res: Response) => {
   try {

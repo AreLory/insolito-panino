@@ -15,35 +15,37 @@ import SizeSelector from "../components/SizeSelector";
 import CartCountingControls from "../components/CartCountingControls";
 
 //Assets/img
-import cartImg from '../assets/img/cart-gray.png'
-import arrowLeft from '../assets/img/arrow-left.png'
+import cartImg from "../assets/img/cart-gray.png";
+import arrowLeft from "../assets/img/arrow-left.png";
+import { useSelector } from "react-redux";
+import { selectTotalItems } from "../features/cart/cartSelector";
 
 export default function Product() {
   const { id } = useParams<{ id: string }>();
   const { isAuthenticated } = useAuth();
 
   const [selectedSize, setSelectedSize] = useState<ISize | null>(null);
-  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+  const [removedIngredients, setRemovedIngredients] = useState<string[]>([]);
 
   const item = useProduct(id);
+  const itemsQuantity = useSelector(selectTotalItems);
 
   const { cartItem, quantity, addOne, removeOne } = useProductCart(
     item,
     selectedSize,
-    selectedIngredients,
+    removedIngredients,
   );
 
   useEffect(() => {
     if (item) {
       setSelectedSize(item.sizes?.[0] || null);
-      setSelectedIngredients(item.ingredients.map((ing) => ing.name));
     }
   }, [item]);
 
   if (!item) return <div>Loading...</div>;
 
-  const toggleIngredient = (name: string) => {
-    setSelectedIngredients((prev) =>
+  const removeIngredient = (name: string) => {
+    setRemovedIngredients((prev) =>
       prev.includes(name) ? prev.filter((i) => i !== name) : [...prev, name],
     );
   };
@@ -53,11 +55,17 @@ export default function Product() {
       <div className="w-full md:max-w-4xl md:w-4xl">
         <div className="flex w-full justify-between px-3">
           <Link to={"/menu"} className="size-10 p-1">
-          <img src={arrowLeft} alt="back" />
+            <img src={arrowLeft} alt="back" />
           </Link>
           <h1 className="text-xl font-semibold">Dettagli Prodotto</h1>
-          <Link to={"/cart"} className="size-10 p-1">
-          <img src={cartImg} alt="cart" />
+          <Link to={"/cart"} className="relative size-10 p-1">
+            <img src={cartImg} alt="icon" />
+
+            {itemsQuantity > 0 && (
+              <span className="absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
+                {itemsQuantity}
+              </span>
+            )}
           </Link>
         </div>
 
@@ -92,8 +100,8 @@ export default function Product() {
 
         <IngredientSelector
           ingredients={item.ingredients}
-          selectedIngredients={selectedIngredients}
-          onToggleIngredient={toggleIngredient}
+          removedIngredients={removedIngredients}
+          onToggleIngredient={removeIngredient}
         />
 
         <AddToCartBar
