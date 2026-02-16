@@ -1,7 +1,8 @@
-import { Schema, Types, model } from "mongoose";
+import { Schema, model } from "mongoose";
 import { IOrder, IOrderItem } from "../types/IOrders";
+import ExtrasSchema from "../models/extras";
 
-const OrderItemSchema = new Schema(
+const OrderItemSchema = new Schema<IOrderItem>(
   {
     product: {
       type: Schema.Types.ObjectId,
@@ -16,7 +17,7 @@ const OrderItemSchema = new Schema(
 
     unitPrice: {
       type: Number,
-      required: true, 
+      required: true,
     },
 
     quantity: {
@@ -26,8 +27,8 @@ const OrderItemSchema = new Schema(
     },
 
     selectedSize: {
-      label: { type: String },
-      price: { type: Number },
+      type: { label: { type: String }, price: { type: Number } },
+      default: undefined,
     },
 
     removedIngredients: {
@@ -36,16 +37,11 @@ const OrderItemSchema = new Schema(
     },
 
     extras: {
-      type: [
-        {
-          name: { type: String, required: true },
-          price: { type: Number, required: true },
-        },
-      ],
+      type: [ExtrasSchema.schema],
       default: [],
     },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const OrdersSchema = new Schema<IOrder>(
@@ -59,7 +55,10 @@ const OrdersSchema = new Schema<IOrder>(
     items: {
       type: [OrderItemSchema],
       required: true,
-      validate: [(v: any[]) => v.length > 0, "Order must have at least one item"],
+      validate: {
+        validator: (v: IOrderItem[]) => v.length > 0,
+        message: "Order must have at least one item",
+      },
     },
 
     status: {
@@ -73,6 +72,11 @@ const OrdersSchema = new Schema<IOrder>(
         "canceled",
       ],
       default: "pending",
+    },
+
+    subtotal: {
+      type:Number,
+      required: true,
     },
 
     total: {
@@ -103,7 +107,7 @@ const OrdersSchema = new Schema<IOrder>(
       default: "",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default model<IOrder>("Orders", OrdersSchema);

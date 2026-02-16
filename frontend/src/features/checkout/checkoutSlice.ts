@@ -1,7 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { OrderCheckoutState, OrderType, PaymentMethod } from "../../types/order";
 
-
 const initialState: OrderCheckoutState = {
     orderType: 'take_away',
     paymentMethod: null,
@@ -19,16 +18,16 @@ const orderSlice = createSlice({
         setPaymentMethod(state, action: PayloadAction<PaymentMethod>){
             state.paymentMethod = action.payload;
         },
-        setNote(state, action:PayloadAction<string>){
+        setNotes(state, action:PayloadAction<string>){
             state.notes = action.payload;
         },
-        resetOrder(state){
-            initialState
+        resetOrder(){
+            return initialState
         }
     }
 })
 
 
-export const {setOrderType, setPaymentMethod, setNote, resetOrder} = orderSlice.actions;
+export const {setOrderType, setPaymentMethod, setNotes, resetOrder} = orderSlice.actions;
 
 export default orderSlice.reducer

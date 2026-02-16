@@ -33,12 +33,11 @@ export const getExtra = async (req: Request, res: Response) => {
 // Create Extra
 export const createExtra = async (req: Request, res: Response) => {
   try {
-    const { name, price, allergens, available } = req.body;
+    const { name, price, available } = req.body;
 
     const newExtra: IExtras = new Extras({
       name,
       price,
-      allergens,
       available,
     });
 

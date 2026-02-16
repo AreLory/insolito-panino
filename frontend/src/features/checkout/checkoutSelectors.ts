@@ -6,6 +6,11 @@ export const selectOrderType = (state: any) => {
   return state?.order?.orderType
 };
 
+export const selectOrder =(state: any) => {
+  if (!state?.order) return [];
+  return state?.order
+};
+
 export const selectFinalTotal = createSelector([
     selectCartSubtotal,
     selectOrderType

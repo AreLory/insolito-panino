@@ -20,6 +20,7 @@ import Product from "./pages/Product";
 import Checkout from "./pages/Checkout";
 // Components
 import BottomNav from "./components/BottomNav";
+import OrderTracking from "./pages/OrderTracking";
 
 
 
@@ -28,7 +29,7 @@ function AppLayout() {
   const location = useLocation();
 
 
-  const hideBottomNavRoutes = ["/product", '/checkout'];
+  const hideBottomNavRoutes = ["/product", '/checkout', '/order'];
 
   const hideBottomNav = hideBottomNavRoutes.some((path) =>
     location.pathname.startsWith(path)
@@ -44,6 +45,7 @@ function AppLayout() {
         <Route path="/cart" element={isAuthenticated ? <Cart /> : <Login />} />
         <Route path="/profile" element={isAuthenticated ? <Profile /> : <Login />} />
         <Route path="/checkout" element={isAuthenticated ? <Checkout/> : <Login/>}/>
+        <Route path="/order" element={<OrderTracking />}/>
       </Routes>
 
       {!hideBottomNav && <BottomNav />}

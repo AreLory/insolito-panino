@@ -5,7 +5,7 @@ interface Option {
 }
 
 interface Props {
-  selectedOption: Option;
+  selectedOption: Option | undefined;
   optionList: Option[];
   onChooseOption: (option: Option) => void;
 }
@@ -21,7 +21,7 @@ export default function Select({
         {optionList.map((opt) => (
           <div
             className={`rounded-lg w-full flex flex-col items-center cursor-pointer ${
-              selectedOption.value === opt.value
+              selectedOption?.value === opt.value
                 ? "scale-90 shadow-inner"
                 : "shadow-xl border-b-4 border border-primary"
             }`}

@@ -1,6 +1,7 @@
 import { Document, Types } from "mongoose";
 import { IProduct } from "./IProducts";
 import IUser from "./IUser";
+import { IExtras } from "./IExtras";
 
 export interface IOrder extends Document {
   user: Types.ObjectId | IUser;
@@ -8,7 +9,7 @@ export interface IOrder extends Document {
   items: IOrderItem[];
 
   status: OrderStatus;
-
+  subtotal:number
   total: number;
 
   paymentMethod: PaymentMethod;
@@ -34,10 +35,7 @@ export interface IOrderItem {
 
   removedIngredients: string[];
 
-  extras: {
-    name: string;
-    price: number;
-  }[];
+  extras: IExtras[];
 }
 
 export enum OrderStatus {
@@ -65,4 +63,17 @@ export enum OrderType {
   TAKE_AWAY = "take_away",
   DINE_IN = "dine_in",
   DELIVERY = "delivery",
+}
+
+export interface CreateOrderBody {
+  items: {
+    _id: string;
+    quantity: number;
+    selectedSize?: { label: string };
+    removedIngredients?: string[];
+    extras?: IExtras[];
+  }[];
+  paymentMethod: PaymentMethod
+  orderType: OrderType
+  notes?: string;
 }

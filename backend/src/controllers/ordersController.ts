@@ -1,8 +1,9 @@
-import { IOrder, IOrderItem } from "../types/IOrders";
+import { CreateOrderBody, IOrder, IOrderItem, OrderType } from "../types/IOrders";
 import Orders from "../models/orders";
 import { Request, Response } from "express";
 import Products from "../models/products";
 import mongoose, { Types } from "mongoose";
+import { IProduct } from "../types/IProducts";
 
 //Orders List
 export const getAllOrders = async (req: Request, res: Response) => {
@@ -35,7 +36,7 @@ export const getOrder = async (req: Request, res: Response) => {
 export const getMyLastOrder = async (req: Request, res: Response) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.userId);
-    const order = await Orders.findOne({ user: userId }).sort({ created: -1 });
+    const order = await Orders.findOne({ user: userId }).sort({ _id: -1 });
     if (!order) {
       return res.status(404).json({ error: "order not found" });
     }
@@ -56,19 +57,33 @@ export const getMyLastOrder = async (req: Request, res: Response) => {
 //Create Order
 export const createOrder = async (req: Request, res: Response) => {
   try {
+
     if (!req.userId) {
       return res.status(401).json({ error: "User not authenticated" });
     }
-
-    const { items, paymentMethod, orderType, notes } = req.body;
+22
+    const {
+      items,
+      paymentMethod,
+      orderType,
+      notes,
+    } = req.body as CreateOrderBody;
 
     if (!items || items.length === 0) {
       return res.status(400).json({ message: "Empty order" });
     }
 
-    const productIds = items.map((i: any) => i._id);
 
-    const products = await Products.find({
+    for (const item of items) {
+      if (!Number.isInteger(item.quantity) || item.quantity < 1) {
+        return res
+          .status(400)
+          .json({ error: `Invalid quantity for product ${item._id}` });
+      }
+    }
+
+    const productIds: string[] = items.map((i) => i._id);
+    const products: IProduct[] = await Products.find({
       _id: { $in: productIds },
     });
 
@@ -76,37 +91,32 @@ export const createOrder = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Invalid product in order" });
     }
 
-    const orderItems: IOrderItem[] = items.map((item: any) => {
-      const product = products.find((p) =>
-        p._id.equals(item._id)
-      );
-
+  
+    const orderItems: IOrderItem[] = items.map((item) => {
+      const product = products.find((p) => p._id.equals(item._id));
       if (!product) {
         throw new Error(`Invalid product: ${item._id}`);
       }
 
-      if (item.quantity < 1) {
-        throw new Error("Invalid quantity");
-      }
-
       let unitPrice = product.basePrice;
+      let selectedSize: { label: string; price?: number } | null = null;
 
-      let selectedSize = null;
+
       if (item.selectedSize) {
         const size = product.sizes?.find(
-          (s: any) => s.label === item.selectedSize.label
+          (s) => s.label === item.selectedSize?.label
         );
-
-        if (!size) {
-          throw new Error(`Invalid size for ${product.name}`);
-        }
-
-        unitPrice += size.price;
-        selectedSize = {
-          label: size.label,
-          price: size.price,
-        };
+        if (!size) throw new Error(`Invalid size for ${product.name}`);
+        unitPrice = size.price;
+        selectedSize = { label: size.label, price: size.price };
       }
+
+
+      const extrasTotal = (item.extras ?? []).reduce(
+        (sum, e) => sum + (e.price ?? 0),
+        0
+      );
+      unitPrice += extrasTotal;
 
       return {
         product: product._id,
@@ -115,18 +125,30 @@ export const createOrder = async (req: Request, res: Response) => {
         quantity: item.quantity,
         selectedSize,
         removedIngredients: item.removedIngredients ?? [],
-        extras: item.extras ?? [],
+        extras: item.extras?.map((e) => ({
+          name: e.name,
+          price: e.price ?? 0,
+        })) ?? [],
       };
     });
 
-    const total = orderItems.reduce(
-      (sum, item) => sum + item.unitPrice * item.quantity,
+
+    let subtotal = orderItems.reduce(
+      (sum, i) => sum + i.unitPrice * i.quantity,
       0
     );
+
+    let total = subtotal
+
+    if (orderType === OrderType.DELIVERY) {
+      total += 2.5
+    }
+
 
     const newOrder = new Orders({
       user: req.userId,
       items: orderItems,
+      subtotal,
       total,
       paymentMethod,
       paymentStatus: "unpaid",
@@ -137,14 +159,13 @@ export const createOrder = async (req: Request, res: Response) => {
 
     await newOrder.save();
 
-    res.status(201).json(newOrder);
+    return res.status(201).json(newOrder);
   } catch (error) {
     console.error("❌ Error creating order:", error);
-
     if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
+      return res.status(500).json({ error: error.message });
     } else {
-      res.status(500).json({ error: "Server error" });
+      return res.status(500).json({ error: "Server error" });
     }
   }
 };
