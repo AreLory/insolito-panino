@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import type { IProducts } from "../types/products";
+import type { Products } from "../types/products";
 import API_BASE_URL from "../config/api";
 import axios from "axios";
 
 export function useProduct(id?: string) {
-  const [product, setProduct] = useState<IProducts | null>(null);
+  const [product, setProduct] = useState<Products | null>(null);
 
   useEffect(() => {
     if (!id) return;

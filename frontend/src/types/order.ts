@@ -1,4 +1,4 @@
-export interface IOrderItem {
+export interface OrderItem {
   _id: string;
   name: string;
   unitPrice: number;
@@ -13,19 +13,44 @@ export interface IOrderItem {
   extras: { name: string; price: number }[];
 }
 
-export interface IOrder {
+export interface Order {
   user: string;
 
-  items: IOrderItem[];
+  items: OrderItem[];
 
-  status: "pending" | "confirmed" | "in_preparation" | "ready" | "completed" | "canceled";
-
+  status: OrderStatus
   total: number;
 
-  paymentMethod: "cash" | "card" | "online";
-  paymentStatus: "unpaid" | "paid" | "refunded";
+  paymentStatus: PaymentStatus
+  orderType: OrderType;
+  paymentMethod: PaymentMethod;
 
-  orderType: "take_away" | "dine_in" | "delivery";
+  notes?: string;
+}
 
+
+export type OrderType = "take_away" | "dine_in" | "delivery";
+export type PaymentMethod = "cash" | "card" | "online";
+export type OrderStatus =
+  | "pending"
+  | "confirmed"
+  | "in_preparation"
+  | "ready"
+  | "completed"
+  | "canceled";
+
+export type PaymentStatus = "unpaid" | "paid" | "refunded";
+
+export interface OrderCheckoutState {
+  orderType: OrderType;
+  paymentMethod: PaymentMethod | null;
+  notes: string;
+}
+
+
+export interface CreateOrderDTO {
+  items: OrderItem[];
+  orderType: OrderType;
+  paymentMethod: PaymentMethod;
   notes?: string;
 }

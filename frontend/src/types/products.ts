@@ -1,12 +1,12 @@
 
 
-export  interface IProducts {
+export  interface Products {
     _id: string
     name: string;
     category: 'burger' | 'panino' | 'wrap' | 'fries' | 'fried' | 'arrosticini' | 'vegetarian';
     basePrice: number;           
-    sizes?: ISize[];             
-    ingredients: IIngredient[];  
+    sizes?: Size[];             
+    ingredients: Ingredient[];  
     extras: { name: string; price: number }[];  
     imageUrl?: string;           
     available?: boolean;         
@@ -14,13 +14,13 @@ export  interface IProducts {
     quantity?: number;           
 }
 
-export interface ISize {
+export interface Size {
     label: 'small' | 'medium' | 'large' | string;
     price: number;
     meatWeight?: number; 
 }
 
-export  interface IIngredient {
+export  interface Ingredient {
     name: string;
     removable?: boolean;
 }

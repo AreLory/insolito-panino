@@ -13,7 +13,7 @@ import type { IOrder } from "../types/order";
 import {
   selectCartTotal,
   selectCartItems,
-} from "../features/cart/cartSelector";
+} from "../features/cart/cartSelectors";
 import { api } from "../config/axios";
 import { clearCart } from "../features/cart/cartSlice";
 

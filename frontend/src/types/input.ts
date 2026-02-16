@@ -1,4 +1,4 @@
-export default interface IInputProps {
+export default interface InputProps {
   label: string;
   value: string|undefined;
   onChange: (val: any) => void;

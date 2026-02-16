@@ -1,8 +1,8 @@
-import type { IIngredient } from "../types/products";
+import type { Ingredient } from "../types/products";
 import Checkbox from "./Checkbox";
 
 interface Props {
-  ingredients: IIngredient[];
+  ingredients: Ingredient[];
   removedIngredients: string[];
   onToggleIngredient: (name: string) => void;
 }

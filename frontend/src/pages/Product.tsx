@@ -6,7 +6,7 @@ import { useProductCart } from "../hooks/useProductCart";
 import { Link, useParams } from "react-router";
 
 //Interfaces
-import type { ISize } from "../types/products";
+import type { Size } from "../types/products";
 
 //Components
 import AddToCartBar from "../components/AddToCartBar";
@@ -18,13 +18,13 @@ import CartCountingControls from "../components/CartCountingControls";
 import cartImg from "../assets/img/cart-gray.png";
 import arrowLeft from "../assets/img/arrow-left.png";
 import { useSelector } from "react-redux";
-import { selectTotalItems } from "../features/cart/cartSelector";
+import { selectTotalItems } from "../features/cart/cartSelectors";
 
 export default function Product() {
   const { id } = useParams<{ id: string }>();
   const { isAuthenticated } = useAuth();
 
-  const [selectedSize, setSelectedSize] = useState<ISize | null>(null);
+  const [selectedSize, setSelectedSize] = useState<Size | null>(null);
   const [removedIngredients, setRemovedIngredients] = useState<string[]>([]);
 
   const item = useProduct(id);

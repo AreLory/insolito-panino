@@ -1,8 +1,8 @@
-import type { IProducts, } from "../types/products";
+import type { Products, } from "../types/products";
 
 import { Link } from "react-router";
 interface Props {
-  item: IProducts;
+  item: Products;
 }
 
 export default function ProductCard({ item }: Props) {

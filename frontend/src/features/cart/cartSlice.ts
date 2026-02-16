@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { ICartItem, ICartState } from "../../types/cart";
+import type { CartItem, CartState } from "../../types/cart";
 
-export const getCartItemKey = (item: ICartItem) =>
+export const getCartItemKey = (item: CartItem) =>
   `${item._id}-${item.selectedSize?.label || ""}-${(
     item.removedIngredients || []
   )
@@ -9,7 +9,7 @@ export const getCartItemKey = (item: ICartItem) =>
     .sort()
     .join(",")}`;
 
-const initialState: ICartState = {
+const initialState: CartState = {
   items: [],
 };
 
@@ -17,7 +17,7 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addToCart(state, action: PayloadAction<ICartItem>) {
+    addToCart(state, action: PayloadAction<CartItem>) {
       const newItem = action.payload;
 
       const key = getCartItemKey(newItem);

@@ -1,4 +1,4 @@
-export default interface IProfile {
+export default interface Profile {
   fullName: string;
   email: string;
   phoneNumber?: string;

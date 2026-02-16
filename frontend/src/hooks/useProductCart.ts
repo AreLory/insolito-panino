@@ -1,30 +1,30 @@
 //Hooks
 import { useDispatch, useSelector } from "react-redux";
 
-import { selectCartItems } from "../features/cart/cartSelector";
+import { selectCartItems } from "../features/cart/cartSelectors";
 import { getCartItemKey, addToCart, removeFromCart } from "../features/cart/cartSlice";
 
 //interfaces
-import type {IProducts, ISize } from "../types/products";
-import type { ICartItem } from "../types/cart";
+import type {Products, Size } from "../types/products";
+import type { CartItem } from "../types/cart";
 
 
 
 
 export function useProductCart(
-  item: IProducts | null,
-  selectedSize: ISize | null,
+  item: Products | null,
+  selectedSize: Size | null,
   removedIngredients: string[]
 ) {
   const dispatch = useDispatch();
-  const cartItems: ICartItem[] = useSelector(selectCartItems);
+  const cartItems: CartItem[] = useSelector(selectCartItems);
 
   if (!item) {
     return { cartItem: null, quantity: 0, addOne: () => {}, removeOne: () => {}, removeAll: () => {} };
   }
 
 
-  const selectedItem: ICartItem = {
+  const selectedItem: CartItem = {
     _id: item._id,
     name: item.name,
     unitPrice: item.basePrice,

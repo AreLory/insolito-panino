@@ -5,7 +5,7 @@ import axios from "axios";
 import API_BASE_URL from "../config/api";
 
 //interfaces
-import type { IProducts } from "../types/products";
+import type { Products } from "../types/products";
 //components
 import ProductCard from "./ProductCard";
 
@@ -13,7 +13,7 @@ interface Props {
   category: { label: string; value: string };
 }
 export default function ProductList({ category }: Props) {
-  const [productList, setProductList] = useState<IProducts[]>([]);
+  const [productList, setProductList] = useState<Products[]>([]);
 
   const getProductList = async () => {
     try {
@@ -39,7 +39,7 @@ export default function ProductList({ category }: Props) {
       <h1 className="text-xl font-bold">{category.label}</h1>
 
       <div className="flex gap-2 flex-wrap justify-center p-4">
-        {productList?.map((product: IProducts) => (
+        {productList?.map((product: Products) => (
           <ProductCard item={product} key={product._id} />
         ))}
       </div>

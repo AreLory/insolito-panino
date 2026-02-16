@@ -1,5 +1,5 @@
 import React from "react";
-import type IInputProps from "../types/input";
+import type InputProps from "../types/input";
 
 export default function Input({
   label,
@@ -8,7 +8,7 @@ export default function Input({
   required,
   type, 
   readonly,
-}: IInputProps) {
+}: InputProps) {
   return (
     <div className="mb-1 w-full">
       <label className="block mb-2.5 text-xs font-medium text-heading m-1">

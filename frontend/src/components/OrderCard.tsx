@@ -1,10 +1,10 @@
 import API_BASE_URL from "../config/api";
 import { useEffect, useState } from "react";
-import type { IOrder, IOrderItem } from "../types/order";
+import type { Order } from "../types/order";
 import { api } from "../config/axios";
 
 export default function OrderCard() {
-  const [lastOrder, setLastOrder] = useState<IOrder | null>(null);
+  const [lastOrder, setLastOrder] = useState<Order | null>(null);
 
   const getLastOrder = async () => {
     try {

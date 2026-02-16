@@ -1,9 +1,9 @@
-import type { ISize } from "../types/products";
+import type { Size } from "../types/products";
 
 interface Props {
-  sizes: ISize[];
-  selectedSize?: ISize | null;
-  onSelectSize: (size: ISize) => void;
+  sizes: Size[];
+  selectedSize?: Size | null;
+  onSelectSize: (size: Size) => void;
 }
 
 export default function SizeSelector({

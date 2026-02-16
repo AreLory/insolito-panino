@@ -1,4 +1,4 @@
-export interface ICartItem {
+export interface CartItem {
   _id: string;
   name: string;
   unitPrice: number;
@@ -13,6 +13,6 @@ export interface ICartItem {
   quantity: number;
 }
 
-export interface ICartState {
-  items: ICartItem[];
+export interface CartState {
+  items: CartItem[];
 }

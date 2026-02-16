@@ -1,4 +1,6 @@
 import { Link, useLocation } from "react-router";
+import { useSelector } from "react-redux";
+import { selectTotalItems } from "../features/cart/cartSelectors";
 //assets/img
 import homeGray from "../assets/img/home-gray.svg";
 import homeYellow from "../assets/img/home-yellow.svg";
@@ -8,8 +10,6 @@ import menuGray from "../assets/img/menu-gray.png";
 import menuYellow from "../assets/img/menu-yellow.png";
 import accountGray from "../assets/img/account-gray.png";
 import accountYellow from "../assets/img/account-yellow.png";
-import { useSelector } from "react-redux";
-import { selectTotalItems } from "../features/cart/cartSelector";
 
 const navItems = [
   { label: "Home", path: "/", icon: homeGray, altIcon: homeYellow },

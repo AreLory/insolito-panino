@@ -1,19 +1,17 @@
 //Hooks
 import { useProductCart } from "../hooks/useProductCart";
-import { useState } from "react";
 
-import { getCartItemKey } from "../features/cart/cartSlice";
 //interfaces
-import type { ICartItem } from "../types/cart";
-import type { IProducts } from "../types/products";
+import type { CartItem } from "../types/cart";
+import type {Products } from "../types/products";
 
 //components
 import CartCountingControls from "./CartCountingControls";
 //assets/img
 import crossIcon from "../assets/img/cross.png";
 
-export default function CartItemCard({ item }: { item: ICartItem }) {
-  const productForHook: IProducts = {
+export default function CartItemCard({ item }: { item: CartItem }) {
+  const productForHook: Products = {
     _id: item._id,
     name: item.name,
     category: "burger",

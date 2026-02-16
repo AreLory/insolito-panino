@@ -1,13 +1,13 @@
-interface IOption {
+interface Option {
   name: string;
   value: string;
   img:string;
 }
 
 interface Props {
-  selectedOption: IOption;
-  optionList: IOption[];
-  onChooseOption: (option: IOption) => void;
+  selectedOption: Option;
+  optionList: Option[];
+  onChooseOption: (option: Option) => void;
 }
 
 export default function Select({

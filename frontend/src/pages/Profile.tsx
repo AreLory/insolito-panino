@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../config/axios";
 //Interfaces
-import type IProfile from "../types/profile";
+import type Profile from "../types/profile";
+//components
 import Input from "../components/Input";
 
 
@@ -13,7 +14,7 @@ import Input from "../components/Input";
 export default function Profile() {
   const {logout} = useAuth()
   
-  const [user, setUser] = useState<IProfile | null>(null);
+  const [user, setUser] = useState<Profile | null>(null);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   
@@ -21,14 +22,14 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   
-  const [form, setForm] = useState<IProfile>({
+  const [form, setForm] = useState<Profile>({
     fullName: "",
     email: "",
     phoneNumber: "",
     address: "",
   });
 
-  const mapUserToForm = (user: IProfile) => ({
+  const mapUserToForm = (user: Profile) => ({
     fullName: user.fullName,
     email: user.email,
     phoneNumber: user.phoneNumber || "",
@@ -38,7 +39,7 @@ export default function Profile() {
   const getInfo = async () => {
     try {
       const profileInfo = await api.get("/users/me");
-      const { fullName, email, phoneNumber, address }: IProfile =
+      const { fullName, email, phoneNumber, address }: Profile =
         profileInfo.data;
 
       setUser({ fullName, email, phoneNumber, address });
