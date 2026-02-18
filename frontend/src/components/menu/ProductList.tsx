@@ -2,10 +2,10 @@
 import { useEffect, useState } from "react";
 
 import axios from "axios";
-import API_BASE_URL from "../config/api";
+import API_BASE_URL from "../../config/api";
 
 //interfaces
-import type { Products } from "../types/products";
+import type { Products } from "../../types/products";
 //components
 import ProductCard from "./ProductCard";
 

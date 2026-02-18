@@ -1,6 +1,6 @@
 
-import type { OrderItem } from '../types/order';
-import { CircleMinus, CirclePlus } from 'lucide-react';
+import type { OrderItem } from '../../types/order';
+import { CircleMinus } from 'lucide-react';
 
 interface OrderItemCardProps {
   item: OrderItem;

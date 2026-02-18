@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ProductList from "../components/ProductList";
+import ProductList from "../components/menu/ProductList";
 import noImg from '../assets/img/noImg.png'
 
 export default function Menu() {

@@ -1,4 +1,4 @@
-import type { Size } from "../types/products";
+import type { Size } from "../../types/products";
 
 interface Props {
   sizes: Size[];

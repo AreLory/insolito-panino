@@ -1,7 +1,7 @@
 export interface CartItem {
   _id: string;
-  name: string;
-  unitPrice: number;
+  name:string;
+  unitPrice:number;
 
   selectedSize: {
     label: string;

@@ -19,21 +19,21 @@ import Profile from "./pages/Profile";
 import Product from "./pages/Product";
 import Checkout from "./pages/Checkout";
 // Components
-import BottomNav from "./components/BottomNav";
+import BottomNav from "./components/shared/BottomNav";
 import OrderTracking from "./pages/OrderTracking";
 
 
 
 function AppLayout() {
   const { isAuthenticated } = useAuth();
-  const location = useLocation();
+  // const location = useLocation();
 
 
-  const hideBottomNavRoutes = ["/product", '/checkout', '/order'];
+  // const hideBottomNavRoutes = ["/product", '/checkout', '/order'];
 
-  const hideBottomNav = hideBottomNavRoutes.some((path) =>
-    location.pathname.startsWith(path)
-  );
+  // const hideBottomNav = hideBottomNavRoutes.some((path) =>
+  //   location.pathname.startsWith(path)
+  // );
 
   return (
     <>
@@ -47,8 +47,6 @@ function AppLayout() {
         <Route path="/checkout" element={isAuthenticated ? <Checkout/> : <Login/>}/>
         <Route path="/order" element={<OrderTracking />}/>
       </Routes>
-
-      {!hideBottomNav && <BottomNav />}
     </>
   );
 }

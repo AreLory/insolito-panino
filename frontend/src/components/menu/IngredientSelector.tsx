@@ -1,5 +1,5 @@
-import type { Ingredient } from "../types/products";
-import Checkbox from "./Checkbox";
+import type { Ingredient } from "../../types/products";
+import Checkbox from "../shared/Checkbox";
 
 interface Props {
   ingredients: Ingredient[];

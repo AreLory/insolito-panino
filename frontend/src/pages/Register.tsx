@@ -5,7 +5,7 @@ import axios from "axios";
 import API_BASE_URL from "../config/api";
 import { redirect } from "react-router";
 //Components
-import Input from "../components/Input";
+import Input from "../components/shared/Input";
 
 export default function Register() {
   const [fullName, setFullName] = useState("");

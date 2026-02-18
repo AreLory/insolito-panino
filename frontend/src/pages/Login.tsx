@@ -3,8 +3,7 @@ import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
 //Component
-import Input from "../components/Input";
-
+import Input from "../components/shared/Input"
 
 
 const Login = () => {

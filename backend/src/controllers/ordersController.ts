@@ -1,4 +1,9 @@
-import { CreateOrderBody, IOrder, IOrderItem, OrderType } from "../types/IOrders";
+import {
+  CreateOrderBody,
+  IOrder,
+  IOrderItem,
+  OrderType,
+} from "../types/IOrders";
 import Orders from "../models/orders";
 import { Request, Response } from "express";
 import Products from "../models/products";
@@ -57,64 +62,66 @@ export const getMyLastOrder = async (req: Request, res: Response) => {
 //Create Order
 export const createOrder = async (req: Request, res: Response) => {
   try {
+    console.log("🔥 createOrder chiamata");
 
     if (!req.userId) {
       return res.status(401).json({ error: "User not authenticated" });
     }
-22
-    const {
-      items,
-      paymentMethod,
-      orderType,
-      notes,
-    } = req.body as CreateOrderBody;
+    const { items, paymentMethod, orderType, notes } =
+      req.body as CreateOrderBody;
 
     if (!items || items.length === 0) {
       return res.status(400).json({ message: "Empty order" });
     }
 
-
     for (const item of items) {
       if (!Number.isInteger(item.quantity) || item.quantity < 1) {
         return res
           .status(400)
-          .json({ error: `Invalid quantity for product ${item._id}` });
+          .json({ error: `Invalid quantity for product ${item.productId}` });
       }
     }
 
-    const productIds: string[] = items.map((i) => i._id);
+    const productIds: string[] = items.map((i) => i.productId);
     const products: IProduct[] = await Products.find({
       _id: { $in: productIds },
     });
 
-    if (products.length !== productIds.length) {
-      return res.status(400).json({ error: "Invalid product in order" });
+    console.log("Items ricevuti:", items);
+    console.log("Product IDs estratti:", productIds);
+    console.log("Prodotti trovati:", products.length);
+
+    const missing = productIds.filter(
+      (id) => !products.some((p) => p._id.equals(id)),
+    );
+
+    if (missing.length > 0) {
+      return res
+        .status(400)
+        .json({ error: "Invalid product in order", missing });
     }
 
-  
     const orderItems: IOrderItem[] = items.map((item) => {
-      const product = products.find((p) => p._id.equals(item._id));
+      const product = products.find((p) => p._id.equals(item.productId));
       if (!product) {
-        throw new Error(`Invalid product: ${item._id}`);
+        throw new Error(`Invalid product: ${item.productId}`);
       }
 
       let unitPrice = product.basePrice;
       let selectedSize: { label: string; price?: number } | null = null;
 
-
       if (item.selectedSize) {
         const size = product.sizes?.find(
-          (s) => s.label === item.selectedSize?.label
+          (s) => s.label === item.selectedSize?.label,
         );
         if (!size) throw new Error(`Invalid size for ${product.name}`);
         unitPrice = size.price;
         selectedSize = { label: size.label, price: size.price };
       }
 
-
       const extrasTotal = (item.extras ?? []).reduce(
         (sum, e) => sum + (e.price ?? 0),
-        0
+        0,
       );
       unitPrice += extrasTotal;
 
@@ -125,25 +132,24 @@ export const createOrder = async (req: Request, res: Response) => {
         quantity: item.quantity,
         selectedSize,
         removedIngredients: item.removedIngredients ?? [],
-        extras: item.extras?.map((e) => ({
-          name: e.name,
-          price: e.price ?? 0,
-        })) ?? [],
+        extras:
+          item.extras?.map((e) => ({
+            name: e.name,
+            price: e.price ?? 0,
+          })) ?? [],
       };
     });
 
-
     let subtotal = orderItems.reduce(
       (sum, i) => sum + i.unitPrice * i.quantity,
-      0
+      0,
     );
 
-    let total = subtotal
+    let total = subtotal;
 
     if (orderType === OrderType.DELIVERY) {
-      total += 2.5
+      total += 2.5;
     }
-
 
     const newOrder = new Orders({
       user: req.userId,

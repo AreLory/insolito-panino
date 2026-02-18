@@ -1,8 +1,9 @@
 export interface OrderItem {
   _id: string;
-  name: string;
-  unitPrice: number;
   quantity: number;
+  name:string;
+  unitPrice:number;
+
 
   selectedSize: {
     label: string;
@@ -14,6 +15,7 @@ export interface OrderItem {
 }
 
 export interface Order {
+  _id: string;
   user: string;
 
   items: OrderItem[];
@@ -27,6 +29,10 @@ export interface Order {
   paymentMethod: PaymentMethod;
 
   notes?: string;
+
+  createdAt: string;
+  updatedAt: string;
+  // ! string from db, not Date
 }
 
 

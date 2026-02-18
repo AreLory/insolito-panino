@@ -5,7 +5,7 @@ import { api } from "../config/axios";
 //Interfaces
 import type IProfile from "../types/profile";
 //components
-import Input from "../components/Input";
+import Input from "../components/shared/Input";
 
 
 
@@ -135,7 +135,7 @@ export default function Profile() {
       </div>
       <form
         onSubmit={updateUser}
-        className="flex flex-col items-center  bg-white p-4 rounded-lg w-full max-w-[600px]  "
+        className="flex flex-col items-center  bg-white p-4 rounded-lg w-full max-w-150"
       >
         <div className="w-full">
           <div className="w-full  md:grid md:gap-x-6 md:mb-6 md:grid-cols-2">
@@ -143,7 +143,7 @@ export default function Profile() {
               <Input
                 key={field.label}
                 label={`${field.label} ${field.optional ? "(optional)" : ""}`}
-                onChange={(v) =>
+                onChange={(v:string) =>
                   field.name === "password"
                     ? setPassword(v)
                     : handleChange(field.name, v)
@@ -160,7 +160,7 @@ export default function Profile() {
                   label="Password (optional)"
                   type="password"
                   value={password}
-                  onChange={(v) => setPassword(v)}
+                  onChange={(v:string) => setPassword(v)}
                 />
                 <p className="text-sm text-gray-400 mb-2">
                   Leave blank to keep current password
@@ -169,7 +169,7 @@ export default function Profile() {
                   label="Confirm Password"
                   type="password"
                   value={confirmPassword}
-                  onChange={(v) => setConfirmPassword(v)}
+                  onChange={(v:string) => setConfirmPassword(v)}
                 />
               </div>
             )}

@@ -3,12 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { setOrderType, setPaymentMethod, setNotes } from "../features/checkout/checkoutSlice";
 import { selectFinalTotal, selectOrder } from "../features/checkout/checkoutSelectors";
-import type { OrderType, PaymentMethod } from "../types/order";
+import type { Order, OrderType, PaymentMethod } from "../types/order";
+import { selectCartSubtotal } from "../features/cart/cartSelectors";
 
 export function useOrder(){
     const dispatch = useDispatch();
-    const order = useSelector(selectOrder)
+    const order:Order = useSelector(selectOrder)
     const total: number = useSelector(selectFinalTotal);
+    const subtotal:number = useSelector(selectCartSubtotal);
 
     const changeOrderType = (orderType: OrderType)=>{
         dispatch(setOrderType(orderType))
@@ -25,6 +27,7 @@ export function useOrder(){
     return {
         order,
         total,
+        subtotal,
         changeOrderType,
         changePaymentMethod,
         changeNotes

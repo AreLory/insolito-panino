@@ -1,22 +1,29 @@
+//Hooks
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+// Types
+import type { Order, OrderItem } from "../types/order";
+// Components
+import OrderItemCard from "../components/order/OrderItemCard";
+import OrderInfo from "../components/order/OrderInfo";
+import { Link } from "react-router";
+// Redux
+import {
+  selectActiveOrder,
+  selectActiveOrderLoading,
+} from "../features/activeOrder/activeOrderSelectors";
+import {fetchActiveOrder} from "../features/activeOrder/activeOrderSlice";
+
+// Assets
 import {
   ChevronLeft,
   MoreHorizontal,
   Utensils,
   CreditCard,
-  Bike,
-  Truck,
+  Bike
 } from "lucide-react";
 
-import { useEffect } from "react";
-import { fetchActiveOrder } from "../features/activeOrder/activeOrderSlice";
-import OrderItemCard from "../components/OrderItemCard";
-import OrderInfo from "../components/OrderInfo";
-import { useDispatch, useSelector } from "react-redux";
-import type { Order, OrderItem } from "../types/order";
-import {
-  selectActiveOrder,
-  selectActiveOrderLoading,
-} from "../features/activeOrder/activeOrderSelectors";
+
 const OrderTracking = () => {
   const dispatch = useDispatch();
   const order:Order| null = useSelector(selectActiveOrder);
@@ -29,18 +36,19 @@ const OrderTracking = () => {
   }, [order, dispatch]);
 
   if (!order) return <p>No order found</p>
-  
+  if (loading) return <p>Loading...</p> 
+
+
 
   return (
     <div className="flex flex-col flex-1 pb-32">
-      {/* Header */}
       <div className="px-6 py-8 flex items-center relative">
-        <button className="w-10 h-10 flex items-center justify-center bg-slate-50 rounded-full text-slate-400 hover:bg-slate-100 transition-colors">
+        <Link to={'/'} className="w-10 h-10 flex items-center justify-center bg-slate-50 rounded-full text-slate-400 hover:bg-slate-100 transition-colors">
           <ChevronLeft size={24} />
-        </button>
+        </Link>
         <div className="flex-1 text-center">
           <h1 className="text-xl font-bold text-slate-800">
-            Order {order.user}
+            Order {`#${new Date(order.createdAt).getTime()}`}
           </h1>
           <p className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold mt-1">
             {order.notes}
@@ -48,7 +56,6 @@ const OrderTracking = () => {
         </div>
       </div>
 
-      {/* Main Content Area */}
       <div className="px-6 space-y-6">
         {/* Status Banner */}
         <div className="p-5 bg-[#FFF2F2] border border-[#FFECEC] rounded-[2.5rem] flex items-center justify-between">
@@ -98,7 +105,7 @@ const OrderTracking = () => {
           />
         </div>
 
-        <div className="pt-6 space-y-3 pb-4">
+        <div className="pt-6 space-y-10 pb-4">
           <div className="flex justify-between text-slate-500 text-sm font-medium">
             <span>Subtotal</span>
             <span>${order.subtotal.toFixed(2)}</span>
@@ -117,14 +124,6 @@ const OrderTracking = () => {
           </div>
         </div>
       </div>
-
-      {/* Sticky Action Button
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md px-6 py-6 sm:pb-8 bg-white/80 backdrop-blur-md">
-        <button className="w-full bg-[#FF3B30] text-white py-5 rounded-[1.5rem] font-bold flex items-center justify-center gap-2 shadow-xl shadow-[#FF3B30]/20 hover:bg-[#E03429] transition-all active:scale-[0.98]">
-          <Truck size={20} fill="currentColor" />
-          <span>Track Order</span>
-        </button>
-      </div> */}
     </div>
   );
 };

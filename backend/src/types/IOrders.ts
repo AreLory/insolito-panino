@@ -67,7 +67,7 @@ export enum OrderType {
 
 export interface CreateOrderBody {
   items: {
-    _id: string;
+    productId: string;
     quantity: number;
     selectedSize?: { label: string };
     removedIngredients?: string[];

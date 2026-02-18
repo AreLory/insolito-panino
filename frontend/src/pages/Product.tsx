@@ -4,21 +4,23 @@ import { useAuth } from "../context/AuthContext";
 import { useProduct } from "../hooks/useProduct";
 import { useProductCart } from "../hooks/useProductCart";
 import { Link, useParams } from "react-router";
+import { useSelector } from "react-redux";
 
 //Interfaces
 import type { Size } from "../types/products";
 
 //Components
-import AddToCartBar from "../components/AddToCartBar";
-import IngredientSelector from "../components/IngredientSelector";
-import SizeSelector from "../components/SizeSelector";
-import CartCountingControls from "../components/CartCountingControls";
+import AddToCartBar from "../components/cart/AddToCartBar";
+import IngredientSelector from "../components/menu/IngredientSelector";
+import SizeSelector from "../components/menu/SizeSelector";
+import CartCountingControls from "../components/cart/CartCountingControls";
 
 //Assets/img
 import cartImg from "../assets/img/cart-gray.png";
 import arrowLeft from "../assets/img/arrow-left.png";
-import { useSelector } from "react-redux";
+
 import { selectTotalItems } from "../features/cart/cartSelectors";
+
 
 export default function Product() {
   const { id } = useParams<{ id: string }>();

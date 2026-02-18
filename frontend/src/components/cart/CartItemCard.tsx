@@ -1,21 +1,22 @@
 //Hooks
-import { useProductCart } from "../hooks/useProductCart";
+import { useProductCart } from "../../hooks/useProductCart";
 
 //interfaces
-import type { CartItem } from "../types/cart";
-import type {Products } from "../types/products";
+import type { CartItem } from "../../types/cart";
+import type {Products } from "../../types/products";
 
 //components
-import CartCountingControls from "./CartCountingControls";
+import CartCountingControls from "../cart/CartCountingControls";
 //assets/img
-import crossIcon from "../assets/img/cross.png";
+import crossIcon from "../../assets/img/cross.png";
+import { MinusCircle } from "lucide-react";
 
 export default function CartItemCard({ item }: { item: CartItem }) {
   const productForHook: Products = {
     _id: item._id,
     name: item.name,
+    basePrice: item.unitPrice, 
     category: "burger",
-    basePrice: item.unitPrice,
     sizes: item.selectedSize
       ? [{ label: item.selectedSize.label, price: item.selectedSize.price }]
       : undefined,
@@ -31,13 +32,12 @@ export default function CartItemCard({ item }: { item: CartItem }) {
     item.selectedSize,
     item.removedIngredients,
   );
-
   const showTotal = () => {
     const total = (item.selectedSize?.price || item.unitPrice) * item.quantity;
     return total.toFixed(2);
   };
   return (
-    <div className={`bg-white  rounded shadow flex p-2 w-full `}>
+    <div className="bg-[#F8FAFC]/50 border border-slate-100/60 rounded-[2rem] p-5 flex items-start gap-4 transition-all hover:border-slate-200">
       <div className="flex w-[30%]">
         <img
           // src={}
@@ -47,12 +47,11 @@ export default function CartItemCard({ item }: { item: CartItem }) {
       </div>
       <div className="w-[70%] flex flex-wrap">
         <div className="w-[50%] flex flex-col pl-4">
-          <h3 className="text-lg font-bold">{item.name}</h3>
-          <h4 className=" text-gray-700">{item.selectedSize?.label}</h4>
-          {item.removedIngredients?.map((i) => (
-            <p key={i} className="text-xs text-gray-700">
-              {" "}
-              NO {i}
+          <h3 className="text-lg font-bold">{cartItem?.name}</h3>
+          <h4 className=" text-gray-700">{cartItem?.selectedSize?.label}</h4>
+          {cartItem?.removedIngredients?.map((i) => (
+            <p key={i} className="flex gap-1 m-1 text-xs  text-red-500">
+              <MinusCircle size={15}/>No {i}
             </p>
           ))}
         </div>

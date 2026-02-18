@@ -2,11 +2,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useOrder } from "../hooks/useOrder";
 //Components
-import MiniNavBar from "../components/MiniNavBar";
-import Select from "../components/Select";
+import MiniNavBar from "../components/shared/MiniNavBar";
+import Select from "../components/shared/Select";
 
 //Interfaces
-import type { CreateOrderDTO, Order } from "../types/order";
+import type { CreateOrderDTO, Order, OrderItem } from "../types/order";
 import type { CartItem } from "../types/cart";
 
 //Redux
@@ -30,8 +30,14 @@ import { resetOrder } from "../features/checkout/checkoutSlice";
 export default function Checkout() {
   const cart = useSelector(selectCartItems);
   const dispatch = useDispatch();
-  const { order, total, changePaymentMethod, changeNotes, changeOrderType } =
-    useOrder();
+  const {
+    order,
+    total,
+    subtotal,
+    changePaymentMethod,
+    changeNotes,
+    changeOrderType,
+  } = useOrder();
 
   const paymentMethodsList = [
     {
@@ -78,10 +84,8 @@ export default function Checkout() {
   const submitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const formattedItems = cart.map((item: CartItem) => ({
-        _id: item._id,
-        name: item.name,
-        unitPrice: item.unitPrice,
+      const formattedItems:OrderItem[] = cart.map((item:CartItem ) => ({
+        productId: item._id,
         quantity: item.quantity,
         selectedSize: item.selectedSize,
         removedIngredients: item.removedIngredients,
@@ -152,19 +156,30 @@ export default function Checkout() {
             </div>
           </div>
           <div className="flex flex-col items-center bg-white shadow-2xl w-full max-w-3xl absolute bottom-0 rounded-2xl">
-            <div className="w-full">
-              <div className="flex justify-around mt-1">
-                <h2 className=" text-lg"> Total: </h2>
-                <h2 className=" text-lg"> € {total.toFixed(2)} </h2>
+            <div className="w-full pt-6 space-y-3 pb-4 px-6">
+              <div className="flex justify-between text-slate-500 text-sm font-medium">
+                <span>Subtotal</span>
+                <span>${subtotal.toFixed(2)}</span>
+              </div>
+              {order.orderType === "delivery" && (
+                <div className="flex justify-between text-slate-500 text-sm font-medium">
+                  <span>Delivery Fee</span>
+                  <span>+ ${(2.5).toFixed(2)}</span>
+                </div>
+              )}
+              <div className="flex justify-between items-center pt-4 border-t border-slate-100">
+                <span className="text-xl font-bold text-slate-800">Total</span>
+                <span className="text-3xl font-bold text-[#FF3B30]">
+                  ${total.toFixed(2)}
+                </span>
               </div>
             </div>
             <div className="h-20 py-4 px-8 mb-2 flex w-full">
               <button
                 type="submit"
-                aria-disabled={!cart.length}
-                className="bg-secondary rounded-full m-1 flex-2 text-center"
+                className="w-full bg-[#FF3B30] text-white py-5 rounded-3xl font-bold flex items-center justify-center gap-2 shadow-xl shadow-[#FF3B30]/20 hover:bg-[#E03429] transition-all active:scale-[0.98]"
               >
-                Submit Order
+                <span>Submit Order</span>
               </button>
             </div>
           </div>
