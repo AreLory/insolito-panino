@@ -17,10 +17,7 @@ const SizeSchema = new Schema<ISize>({
 
 const ProductsSchema = new Schema<IProductDocument>({
   name: { type: String, required: true },
-  category: { 
-    type: [String], 
-    required: true 
-  },
+  category: [{type: Schema.Types.ObjectId, ref: 'Categories'}],
   basePrice: { type: Number, required: true },
   sizes: [SizeSchema],
   ingredients: { type: [IngredientSchema], required: true },

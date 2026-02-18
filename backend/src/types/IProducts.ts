@@ -2,7 +2,7 @@ import { Document, Types } from "mongoose";
 
 export  interface IProduct extends Document {
     name: string;
-    category: string[]
+    category: Types.ObjectId[]
     basePrice: number;           
     sizes?: ISize[];             
     ingredients: IIngredient[];  

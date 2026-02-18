@@ -1,0 +1,14 @@
+import { Schema, model } from "mongoose";
+import { ICategories } from "../types/ICategories";
+
+const CategorySchema = new Schema<ICategories>({
+  name: { type: String, required: true },
+  slug: { type: String, required: true },
+  emoji: { type: String, required: true },
+  img: {type:String},
+  description: { type: String },
+  active: { type: Boolean },
+  color: { type: String },
+});
+
+export default model<ICategories>('Categories', CategorySchema)

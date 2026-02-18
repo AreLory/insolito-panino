@@ -19,7 +19,7 @@ import Profile from "./pages/Profile";
 import Product from "./pages/Product";
 import Checkout from "./pages/Checkout";
 // Components
-import BottomNav from "./components/shared/BottomNav";
+// import BottomNav from "./components/shared/BottomNav";
 import OrderTracking from "./pages/OrderTracking";
 
 
