@@ -1,10 +1,11 @@
 import { User, History, Heart, Settings } from 'lucide-react';
+import { Link } from 'react-router';
 
 interface QuickAccessItem {
   id: string;
   icon: 'user' | 'history' | 'heart' | 'settings';
   label: string;
-  count?: number;
+  link: string
   color: string;
 }
 
@@ -28,7 +29,8 @@ export default function QuickAccess({ items }: QuickAccessProps) {
         {items.map((item) => {
           const Icon = iconMap[item.icon];
           return (
-            <button
+            <Link
+              to={item.link}
               key={item.id}
               className="bg-white rounded-2xl p-5 shadow-lg hover:shadow-xl transition group"
             >
@@ -37,11 +39,9 @@ export default function QuickAccess({ items }: QuickAccessProps) {
               </div>
               <div className="text-left">
                 <p className="font-bold text-gray-800">{item.label}</p>
-                {item.count !== undefined && (
-                  <p className="text-sm text-gray-500 mt-1">{item.count} elementi</p>
-                )}
+                
               </div>
-            </button>
+            </Link>
           );
         })}
       </div>

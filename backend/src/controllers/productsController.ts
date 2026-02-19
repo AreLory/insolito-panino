@@ -1,26 +1,30 @@
 import { IProduct } from "../types/IProducts";
 import Products from "../models/products";
 import { Request, Response } from "express";
+import mongoose from "mongoose";
 
 //Products List
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const category = req.query.category as string|undefined;
-    const products = await Products.find(category? {category: category} : {});
+    const category = req.query.category as string | undefined;
+
+    const filter = category
+      ? { category: new mongoose.Types.ObjectId(category) }
+      : {};
+
+    const products = await Products.find(filter).populate("category");
     res.status(200).json(products);
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "Server error" });
-    }
+    res.status(500).json({
+      error: error instanceof Error ? error.message : "Server error",
+    });
   }
 };
 //Get Product Info
 export const getProduct = async (req: Request, res: Response) => {
   try {
     const prodId = req.params.id;
-    const product = await Products.findById(prodId).populate('extras');
+    const product = await Products.findById(prodId).populate("extras");
     res.status(200).json(product);
   } catch (error) {
     if (error instanceof Error) {
@@ -32,44 +36,43 @@ export const getProduct = async (req: Request, res: Response) => {
 };
 
 // ! Admin only
-//Create Product 
+//Create Product
 export const createProduct = async (req: Request, res: Response) => {
-    try {
-       const {
-        name, 
-        category,
-        basePrice,
-        sizes,
-        ingredients,
-        extras,
-        imageUrl,
-        available,
-        description
-       } = req.body
+  try {
+    const {
+      name,
+      category,
+      basePrice,
+      sizes,
+      ingredients,
+      extras,
+      imageUrl,
+      available,
+      description,
+    } = req.body;
 
+    const newProduct: IProduct = new Products({
+      name,
+      category,
+      basePrice,
+      sizes,
+      ingredients,
+      extras,
+      imageUrl,
+      available,
+      description,
+    });
 
-       const newProduct:IProduct = new Products ({
-        name, 
-        category,
-        basePrice,
-        sizes,
-        ingredients,
-        extras,
-        imageUrl,
-        available,
-        description
-       })
-
-       await newProduct.save()
-       res.status(200).json(newProduct)
-    } catch (error) {
-        if (error instanceof Error) {
+    await newProduct.save();
+    res.status(200).json(newProduct);
+  } catch (error) {
+    if (error instanceof Error) {
       res.status(500).json({ error: error.message });
     } else {
       res.status(500).json({ error: "Server error" });
     }
-    }
-}
+  }
+};
 
 //Delete Product
 export const deleteProduct = async (req: Request, res: Response) => {
@@ -92,11 +95,11 @@ export const deleteProduct = async (req: Request, res: Response) => {
 export const updateProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const change = req.body
+    const change = req.body;
     const product = await Products.findByIdAndUpdate(
       id,
       { $set: change },
-      { new: true }
+      { new: true },
     );
 
     if (!product) {

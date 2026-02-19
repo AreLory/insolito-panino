@@ -31,10 +31,11 @@ export interface Ingredient {
 }
 
 export interface Category {
-  id: string;
-  name: string;
-  emoji: string;
-  description: string;
-  itemCount: number;
-  color: string;
+    _id: string,
+    name:string,
+    slug:string,
+    emoji:string,
+    img:string,
+    description:string,
+    active:boolean
 }

@@ -35,7 +35,7 @@ export interface IOrderItem {
 
   removedIngredients: string[];
 
-  extras: IExtras[];
+  extras: Types.ObjectId[]|IExtras[];
 }
 
 export enum OrderStatus {

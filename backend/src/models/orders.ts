@@ -36,10 +36,13 @@ const OrderItemSchema = new Schema<IOrderItem>(
       default: [],
     },
 
-    extras: {
-      type: [ExtrasSchema.schema],
-      default: [],
-    },
+    extras: [
+      {
+        extra: { type: Schema.Types.ObjectId, ref: 'Extras' },
+        name: { type: String, required: true },
+        price: { type: Number, required: true },
+      },
+    ],
   },
   { _id: false },
 );
@@ -75,7 +78,7 @@ const OrdersSchema = new Schema<IOrder>(
     },
 
     subtotal: {
-      type:Number,
+      type: Number,
       required: true,
     },
 

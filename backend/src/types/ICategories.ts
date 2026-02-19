@@ -7,5 +7,4 @@ export interface ICategories extends Document {
   img: string;
   description?: string;
   active?:boolean;
-  color?: string;
 }

@@ -5,12 +5,12 @@ import axios from "axios";
 import API_BASE_URL from "../../config/api";
 
 //interfaces
-import type { Products } from "../../types/products";
+import type { Category, Products } from "../../types/products";
 //components
 import ProductCard from "./ProductCard";
 
 interface Props {
-  category: { label: string; value: string };
+  category: Category;
 }
 export default function ProductList({ category }: Props) {
   const [productList, setProductList] = useState<Products[]>([]);
@@ -18,11 +18,11 @@ export default function ProductList({ category }: Props) {
   const getProductList = async () => {
     try {
       const res = await axios.get(
-        `${API_BASE_URL}/products?category=${category.value}`,
+        `${API_BASE_URL}/products?category=${category._id}`,
       );
-      const productsWithId = res.data.map((product: any) => ({
+      const productsWithId = res.data.map((product: Products) => ({
         ...product,
-        id: product._id || product.id,
+        id: product._id,
       }));
       setProductList(productsWithId);
     } catch (error) {
@@ -36,7 +36,7 @@ export default function ProductList({ category }: Props) {
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-xl font-bold">{category.label}</h1>
+      <h1 className="text-xl font-bold">{category.name}</h1>
 
       <div className="flex gap-2 flex-wrap justify-center p-4">
         {productList?.map((product: Products) => (

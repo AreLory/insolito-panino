@@ -9,11 +9,19 @@ interface Location {
   isOpen: boolean;
 }
 
-interface LocationSectionProps {
-  locations: Location[];
-}
+export default function LocationSection() {
 
-export default function LocationSection({ locations }: LocationSectionProps) {
+    const locations:Location[] = [
+    {
+      id: "1",
+      name: "Largo Pertini",
+      address: "Via Pasolini, 20, 64025 Pineto TE",
+      distance: "0.5 km",
+      openUntil: "22:00",
+      isOpen: true,
+    }
+  ];
+  
   return (
     <div className="mx-4 mt-8">
       <div className="flex items-center justify-between mb-4">
@@ -61,9 +69,9 @@ export default function LocationSection({ locations }: LocationSectionProps) {
                   )}
                 </div>
               </div>
-              <button className="bg-orange-500 text-white p-2 rounded-full hover:scale-105 transition">
+              <a href='https://maps.app.goo.gl/sQemTegF64p2gJdv8' className="bg-orange-500 text-white p-2 rounded-full hover:scale-105 transition">
                 <Navigation size={18} />
-              </button>
+              </a>
             </div>
           </div>
         ))}

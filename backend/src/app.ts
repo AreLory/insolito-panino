@@ -15,6 +15,7 @@ import userRouter from "./routes/userRoute";
 import ordersRouter from "./routes/ordersRoute";
 import productsRouter from "./routes/productsRoute";
 import extrasRouter from "./routes/extrasRoute";
+import categoriesRouter from './routes/categoriesRoute'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -38,6 +39,7 @@ app.use("/api", userRouter);
 app.use("/api", ordersRouter);
 app.use("/api", productsRouter);
 app.use("/api", extrasRouter);
+app.use("/api", categoriesRouter);
 
 
 // Server + DB

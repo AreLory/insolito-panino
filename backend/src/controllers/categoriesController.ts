@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 //Categories List
 export const getAllCategories = async (req: Request, res: Response) => {
   try {
-    const extras =await Categories.find();
+    const extras = await Categories.find();
     res.status(200).json(extras);
   } catch (error) {
     if (error instanceof Error) {
@@ -16,14 +16,18 @@ export const getAllCategories = async (req: Request, res: Response) => {
   }
 };
 
-
 // Create Categories
 export const createCategories = async (req: Request, res: Response) => {
   try {
-    const { name, price, available } = req.body;
+    const { name, slug, emoji, img, description, active} = req.body;
 
     const newCategories: ICategories = new Categories({
-      
+      name,
+      slug,
+      emoji,
+      img,
+      description,
+      active,
     });
 
     await newCategories.save();
@@ -60,7 +64,7 @@ export const updateCategories = async (req: Request, res: Response) => {
     const categories = await Categories.findByIdAndUpdate(
       id,
       { $set: change },
-      { new: true }
+      { new: true },
     );
 
     if (!categories) {
