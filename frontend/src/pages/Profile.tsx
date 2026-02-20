@@ -6,22 +6,19 @@ import { api } from "../config/axios";
 import type IProfile from "../types/profile";
 //components
 import Input from "../components/shared/Input";
-
-
-
-
+import MiniNavBar from "../components/shared/MiniNavBar";
+import { ArrowLeft, Home } from "lucide-react";
 
 export default function Profile() {
-  const {logout} = useAuth()
-  
+  const { logout } = useAuth();
+
   const [user, setUser] = useState<IProfile | null>(null);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  
-  
+
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
-  
+
   const [form, setForm] = useState<IProfile>({
     fullName: "",
     email: "",
@@ -126,59 +123,57 @@ export default function Profile() {
   };
 
   return (
-    <div className="items-center flex flex-col h-screen">
-      <div className="h-30 flex items-center flex-col mt-10">
-        <h1 className="text-3xl text-shade font-bold">Welcome!</h1>
-        <p className="p-6 text-gray-500 text-center">
-          Sign up to explore your favourites Burgers and exclusive features
-        </p>
-      </div>
-      <form
-        onSubmit={updateUser}
-        className="flex flex-col items-center  bg-white p-4 rounded-lg w-full max-w-150"
-      >
-        <div className="w-full">
-          <div className="w-full  md:grid md:gap-x-6 md:mb-6 md:grid-cols-2">
-            {fields.map((field) => (
-              <Input
-                key={field.label}
-                label={`${field.label} ${field.optional ? "(optional)" : ""}`}
-                onChange={(v:string) =>
-                  field.name === "password"
-                    ? setPassword(v)
-                    : handleChange(field.name, v)
-                }
-                value={field.value}
-                required={field.required}
-                type={field.type || "text"}
-                readonly={!isEditing}
-              />
-            ))}
-            {isEditing && (
-              <div className="mt-2">
-                <Input
-                  label="Password (optional)"
-                  type="password"
-                  value={password}
-                  onChange={(v:string) => setPassword(v)}
-                />
-                <p className="text-sm text-gray-400 mb-2">
-                  Leave blank to keep current password
-                </p>
-                <Input
-                  label="Confirm Password"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(v:string) => setConfirmPassword(v)}
-                />
-              </div>
-            )}
-          </div>
+    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+      <MiniNavBar 
+      leftChild={<ArrowLeft />}
+      pageName="Your Profile"
+      rightChild={<Home/>}
+      goTo="/"
+      goBack="/"
+      />
+      <div className="w-full max-w-md">
+        <form className="bg-white rounded-2xl shadow-xl p-8">
+          <h1 className="text-3xl text-shade font-bold text-center">Your Profile</h1>
+          {fields.map((field) => (
+            <Input
+              key={field.label}
+              label={`${field.label} ${field.optional ? "(optional)" : ""}`}
+              onChange={(v: string) =>
+                field.name === "password"
+                  ? setPassword(v)
+                  : handleChange(field.name, v)
+              }
+              value={field.value}
+              required={field.required}
+              type={field.type || "text"}
+              readonly={!isEditing}
+            />
+          ))}
           {isEditing && (
+            <div className="mt-2">
+              <Input
+                label="Password (optional)"
+                type="password"
+                value={password}
+                onChange={(v: string) => setPassword(v)}
+              />
+              <p className="text-sm text-gray-400 mb-2">
+                Leave blank to keep current password
+              </p>
+              <Input
+                label="Confirm Password"
+                type="password"
+                value={confirmPassword}
+                onChange={(v: string) => setConfirmPassword(v)}
+              />
+            </div>
+          )}
+
+          {isEditing ? (
             <div className="mt-6">
               <button
                 type="submit"
-                className="bg-shade rounded-full w-full h-12 text-white shadow-xs shadow-primary hover:bg-accent hover:cursor-pointer"
+                className="w-full mt-6 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200"
               >
                 Save
               </button>
@@ -190,37 +185,35 @@ export default function Profile() {
                   setPassword("");
                   setIsEditing(false);
                 }}
-                className="mt-2 bg-secondary rounded-full w-full h-12 text-white shadow-xs shadow-primary hover:bg-accent hover:cursor-pointer"
+                className="w-full mt-6 px-4 py-2.5 bg-red-500 text-white rounded-lg font-medium hover:bg-red-700 transition-colors duration-200"
               >
                 Cancel
               </button>
             </div>
-          )}
-          {!isEditing && (
+          ) : (
             <div className="mt-6">
               <button
                 type="button"
                 onClick={() => {
                   setIsEditing(true);
                 }}
-                className="bg-accent rounded-full w-full h-12 text-white shadow-xs shadow-primary hover:bg-accent hover:cursor-pointer"
+                className="w-full mt-6 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200"
               >
                 Edit
               </button>
               <button
                 type="button"
                 onClick={() => {
-                  logout()
+                  logout();
                 }}
-                className="bg-shade rounded-full mt-2 w-full h-12 text-white shadow-xs shadow-primary hover:bg-accent hover:cursor-pointer"
+                className="w-full mt-6 px-4 py-2.5 bg-red-500 text-white rounded-lg font-medium hover:bg-red-700 transition-colors duration-200"
               >
                 Log out
               </button>
             </div>
           )}
-        </div>
-      </form>
-
+        </form>
+      </div>
       {loading && <p>Updating...</p>}
     </div>
   );

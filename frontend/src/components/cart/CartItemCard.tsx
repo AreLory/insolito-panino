@@ -3,19 +3,18 @@ import { useProductCart } from "../../hooks/useProductCart";
 
 //interfaces
 import type { CartItem } from "../../types/cart";
-import type {Products } from "../../types/products";
+import type { Products } from "../../types/products";
 
 //components
 import CartCountingControls from "../cart/CartCountingControls";
 //assets/img
-import crossIcon from "../../assets/img/cross.png";
-import { MinusCircle } from "lucide-react";
+import { MinusCircle, PlusCircle, X } from "lucide-react";
 
 export default function CartItemCard({ item }: { item: CartItem }) {
   const productForHook: Products = {
     _id: item._id,
     name: item.name,
-    basePrice: item.unitPrice, 
+    basePrice: item.unitPrice,
     category: "burger",
     sizes: item.selectedSize
       ? [{ label: item.selectedSize.label, price: item.selectedSize.price }]
@@ -23,7 +22,7 @@ export default function CartItemCard({ item }: { item: CartItem }) {
     ingredients: item.removedIngredients
       ? item.removedIngredients.map((i) => ({ name: i }))
       : [],
-    extras: item.extras,
+    availableExtras: item.selectedExtras || [],
     quantity: item.quantity,
   };
 
@@ -31,44 +30,97 @@ export default function CartItemCard({ item }: { item: CartItem }) {
     productForHook,
     item.selectedSize,
     item.removedIngredients,
+    item.selectedExtras?.map((e) => e._id) || [],
   );
+  if (!cartItem) return <p>loading...</p>;
+
   const showTotal = () => {
-    const total = (item.selectedSize?.price || item.unitPrice) * item.quantity;
+    if (!cartItem) return "0.00";
+
+    const sizePrice = cartItem.selectedSize?.price ?? cartItem.unitPrice ?? 0;
+
+    const extrasPrice =
+      cartItem.selectedExtras?.reduce(
+        (sum, e: any) => sum + (e?.price ?? 0),
+        0,
+      ) ?? 0;
+
+    const total = (sizePrice + extrasPrice) * (cartItem.quantity ?? 0);
     return total.toFixed(2);
   };
   return (
-    <div className="bg-[#F8FAFC]/50 border border-slate-100/60 rounded-[2rem] p-5 flex items-start gap-4 transition-all hover:border-slate-200">
-      <div className="flex w-[30%]">
-        <img
-          // src={}
-          alt="panino"
-          className="size-30 rounded-2xl"
-        />
-      </div>
-      <div className="w-[70%] flex flex-wrap">
-        <div className="w-[50%] flex flex-col pl-4">
-          <h3 className="text-lg font-bold">{cartItem?.name}</h3>
-          <h4 className=" text-gray-700">{cartItem?.selectedSize?.label}</h4>
-          {cartItem?.removedIngredients?.map((i) => (
-            <p key={i} className="flex gap-1 m-1 text-xs  text-red-500">
-              <MinusCircle size={15}/>No {i}
-            </p>
-          ))}
-        </div>
-        <div className="flex flex-col w-[50%]">
-          <div className="flex justify-end w-auto items-center p-2 ">
-            <button className="size-4" onClick={removeAll}>
-              <img src={crossIcon} alt="X" />
-            </button>
-          </div>
-        </div>
-        <div className=" flex items-center justify-between w-full px-4">
-          <h3 className="text-xl font-semibold">€ {showTotal()}</h3>
-          <CartCountingControls
-            quantity={quantity}
-            onAddToCart={addOne}
-            onRemoveFromCart={removeOne}
+    <div className="relative rounded-2xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-all">
+      <button
+        onClick={removeAll}
+        className="absolute top-3 right-3 p-1.5 rounded-full hover:bg-gray-100 transition text-gray-400 hover:text-gray-700"
+      >
+        <X size={18} />
+      </button>
+
+      <div className="flex gap-10">
+        <div className="w-28 h-28 shrink-0">
+          <img
+            alt="panino"
+            className="w-full h-full object-cover rounded-xl bg-gray-100"
           />
+        </div>
+
+        <div className="flex flex-col flex-1 justify-between pr-6">
+          <div className="space-y-2">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 leading-tight">
+                {cartItem?.name}
+              </h3>
+
+              {cartItem?.selectedSize && (
+                <p className="text-sm text-gray-500 mt-0.5">
+                  {cartItem.selectedSize.label}
+                </p>
+              )}
+            </div>
+
+            {cartItem?.removedIngredients &&
+              cartItem?.removedIngredients?.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {cartItem.removedIngredients.map((i) => (
+                    <span
+                      key={i}
+                      className="flex items-center gap-1 text-xs bg-red-50 text-red-600 px-2 py-1 rounded-lg"
+                    >
+                      <MinusCircle size={14} />
+                      No {i}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+            {cartItem?.selectedExtras && cartItem.selectedExtras.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {cartItem.selectedExtras.map((e) => (
+                  <span
+                    key={e._id}
+                    className="flex items-center gap-1 text-xs bg-green-100 text-green-600 px-2 py-1 rounded-lg"
+                  >
+                    <PlusCircle size={14} />
+                    {e.name}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center justify-between mt-4 w-60">
+            <div className="text-right">
+              <p className="text-xs text-gray-400">Totale</p>
+              <p className="text-xl font-bold text-gray-900">€ {showTotal()}</p>
+            </div>
+
+            <CartCountingControls
+              quantity={quantity}
+              onAddToCart={addOne}
+              onRemoveFromCart={removeOne}
+            />
+          </div>
         </div>
       </div>
     </div>

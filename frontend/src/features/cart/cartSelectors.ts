@@ -9,7 +9,7 @@ export const selectCartItems = (state: any) => {
 export const selectCartSubtotal = createSelector([selectCartItems], (items) => {
   return items.reduce((acc, item) => {
     const sizePrice = item.selectedSize?.price ?? 0;
-    const extrasPrice = item.extras.reduce((eAcc, e) => eAcc + e.price, 0);
+    const extrasPrice = item.selectedExtras.reduce((eAcc, e) => eAcc + e.price, 0);
     return acc + (( sizePrice || item.unitPrice ) + extrasPrice) * item.quantity;
   }, 0);
 });

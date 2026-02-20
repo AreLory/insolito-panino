@@ -11,7 +11,7 @@ export interface OrderItem {
   } | null;
 
   removedIngredients: string[];
-  extras: { name: string; price: number }[];
+  selectedExtras: { _id:string, name: string; price: number }[];
 }
 
 export interface Order {

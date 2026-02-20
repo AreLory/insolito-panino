@@ -8,8 +8,7 @@ import MiniNavBar from "../components/shared/MiniNavBar";
 //interfaces
 import type { CartItem } from "../types/cart";
 
-import trashImg from "../assets/img/trash.png";
-import arrowLeft from "../assets/img/arrow-left.png";
+import { ArrowLeft, TrashIcon } from "lucide-react";
 
 import { clearCart, getCartItemKey } from "../features/cart/cartSlice";
 import {
@@ -28,16 +27,18 @@ export default function Cart() {
   };
 
   return (
-    <div className="w-screen h-screen flex justify-center bg-white">
-      <div className="flex flex-col items-center shadow-2xl w-full max-w-3xl h-[65vh] rounded-2xl">
-        <MiniNavBar
-          rightImg={trashImg}
-          leftImg={arrowLeft}
-          pageName={"My Cart"}
-          onClick={clear}
-          linkTo="/menu"
-        />
-        <div className="w-full max-w-2xl h-[65vh] overflow-y-auto rounded-2xl py-4">
+    <div className="min-h-screen">
+      <MiniNavBar 
+       leftChild={<ArrowLeft/>}
+       rightChild={<TrashIcon/>}
+       pageName="My Cart"
+       goBack="/menu"
+       goTo="/checkout"
+       onClickAction={clear}
+       />
+      <div className="pt-20 pb-32 max-w-2xl mx-auto">
+       
+        <div className="flex flex-col items-center bg-white">
           {cart?.map((item: CartItem) => (
             <CartItemCard item={item} key={getCartItemKey(item)} />
           ))}

@@ -12,23 +12,35 @@ export default function SizeSelector({
   onSelectSize,
 }: Props) {
   return (
-    <div className=" h-20 p-2">
-      <div className="flex w-full justify-around">
-        {sizes.map((size) => (
-          <div
-            className={`rounded-lg w-full flex flex-col items-center cursor-pointer ${
-              selectedSize?.label === size.label ? "scale-90 shadow-inner"
-                : "shadow-xl border-b-4 border border-primary"
-            }`}
-            onClick={() => onSelectSize(size)}
-            key={size.label}
-          >
-            <h1 className="font-semibold">{size.label}</h1>
-            <h2 className="text-xs">({size.meatWeight}gr)</h2>
-            <h3>€ {size.price.toFixed(2)}</h3>
+          <div className="bg-white mt-2 p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              Scegli la taglia
+            </h2>
+            <div className="grid grid-cols-3 gap-3">
+              {sizes.map((size) => (
+                <button
+                  key={size.label}
+                  onClick={() => onSelectSize(size)}
+                  className={`p-4 rounded-xl border-2 transition-all ${
+                    selectedSize === size
+                      ? "border-orange-500 bg-orange-50"
+                      : "border-gray-200 hover:border-orange-300"
+                  }`}
+                >
+                  <div className="font-semibold text-gray-900">{size.label}</div>
+                  {size.meatWeight && (
+                    <div className="text-xs text-gray-500 mt-1">
+                      {size.meatWeight}g
+                    </div>
+                  )}
+                  {size.price > 0 && (
+                    <div className="text-sm font-semibold text-orange-600 mt-1">
+                      +€{size.price.toFixed(2)}
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
-        ))}
-      </div>
-    </div>
-  );
+        );
 }

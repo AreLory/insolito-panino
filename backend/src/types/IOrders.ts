@@ -25,6 +25,7 @@ export interface IOrderItem {
   name: string;
 
   unitPrice: number;
+  itemTotal:number
 
   quantity: number;
 
@@ -35,7 +36,11 @@ export interface IOrderItem {
 
   removedIngredients: string[];
 
-  extras: Types.ObjectId[]|IExtras[];
+  selectedExtras:  {
+    extraId: Types.ObjectId;
+    name: string;
+    price: number;
+  }[];
 }
 
 export enum OrderStatus {
@@ -71,7 +76,7 @@ export interface CreateOrderBody {
     quantity: number;
     selectedSize?: { label: string };
     removedIngredients?: string[];
-    extras?: IExtras[];
+    selectedExtras?: IExtras[];
   }[];
   paymentMethod: PaymentMethod
   orderType: OrderType

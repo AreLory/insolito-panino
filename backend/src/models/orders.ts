@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 import { IOrder, IOrderItem } from "../types/IOrders";
-import ExtrasSchema from "../models/extras";
+
 
 const OrderItemSchema = new Schema<IOrderItem>(
   {
@@ -19,6 +19,10 @@ const OrderItemSchema = new Schema<IOrderItem>(
       type: Number,
       required: true,
     },
+    itemTotal: {
+      type: Number,
+      required: true
+    },
 
     quantity: {
       type: Number,
@@ -36,9 +40,9 @@ const OrderItemSchema = new Schema<IOrderItem>(
       default: [],
     },
 
-    extras: [
+    selectedExtras: [
       {
-        extra: { type: Schema.Types.ObjectId, ref: 'Extras' },
+        extraId: { type: Schema.Types.ObjectId, ref: 'Extras' },
         name: { type: String, required: true },
         price: { type: Number, required: true },
       },

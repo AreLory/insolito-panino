@@ -24,11 +24,11 @@ export const getAllProducts = async (req: Request, res: Response) => {
 export const getProduct = async (req: Request, res: Response) => {
   try {
     const prodId = req.params.id;
-    const product = await Products.findById(prodId).populate("extras");
+    const product = await Products.findById(prodId).populate("availableExtras");
     res.status(200).json(product);
   } catch (error) {
     if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error.message});
     } else {
       res.status(500).json({ error: "Server error" });
     }
@@ -45,7 +45,7 @@ export const createProduct = async (req: Request, res: Response) => {
       basePrice,
       sizes,
       ingredients,
-      extras,
+      availableExtras,
       imageUrl,
       available,
       description,
@@ -57,7 +57,7 @@ export const createProduct = async (req: Request, res: Response) => {
       basePrice,
       sizes,
       ingredients,
-      extras,
+      availableExtras,
       imageUrl,
       available,
       description,

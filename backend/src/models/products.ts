@@ -21,7 +21,7 @@ const ProductsSchema = new Schema<IProductDocument>({
   basePrice: { type: Number, required: true },
   sizes: [SizeSchema],
   ingredients: { type: [IngredientSchema], required: true },
-  extras: [{type: Schema.Types.ObjectId, ref: 'Extras'}],
+  availableExtras: [{type: Schema.Types.ObjectId, ref: 'Extras'}],
   imageUrl: { type: String },
   available: { type: Boolean, default: true },
   description: { type: String }

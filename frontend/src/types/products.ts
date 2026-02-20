@@ -12,7 +12,7 @@ export interface Products {
   basePrice: number;
   sizes?: Size[];
   ingredients: Ingredient[];
-  extras: { name: string; price: number }[];
+  availableExtras: AvailableExtra[];
   imageUrl?: string;
   available?: boolean;
   description?: string;
@@ -31,11 +31,18 @@ export interface Ingredient {
 }
 
 export interface Category {
-    _id: string,
-    name:string,
-    slug:string,
-    emoji:string,
-    img:string,
-    description:string,
-    active:boolean
+  _id: string;
+  name: string;
+  slug: string;
+  emoji: string;
+  img: string;
+  description: string;
+  active: boolean;
+}
+
+export interface AvailableExtra {
+  _id: string;
+  name: string;
+  price: number;
+  available?: true;
 }

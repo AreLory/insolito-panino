@@ -3,8 +3,7 @@ import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
 //Component
-import Input from "../components/shared/Input"
-
+import Input from "../components/shared/Input";
 
 const Login = () => {
   const { login } = useAuth();
@@ -30,49 +29,43 @@ const Login = () => {
   };
 
   return (
-    <div className="items-center flex flex-col h-screen">
-      <div className="h-40 flex items-center flex-col mt-30">
-        <h1 className="text-3xl text-shade font-bold">Welcome Back</h1>
-        <p className="p-6 text-gray-500 text-center">
-          Log in to explore your favourites Burgers and exclusive features
+    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md flex flex-col items-center">
+        <form onSubmit={userLogin} className="bg-white rounded-2xl shadow-xl p-8 w-full">
+          <h1 className="text-3xl text-shade font-bold text-center">Welcome back!</h1>
+          <p className="text-gray-500 text-center">Log in here for fantastic features</p>
+          <Input
+            key={"email"}
+            label={"Email"}
+            onChange={setEmail}
+            value={email}
+            required={true}
+            type={"email"}
+          />
+
+          <Input
+            key={"pword"}
+            label={"Password"}
+            onChange={setPassword}
+            value={password}
+            required={true}
+            type={"password"}
+          />
+
+          <button
+            type="submit"
+            className="w-full mt-6 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200"
+          >
+            Log in
+          </button>
+        </form>
+        <p className="text-accent">
+          You don't have an account?{" "}
+          <a href="/#/register" className="underline cursor-pointer">
+            Sign here
+          </a>
         </p>
       </div>
-      <form
-        onSubmit={userLogin}
-        className="flex flex-col items-center  bg-white p-4 rounded-lg w-full max-w-[600px]  "
-      >
-        <Input
-          key={"email"}
-          label={"Email"}
-          onChange={setEmail}
-          value={email}
-          required={true}
-          type={"email"}
-        />
-        <Input
-          key={"pword"}
-          label={"Password"}
-          onChange={setPassword}
-          value={password}
-          required={true}
-          type={"password"}
-        />
-
-        <div className="mt-10 w-full">
-          <button
-            className="bg-shade rounded-full w-full h-12 text-white shadow-xs shadow-primary hover:bg-accent hover:cursor-pointer"
-            type="submit"
-          >
-            Login
-          </button>
-        </div>
-      </form>
-      <p className="text-accent">
-        Don't have an account?{" "}
-        <a href="/#/register" className="underline cursor-pointer">
-          Sign up here
-        </a>
-      </p>
     </div>
   );
 };

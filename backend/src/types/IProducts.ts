@@ -6,7 +6,7 @@ export interface IProduct extends Document {
   basePrice: number;
   sizes?: ISize[];
   ingredients: IIngredient[];
-  extras?: Types.ObjectId[];
+  availableExtras?: Types.ObjectId[];
   imageUrl?: string;
   available?: boolean;
   description?: string;

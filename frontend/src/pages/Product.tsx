@@ -1,50 +1,49 @@
 //Hooks
-import { useEffect, useState } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { Link, useParams } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { useProduct } from "../hooks/useProduct";
 import { useProductCart } from "../hooks/useProductCart";
-import { Link, useParams } from "react-router";
 import { useSelector } from "react-redux";
 
-//Interfaces
 import type { Size } from "../types/products";
-
-//Components
-import AddToCartBar from "../components/cart/AddToCartBar";
-import IngredientSelector from "../components/menu/IngredientSelector";
-import SizeSelector from "../components/menu/SizeSelector";
-import CartCountingControls from "../components/cart/CartCountingControls";
-
-//Assets/img
-import cartImg from "../assets/img/cart-gray.png";
-import arrowLeft from "../assets/img/arrow-left.png";
-
 import { selectTotalItems } from "../features/cart/cartSelectors";
 
+import { ArrowLeft, ShoppingCart } from "lucide-react";
+// Components
+import AddToCartBar from "../components/menu/AddToCartBar";
+import CartCountingControls from "../components/cart/CartCountingControls";
+import SizeSelector from "../components/menu/SizeSelector";
+import IngredientSelector from "../components/menu/IngredientSelector";
+import ExtraSelector from "../components/menu/ExtraSelector";
+import MiniNavBar from "../components/shared/MiniNavBar";
 
 export default function Product() {
   const { id } = useParams<{ id: string }>();
   const { isAuthenticated } = useAuth();
+  const itemsQuantity = useSelector(selectTotalItems);
+
+  const [ingredientsExpanded, setIngredientsExpanded] = useState(false);
+  const [extrasExpanded, setExtrasExpanded] = useState(false);
 
   const [selectedSize, setSelectedSize] = useState<Size | null>(null);
   const [removedIngredients, setRemovedIngredients] = useState<string[]>([]);
+  const [selectedExtras, setSelectedExtras] = useState<Set<string>>(new Set());
 
-  const item = useProduct(id);
-  const itemsQuantity = useSelector(selectTotalItems);
+  const product = useProduct(id);
 
   const { cartItem, quantity, addOne, removeOne } = useProductCart(
-    item,
+    product,
     selectedSize,
     removedIngredients,
+    Array.from(selectedExtras),
   );
 
   useEffect(() => {
-    if (item) {
-      setSelectedSize(item.sizes?.[0] || null);
+    if (product) {
+      setSelectedSize(product.sizes?.[0] || null);
     }
-  }, [item]);
-
-  if (!item) return <div>Loading...</div>;
+  }, [product]);
 
   const removeIngredient = (name: string) => {
     setRemovedIngredients((prev) =>
@@ -52,66 +51,110 @@ export default function Product() {
     );
   };
 
+  const toggleExtra = (extraId: string) => {
+    setSelectedExtras((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(extraId)) newSet.delete(extraId);
+      else newSet.add(extraId);
+      return newSet;
+    });
+  };
+
+  const total = useMemo(() => {
+    if (!product) return 0;
+    const basePrice = product.basePrice;
+
+    const sizePrice = selectedSize?.price;
+
+    const extrasPrice = Array.from(selectedExtras).reduce((sum, id) => {
+      const extra = product.availableExtras.find((e) => e._id === id);
+      return sum + (extra?.price ?? 0);
+    }, 0);
+
+    const finalUnitPrice = sizePrice || basePrice;
+    if (quantity <= 0) {
+      return finalUnitPrice + extrasPrice;
+    } else {
+      return (finalUnitPrice + extrasPrice) * quantity;
+    }
+  }, [product, selectedSize, selectedExtras, quantity]);
+
+  if (!product) return <div>Loading...</div>;
+
   return (
-    <div className="w-screen flex md:justify-center">
-      <div className="w-full md:max-w-4xl md:w-4xl">
-        <div className="flex w-full justify-between px-3">
-          <Link to={"/menu"} className="size-10 p-1">
-            <img src={arrowLeft} alt="back" />
-          </Link>
-          <h1 className="text-xl font-semibold">Dettagli Prodotto</h1>
-          <Link to={"/cart"} className="relative size-10 p-1">
-            <img src={cartImg} alt="icon" />
+    <div className="min-h-screen bg-gray-50">
+      <MiniNavBar
+        leftChild={<ArrowLeft />}
+        rightChild={<ShoppingCart />}
+        badgeCount={itemsQuantity}
+        pageName={product.name}
+        goBack="/menu"
+        goTo="/cart"
+      />
 
-            {itemsQuantity > 0 && (
-              <span className="absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
-                {itemsQuantity}
-              </span>
+      <div className="pt-20 pb-32 max-w-2xl mx-auto">
+        <div className="bg-white">
+          <div className="relative h-72 overflow-hidden">
+            {product.imageUrl && (
+              <img
+                src={product.imageUrl}
+                alt={product.name}
+                className="w-full h-full object-cover"
+              />
             )}
-          </Link>
+          </div>
+          <div className="p-6">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              {product.name} {selectedSize?.label}
+            </h1>
+            {product.description && (
+              <p className="text-gray-600 mb-4">{product.description}</p>
+            )}
+            <div className="text-2xl font-bold text-orange-600">
+              €{(selectedSize?.price || product.basePrice).toFixed(2)}
+            </div>
+          </div>
         </div>
 
-        <div className="flex h-70 justify-center items-center">
-          <img
-            src={item.imageUrl}
-            alt={item.name}
-            className="bg-white rounded size-66"
-          />
-        </div>
-
-        <div className="flex h-15 px-4 items-center justify-between">
-          <h3 className="text-xl font-bold mt-2">
-            {`${item.name} ${selectedSize?.label || ""}`}
-          </h3>
-          {cartItem && (
-            <CartCountingControls
-              quantity={quantity}
-              onAddToCart={addOne}
-              onRemoveFromCart={removeOne}
-            />
-          )}
-        </div>
-
-        {item.sizes && (
+        {product.sizes && product.sizes.length > 0 && (
           <SizeSelector
-            sizes={item.sizes}
+            sizes={product.sizes}
             selectedSize={selectedSize}
             onSelectSize={setSelectedSize}
           />
         )}
 
         <IngredientSelector
-          ingredients={item.ingredients}
+          ingredients={product.ingredients}
+          isExpanded={ingredientsExpanded}
           removedIngredients={removedIngredients}
+          onSetIngredientsExpanded={setIngredientsExpanded}
           onToggleIngredient={removeIngredient}
         />
 
-        <AddToCartBar
-          price={selectedSize?.price ?? item.basePrice}
-          isAuthenticated={isAuthenticated}
-          onAddToCart={addOne}
+        <ExtraSelector
+          extras={product.availableExtras}
+          isExpanded={extrasExpanded}
+          selectedExtras={selectedExtras}
+          onSetExpanded={setExtrasExpanded}
+          onToggleExtra={toggleExtra}
         />
+
+        {isAuthenticated && (
+          <div className="bg-white mt-2 p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              Quantità
+            </h2>
+            <CartCountingControls
+              onAddToCart={addOne}
+              onRemoveFromCart={removeOne}
+              quantity={quantity}
+            />
+          </div>
+        )}
       </div>
+
+      {isAuthenticated && <AddToCartBar price={total} onAddToCart={addOne} />}
     </div>
   );
 }

@@ -3,9 +3,14 @@ import ProductList from "../components/menu/ProductList";
 import axios from "axios";
 import API_BASE_URL from "../config/api";
 import type { Category } from "../types/products";
+import MiniNavBar from "../components/shared/MiniNavBar";
+import { ArrowLeft, ShoppingCart } from "lucide-react";
+import { useSelector } from "react-redux";
+import { selectTotalItems } from "../features/cart/cartSelectors";
 
 export default function Menu() {
   const [categories, setCategories] = useState<Category[]>([]);
+  const itemsQuantity = useSelector(selectTotalItems)
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null,
   );
@@ -37,7 +42,15 @@ export default function Menu() {
 
   return (
     <div className="w-screen h-screen flex flex-col">
-      <div className="flex flex-col gap-2 pt-2 pb-1 w-full overflow-x-scroll md:justify-center mt-6 items-center bg-white">
+      <MiniNavBar 
+      leftChild={<ArrowLeft/>}
+      rightChild={<ShoppingCart />}
+      pageName="Menu"
+      badgeCount={itemsQuantity}
+      goBack="/"
+      goTo="/cart"
+      />
+      <div className="pt-20 pb-32 max-w-2xl mx-auto flex flex-col items-center justify-center">
         <h1 className="text-xl font-bold">Categories</h1>
         <div className="flex flex-row w-full sm:overflow-auto md:justify-center">
           {categories.map((cat) => (

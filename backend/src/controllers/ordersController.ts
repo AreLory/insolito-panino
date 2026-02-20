@@ -7,8 +7,10 @@ import {
 import Orders from "../models/orders";
 import { Request, Response } from "express";
 import Products from "../models/products";
+import Extras from "../models/extras";
 import mongoose, { Types } from "mongoose";
 import { IProduct } from "../types/IProducts";
+import { IExtras } from "../types/IExtras";
 
 //Orders List
 export const getAllOrders = async (req: Request, res: Response) => {
@@ -101,49 +103,58 @@ export const createOrder = async (req: Request, res: Response) => {
         .json({ error: "Invalid product in order", missing });
     }
 
+    const allExtraIds = items.flatMap((i) => 
+      (i.selectedExtras ?? []).map(e => typeof e === 'string' ? e : e._id)
+    ).filter(Boolean);
+    const extrasFromDb = await Extras.find({
+      _id: { $in: allExtraIds },
+    }).lean() as IExtras[];
+
     const orderItems: IOrderItem[] = items.map((item) => {
       const product = products.find((p) => p._id.equals(item.productId));
-      if (!product) {
-        throw new Error(`Invalid product: ${item.productId}`);
-      }
+      if (!product) throw new Error(`Invalid product: ${item.productId}`);
 
       let unitPrice = product.basePrice;
       let selectedSize: { label: string; price?: number } | null = null;
 
       if (item.selectedSize) {
         const size = product.sizes?.find(
-          (s) => s.label === item.selectedSize?.label,
+          (s) => s.label === item.selectedSize!.label,
         );
         if (!size) throw new Error(`Invalid size for ${product.name}`);
         unitPrice = size.price;
         selectedSize = { label: size.label, price: size.price };
       }
 
-      const extrasTotal = (item.extras ?? []).reduce(
-        (sum, e) => sum + (e.price ?? 0),
-        0,
-      );
-      unitPrice += extrasTotal;
+      const selectedExtras = (item.selectedExtras ?? []).map((extra) => {
+        const extraData = typeof extra === 'string' ? { _id: extra } : extra;
+        const extraFromDb = extrasFromDb.find((e) => e._id.toString() === extraData._id.toString());
+        if (!extraFromDb || !extraFromDb.available)
+          throw new Error(`Invalid extra selected`);
+
+        return {
+          extraId: extraFromDb._id,
+          name: extraFromDb.name,
+          price: extraFromDb.price || 0,
+        };
+      });
+
+      const extrasTotal = selectedExtras.reduce((sum, e) => sum + e.price, 0);
+      const itemTotal = (unitPrice + extrasTotal) * item.quantity;
 
       return {
         product: product._id,
         name: product.name,
         unitPrice,
         quantity: item.quantity,
+        itemTotal,
         selectedSize,
         removedIngredients: item.removedIngredients ?? [],
-        extras:
-          item.extras?.map((e) => ({
-            name: e.name,
-            price: e.price ?? 0,
-          })) ?? [],
+        selectedExtras,
       };
     });
 
-    let subtotal = orderItems.reduce(
-      (sum, i) => sum + i.unitPrice * i.quantity,
-      0,
-    );
+    let subtotal = orderItems.reduce((sum, i) => sum + i.itemTotal, 0);
 
     let total = subtotal;
 
@@ -157,6 +168,7 @@ export const createOrder = async (req: Request, res: Response) => {
       subtotal,
       total,
       paymentMethod,
+      // default = unpaid
       paymentStatus: "unpaid",
       orderType,
       notes,

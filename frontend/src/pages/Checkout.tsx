@@ -17,8 +17,6 @@ import { clearCart } from "../features/cart/cartSlice";
 import { api } from "../config/axios";
 
 //Assets/img
-import arrowLeft from "../assets/img/arrow-left.png";
-import cartImg from "../assets/img/cart-gray.png";
 import cashImg from "../assets/img/coins.png";
 import cardImg from "../assets/img/credit-card.png";
 import bankImg from "../assets/img/bank.png";
@@ -26,6 +24,7 @@ import takeAwayImg from "../assets/img/take-away.png";
 import dineInImg from "../assets/img/holding-hand-dinner.png";
 import deliveryImg from "../assets/img/delivery-man.png";
 import { resetOrder } from "../features/checkout/checkoutSlice";
+import { ArrowLeft, ShoppingCart } from "lucide-react";
 
 export default function Checkout() {
   const cart = useSelector(selectCartItems);
@@ -89,7 +88,7 @@ export default function Checkout() {
         quantity: item.quantity,
         selectedSize: item.selectedSize,
         removedIngredients: item.removedIngredients,
-        extras: item.extras,
+        selectedExtras: item.selectedExtras,
       }));
 
       const orderDTO: CreateOrderDTO = {
@@ -111,21 +110,23 @@ export default function Checkout() {
         error?.response?.data || error.message,
       );
     }
-  };
+  }; 
 
   return (
     <div className="w-screen h-screen flex justify-center bg-white">
-      <div className="h-[80vh] w-full md:max-w-4xl md:w-4xl flex flex-col items-center justify-center ">
         <MiniNavBar
-          rightImg={cartImg}
-          leftImg={arrowLeft}
+          leftChild={<ArrowLeft/>}
+          rightChild={<ShoppingCart/>}
           pageName="Checkout"
-          linkTo="/cart"
+          goBack="/cart"
+          goTo="/cart"
         />
+      <div className="pt-20 pb-32 max-w-3xl w-full">
+      
         <form
           action="submit"
           onSubmit={submitOrder}
-          className="flex w-full justify-center h-full"
+          className="flex w-full justify-center"
         >
           <div className="flex h-full w-full shadow-2xl max-w-3xl rounded-2xl">
             <div className="flex flex-col items-center w-full gap-4">

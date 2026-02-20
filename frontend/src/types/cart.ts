@@ -1,7 +1,7 @@
 export interface CartItem {
   _id: string;
-  name:string;
-  unitPrice:number;
+  name: string;
+  unitPrice: number;
 
   selectedSize: {
     label: string;
@@ -9,8 +9,9 @@ export interface CartItem {
   } | null;
 
   removedIngredients: string[];
-  extras: { name: string; price: number }[];
+  selectedExtras: { _id: string; name: string; price: number }[];
   quantity: number;
+  totalItemPrice:number
 }
 
 export interface CartState {

@@ -57,7 +57,7 @@ const OrderTracking = () => {
       </div>
 
       <div className="px-6 space-y-6">
-        {/* Status Banner */}
+
         <div className="p-5 bg-[#FFF2F2] border border-[#FFECEC] rounded-[2.5rem] flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-[#FF3B30] rounded-full flex items-center justify-center text-white">
@@ -77,14 +77,13 @@ const OrderTracking = () => {
           </div>
         </div>
 
-        {/* Section Title */}
         <h3 className="text-[11px] uppercase tracking-[0.15em] text-slate-400 font-bold px-1 pt-2">
           Your Order Items
         </h3>
 
         <div className="space-y-4">
           {order.items.map((item: OrderItem) => (
-            <OrderItemCard key={item._id} item={item} />
+            <OrderItemCard key={`${item._id}-${item.selectedSize?.label}`} item={item} />
           ))}
         </div>
 

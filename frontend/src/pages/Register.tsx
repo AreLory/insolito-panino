@@ -59,18 +59,13 @@ export default function Register() {
   };
 
   return (
-    <div className="items-center flex flex-col h-screen">
-      <div className="h-30 flex items-center flex-col mt-10">
-        <h1 className="text-3xl text-shade font-bold">Welcome!</h1>
-        <p className="p-6 text-gray-500 text-center">
-          Sign up to explore your favourites Burgers and exclusive features
-        </p>
-      </div>
-      <form
-        onSubmit={userRegister}
-        className="flex flex-col items-center  bg-white p-4 rounded-lg w-full max-w-150  "
-      >
-        <div className="w-full md:grid md:gap-x-6 md:mb-6 md:grid-cols-2">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md flex flex-col items-center">
+        <form onSubmit={userRegister} className="bg-white rounded-2xl shadow-xl p-8 w-full">
+          <h1 className="text-3xl text-shade font-bold text-center">
+            Sign Up
+          </h1>
+          <p className="text-gray-500 text-center">Register here for order</p>
           {fields.map((field) => (
             <Input
               key={field.label}
@@ -81,22 +76,21 @@ export default function Register() {
               type={field.type || "text"}
             />
           ))}
-        </div>
-        <div className="mt-10 w-full">
+
           <button
-            className="bg-shade rounded-full w-full h-12 text-white shadow-xs shadow-primary hover:bg-accent hover:cursor-pointer"
             type="submit"
+            className="w-full mt-6 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200"
           >
-            Register
+            Save
           </button>
-        </div>
-      </form>
-      <p className="text-accent">
-        You already have an account?{" "}
-        <a href="/#/" className="underline cursor-pointer">
-          Login Here
-        </a>
-      </p>
+        </form>
+        <p className="text-accent">
+          You already have an account?{" "}
+          <a href="/#/" className="underline cursor-pointer">
+            Login Here
+          </a>
+        </p>
+      </div>
     </div>
   );
 }
