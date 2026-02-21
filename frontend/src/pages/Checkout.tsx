@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useOrder } from "../hooks/useOrder";
 //Components
 import MiniNavBar from "../components/shared/MiniNavBar";
-import Select from "../components/shared/Select";
+import Select from "../components/checkout/Select";
 
 //Interfaces
 import type { CreateOrderDTO, Order, OrderItem } from "../types/order";

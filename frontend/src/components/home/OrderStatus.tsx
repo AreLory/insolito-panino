@@ -11,8 +11,8 @@ export default function OrderStatus({ hasActiveOrder, orderStatus, estimatedTime
   if (!hasActiveOrder) return null;
 
   return (
-    <div className="bg-linear-to-r from-green-500 to-emerald-600 text-white rounded-2xl p-5 shadow-lg mx-4 mt-4">
-      <div className="flex items-center justify-between">
+    <div className="cursor-pointer bg-linear-to-r from-green-500 to-emerald-600 text-white rounded-2xl p-5 shadow-lg mx-4 mt-4">
+      <Link to={'/order-tracking'} className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="bg-white/20 p-3 rounded-full">
             <Clock size={24} />
@@ -25,10 +25,10 @@ export default function OrderStatus({ hasActiveOrder, orderStatus, estimatedTime
             )}
           </div>
         </div>
-        <Link to={'/order'} className="bg-white text-green-600 p-3 rounded-full hover:scale-105 transition">
+        <button className="bg-white text-green-600 p-3 rounded-full hover:scale-105 transition">
           <ChevronRight size={24} />
-        </Link>
-      </div>
+        </button>
+      </Link>
     </div>
   );
 }

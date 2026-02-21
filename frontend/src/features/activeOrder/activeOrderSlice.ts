@@ -19,7 +19,7 @@ export const fetchActiveOrder = createAsyncThunk<Order | null, void, { rejectVal
   "activeOrder/fetch",
   async (_, thunkAPI) => {
     try {
-      const res = await api.get(`${API_BASE_URL}/orders/me`);
+      const res = await api.get(`${API_BASE_URL}/orders/last`);
       return res.data;
     } catch (error: any) {
       console.error(error);

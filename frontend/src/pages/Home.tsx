@@ -100,7 +100,7 @@ const Home = () => {
       id: "2",
       icon: "history" as const,
       label: "Ordini",
-      link: "/",
+      link: "/orders",
       color: "bg-gradient-to-br from-blue-400 to-cyan-400",
     },
     {

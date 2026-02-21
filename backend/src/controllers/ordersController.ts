@@ -15,7 +15,8 @@ import { IExtras } from "../types/IExtras";
 //Orders List
 export const getAllOrders = async (req: Request, res: Response) => {
   try {
-    const orders = await Orders.find();
+    const userId = new mongoose.Types.ObjectId(req.userId);
+    const orders = await Orders.find({user: userId});
     res.status(200).json(orders);
   } catch (error) {
     if (error instanceof Error) {

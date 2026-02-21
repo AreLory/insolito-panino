@@ -21,6 +21,10 @@ export default function MiniNavBar({
   
 }: Props) {
 
+  if (!badgeCount) {
+    badgeCount = 0
+  }
+
 
   return (
     <div className="fixed top-0 left-0 right-0 bg-white shadow-sm z-10">

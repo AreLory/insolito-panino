@@ -18,9 +18,8 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Product from "./pages/Product";
 import Checkout from "./pages/Checkout";
-// Components
-// import BottomNav from "./components/shared/BottomNav";
 import OrderTracking from "./pages/OrderTracking";
+import Orders from "./pages/Orders";
 
 
 
@@ -45,7 +44,8 @@ function AppLayout() {
         <Route path="/cart" element={isAuthenticated ? <Cart /> : <Login />} />
         <Route path="/profile" element={isAuthenticated ? <Profile /> : <Login />} />
         <Route path="/checkout" element={isAuthenticated ? <Checkout/> : <Login/>}/>
-        <Route path="/order" element={<OrderTracking />}/>
+        <Route path="/order-tracking" element={<OrderTracking />}/>
+        <Route path="/orders" element={<Orders/>}/>
       </Routes>
     </>
   );
