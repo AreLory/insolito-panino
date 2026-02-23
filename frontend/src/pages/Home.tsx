@@ -6,7 +6,7 @@ import {
   selectActiveOrder,
   selectActiveOrderLoading,
 } from "../features/activeOrder/activeOrderSelectors";
-import { selectCartItems } from "../features/cart/cartSelectors";
+import { selectCartItems, selectTotalItems } from "../features/cart/cartSelectors";
 
 import Header from "../components/home/Header";
 import OrderStatus from "../components/home/OrderStatus";
@@ -23,7 +23,7 @@ const Home = () => {
   const order = useSelector(selectActiveOrder);
   const loading = useSelector(selectActiveOrderLoading);
   const cart = useSelector(selectCartItems);
-  const cartItemsQuantity = useSelector(selectCartItems);
+  const cartItemsQuantity = useSelector(selectTotalItems);
 
   useEffect(() => {
     if (!order) {
