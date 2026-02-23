@@ -1,13 +1,10 @@
-//Hooks
 import { useProductCart } from "../../hooks/useProductCart";
 
-//interfaces
+import CartCountingControls from "../cart/CartCountingControls";
+
 import type { CartItem } from "../../types/cart";
 import type { Products } from "../../types/products";
 
-//components
-import CartCountingControls from "../cart/CartCountingControls";
-//assets/img
 import { MinusCircle, PlusCircle, X } from "lucide-react";
 
 export default function CartItemCard({ item }: { item: CartItem }) {
@@ -32,6 +29,7 @@ export default function CartItemCard({ item }: { item: CartItem }) {
     item.removedIngredients,
     item.selectedExtras?.map((e) => e._id) || [],
   );
+
   if (!cartItem) return <p>loading...</p>;
 
   const showTotal = () => {
@@ -48,6 +46,7 @@ export default function CartItemCard({ item }: { item: CartItem }) {
     const total = (sizePrice + extrasPrice) * (cartItem.quantity ?? 0);
     return total.toFixed(2);
   };
+  
   return (
     <div className="relative rounded-2xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-all">
       <button

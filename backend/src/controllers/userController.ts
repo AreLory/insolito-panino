@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const jwtSecret = process.env.JWT;
+const jwtSecret = process.env.JWT as string;
 
 // Register
 export const createUser = async (req: Request, res: Response) => {
@@ -24,10 +24,10 @@ export const createUser = async (req: Request, res: Response) => {
       email,
       password: hashedPassword,
       phoneNumber,
-      street,
+      address,
     });
     await newUser.save();
-    const token = jwt.sign({ id: user._id }, jwtSecret, { expiresIn: "1h" });
+    const token = jwt.sign({ id: newUser._id, email: newUser.email }, jwtSecret, { expiresIn: "1h" });
 
     res.status(201).send({
       message: "Registration successful",
@@ -49,7 +49,7 @@ export const userLogin = async (req: Request, res: Response) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ error: "Invalid credentials" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -70,7 +70,7 @@ export const userLogin = async (req: Request, res: Response) => {
 
 // Logout
 export const userLogout = async (req: Request, res: Response) => {
-  res.status(204).send();
+  res.status(200).json({message: 'Loagout successful'});
 };
 
 // GET /users/me

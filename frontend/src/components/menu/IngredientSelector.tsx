@@ -24,9 +24,9 @@ export default function IngredientSelector({
             className="w-full p-6 flex items-center justify-between hover:bg-gray-50 transition-colors"
           >
             <div className="flex items-center gap-3">
-              <h2 className="text-lg font-semibold text-gray-900">Ingredienti</h2>
+              <h2 className="text-lg font-semibold text-gray-900">Ingredients</h2>
               <span className="text-sm text-gray-500">
-                ({ingredients.filter((i) => i.removable).length} modificabili)
+                ({ingredients.filter((i) => i.removable).length} removable)
               </span>
             </div>
             {isExpanded ? (
@@ -62,7 +62,7 @@ export default function IngredientSelector({
                       <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
                     </label>
                   ) : (
-                    <span className="text-xs text-gray-400 italic">Base</span>
+                    <span className="text-xs text-gray-400 italic">Basic</span>
                   )}
                 </div>
               ))}

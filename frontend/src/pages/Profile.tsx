@@ -1,16 +1,20 @@
-//Hooks
 import { useEffect, useState } from "react";
+
 import { useAuth } from "../context/AuthContext";
-import { api } from "../config/axios";
-//Interfaces
-import type IProfile from "../types/profile";
-//components
+import { useAlert } from "../context/AlertContext";
+
 import Input from "../components/shared/Input";
 import MiniNavBar from "../components/shared/MiniNavBar";
+
+import { api } from "../config/axios";
+
+import type IProfile from "../types/profile";
+
 import { ArrowLeft, Home } from "lucide-react";
 
 export default function Profile() {
   const { logout } = useAuth();
+  const { showAlert } = useAlert();
 
   const [user, setUser] = useState<IProfile | null>(null);
   const [password, setPassword] = useState("");
@@ -25,34 +29,6 @@ export default function Profile() {
     phoneNumber: "",
     address: "",
   });
-
-  const mapUserToForm = (user: IProfile) => ({
-    fullName: user.fullName,
-    email: user.email,
-    phoneNumber: user.phoneNumber || "",
-    address: user.address || "",
-  });
-
-  const getInfo = async () => {
-    try {
-      const profileInfo = await api.get("/users/me");
-      const { fullName, email, phoneNumber, address }: IProfile =
-        profileInfo.data;
-
-      setUser({ fullName, email, phoneNumber, address });
-    } catch (error) {
-      console.log("Error", error);
-    }
-  };
-  useEffect(() => {
-    getInfo();
-  }, []);
-
-  useEffect(() => {
-    if (!user) return;
-
-    setForm(mapUserToForm(user));
-  }, [user]);
 
   const fields = [
     {
@@ -82,12 +58,28 @@ export default function Profile() {
     },
   ];
 
-  const handleChange = (field: string, value: string) => {
-    setForm((prevForm) => ({
-      ...prevForm,
-      [field]: value,
-    }));
+  const mapUserToForm = (user: IProfile) => ({
+    fullName: user.fullName,
+    email: user.email,
+    phoneNumber: user.phoneNumber || "",
+    address: user.address || "",
+  });
+
+  const getInfo = async () => {
+    try {
+      const profileInfo = await api.get("/users/me");
+      const { fullName, email, phoneNumber, address }: IProfile =
+        profileInfo.data;
+
+      setUser({ fullName, email, phoneNumber, address });
+    } catch (error) {
+      console.log("Error", error);
+    }
   };
+
+  useEffect(() => {
+    getInfo();
+  }, []);
 
   const updateUser = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,7 +88,7 @@ export default function Profile() {
       const { fullName, email, phoneNumber, address } = form;
       if (password || confirmPassword) {
         if (password !== confirmPassword) {
-          alert("Passwords do not match");
+          showAlert("warning", "Passwords do not match");
           setLoading(false);
           return;
         }
@@ -114,26 +106,54 @@ export default function Profile() {
       }
       const response = await api.patch("/users/me", payload);
       setUser(response.data);
+      showAlert("success", "Profile successfully updated");
       setIsEditing(false);
     } catch (error) {
-      console.log("Error updating user:", error);
+      showAlert("error", `Failed to update profile. Please try again`);
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    if (!user) return;
+    setForm((prevForm) => ({
+      ...prevForm,
+      ...mapUserToForm(user),
+    }));
+  }, [user]);
+
+  const handleChange = (field: string, value: string) => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      [field]: value,
+    }));
+  };
+
+  const handleCancel = () => {
+    if (!user) return;
+    setForm(mapUserToForm(user));
+    setPassword("");
+    showAlert("info", "Edit action canceled");
+    setIsEditing(false);
+  };
+
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
-      <MiniNavBar 
-      leftChild={<ArrowLeft />}
-      pageName="Your Profile"
-      rightChild={<Home/>}
-      goTo="/"
-      goBack="/"
+      <MiniNavBar
+        leftChild={<ArrowLeft />}
+        pageName="Your Profile"
+        rightChild={<Home />}
+        goTo="/"
+        goBack="/"
       />
-      <div className="w-full max-w-md">
-        <form className="bg-white rounded-2xl shadow-xl p-8">
-          <h1 className="text-3xl text-shade font-bold text-center">Your Profile</h1>
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+        <form
+          onSubmit={updateUser}
+        >
+          <h1 className="text-3xl text-shade font-bold text-center">
+            Your Profile
+          </h1>
           {fields.map((field) => (
             <Input
               key={field.label}
@@ -169,7 +189,7 @@ export default function Profile() {
             </div>
           )}
 
-          {isEditing ? (
+          {isEditing && (
             <div className="mt-6">
               <button
                 type="submit"
@@ -179,18 +199,15 @@ export default function Profile() {
               </button>
               <button
                 type="button"
-                onClick={() => {
-                  if (!user) return;
-                  setForm(mapUserToForm(user));
-                  setPassword("");
-                  setIsEditing(false);
-                }}
+                onClick={() => handleCancel()}
                 className="w-full mt-6 px-4 py-2.5 bg-red-500 text-white rounded-lg font-medium hover:bg-red-700 transition-colors duration-200"
               >
                 Cancel
               </button>
             </div>
-          ) : (
+          ) }
+        </form>
+         {!isEditing && (
             <div className="mt-6">
               <button
                 type="button"
@@ -212,8 +229,9 @@ export default function Profile() {
               </button>
             </div>
           )}
-        </form>
       </div>
+
+      {/* todo: <Loader/> */}
       {loading && <p>Updating...</p>}
     </div>
   );

@@ -24,11 +24,11 @@ export default function LocationSection() {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <MapPin className="text-orange-500" size={24} />
-          <h2 className="text-2xl font-bold text-gray-800">Dove Siamo</h2>
+          <h2 className="text-2xl font-bold text-gray-800">Where we are</h2>
         </div>
         <button className="text-orange-500 text-sm font-bold flex items-center gap-1 hover:gap-2 transition-all">
           <Navigation size={16} />
-          Mappa
+          Map
         </button>
       </div>
 
@@ -41,11 +41,11 @@ export default function LocationSection() {
                   <h3 className="font-bold text-gray-800">{location.name}</h3>
                   {location.isOpen ? (
                     <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-bold">
-                      APERTO
+                      OPEN
                     </span>
                   ) : (
                     <span className="bg-red-100 text-red-700 text-xs px-2 py-1 rounded-full font-bold">
-                      CHIUSO
+                      CLOSE
                     </span>
                   )}
                 </div>

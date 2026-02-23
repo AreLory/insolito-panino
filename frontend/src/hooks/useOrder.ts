@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { setOrderType, setPaymentMethod, setNotes } from "../features/checkout/checkoutSlice";
 import { selectFinalTotal, selectOrder } from "../features/checkout/checkoutSelectors";
-import type { Order, OrderType, PaymentMethod } from "../types/order";
 import { selectCartSubtotal } from "../features/cart/cartSelectors";
+
+import type { Order, OrderType, PaymentMethod } from "../types/order";
 
 export function useOrder(){
     const dispatch = useDispatch();

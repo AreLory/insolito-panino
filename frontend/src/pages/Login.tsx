@@ -1,12 +1,14 @@
-//Hooks
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext";
 
-//Component
+import { useAuth } from "../context/AuthContext";
+import { useAlert } from "../context/AlertContext";
+
 import Input from "../components/shared/Input";
+import axios from "axios";
 
 const Login = () => {
   const { login } = useAuth();
+  const {showAlert}= useAlert()
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,12 +19,26 @@ const Login = () => {
     setLoading(true);
     try {
       await login(email, password);
-    } catch (error: any) {
-      console.log("Login error status:", error?.response?.status);
-      console.log(
-        "Login error body:",
-        error?.response?.data ?? error?.message ?? error,
-      );
+      showAlert('success', 'Login succesful')
+    } catch (error:unknown) {
+      if (axios.isAxiosError(error) && error.response){
+        switch(error.response.status){
+          case 401: 
+          showAlert('error', `Error: ${error.response.data.error}`)
+          break;
+          case 404:
+            showAlert('error', `Error: ${error.response.data.error}`)
+            break;
+           case 500:
+            showAlert("error", error.message);
+            break;
+          default:
+            showAlert("error", `Unexpected error: ${error.response.status}`);
+        }
+      } else {
+        showAlert("error", "Network error or unexpected error" + error);
+        return { error: "Network error" };
+      }
     } finally {
       setLoading(false);
     }

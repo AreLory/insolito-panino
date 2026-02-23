@@ -10,7 +10,7 @@ interface OrderInfoProps {
 
 const OrderInfo= ({ icon, label, value, iconBg, iconColor }:OrderInfoProps) => {
   return (
-    <div className="p-4 bg-slate-50 border border-slate-100/50 rounded-[2rem] flex flex-col items-start gap-2">
+    <div className="p-4 bg-slate-50 border border-slate-100/50 rounded-4xl flex flex-col items-start gap-2">
       <div className={`w-8 h-8 rounded-lg ${iconBg} ${iconColor} flex items-center justify-center`}>
         {icon}
       </div>

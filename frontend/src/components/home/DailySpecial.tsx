@@ -1,6 +1,6 @@
 import { Star, Plus } from 'lucide-react';
 
-interface DailySpecialProps {
+interface Props {
   name: string;
   description: string;
   price: number;
@@ -16,7 +16,7 @@ export default function DailySpecial({
   originalPrice,
   imageUrl,
   rating
-}: DailySpecialProps) {
+}: Props) {
   return (
     <div className="mx-4 mt-6">
       <div className="flex items-center justify-between mb-3">

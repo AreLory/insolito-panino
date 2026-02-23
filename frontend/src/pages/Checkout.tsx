@@ -1,34 +1,41 @@
-//Hooks
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+
+import { selectCartItems } from "../features/cart/cartSelectors";
+import { clearCart } from "../features/cart/cartSlice";
+import { resetOrder } from "../features/checkout/checkoutSlice";
+
 import { useOrder } from "../hooks/useOrder";
-//Components
+import { useAlert } from "../context/AlertContext";
+
 import MiniNavBar from "../components/shared/MiniNavBar";
 import Select from "../components/checkout/Select";
 
-//Interfaces
+import { api } from "../config/axios";
+
 import type { CreateOrderDTO, Order, OrderItem } from "../types/order";
 import type { CartItem } from "../types/cart";
 
-//Redux
-import { selectCartItems } from "../features/cart/cartSelectors";
+import {
+  ArrowLeft,
+  ShoppingCart,
+  Coins,
+  CreditCard,
+  Landmark,
+  Van,
+  ShoppingBag,
+  Utensils,
+} from "lucide-react";
 
-import { clearCart } from "../features/cart/cartSlice";
-
-import { api } from "../config/axios";
-
-//Assets/img
-import cashImg from "../assets/img/coins.png";
-import cardImg from "../assets/img/credit-card.png";
-import bankImg from "../assets/img/bank.png";
-import takeAwayImg from "../assets/img/take-away.png";
-import dineInImg from "../assets/img/holding-hand-dinner.png";
-import deliveryImg from "../assets/img/delivery-man.png";
-import { resetOrder } from "../features/checkout/checkoutSlice";
-import { ArrowLeft, ShoppingCart } from "lucide-react";
 
 export default function Checkout() {
+  const { showAlert } = useAlert();
+
+  const navigate = useNavigate()
+  
   const cart = useSelector(selectCartItems);
   const dispatch = useDispatch();
+
   const {
     order,
     total,
@@ -42,34 +49,34 @@ export default function Checkout() {
     {
       name: "Cash",
       value: "cash",
-      img: cashImg,
+      img: <Coins />,
     },
     {
       name: "Card",
       value: "card",
-      img: cardImg,
+      img: <CreditCard />,
     },
     {
       name: "Online",
       value: "online",
-      img: bankImg,
+      img: <Landmark />,
     },
   ];
   const orderTypesList = [
     {
       name: "Take Away",
       value: "take_away",
-      img: takeAwayImg,
+      img: <ShoppingBag />,
     },
     {
       name: "Dine In",
       value: "dine_in",
-      img: dineInImg,
+      img: <Utensils />,
     },
     {
       name: "Delivery",
       value: "delivery",
-      img: deliveryImg,
+      img: <Van />,
     },
   ];
 
@@ -83,7 +90,7 @@ export default function Checkout() {
   const submitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const formattedItems:OrderItem[] = cart.map((item:CartItem ) => ({
+      const formattedItems: OrderItem[] = cart.map((item: CartItem) => ({
         productId: item._id,
         quantity: item.quantity,
         selectedSize: item.selectedSize,
@@ -98,31 +105,26 @@ export default function Checkout() {
         notes: order.notes,
       };
 
-      const response = await api.post<Order>("/orders", orderDTO);
-
-      console.log("✅ Order created:", response.data);
+      const res = await api.post<Order>("/orders", orderDTO);
+      showAlert("success",'Order: '+ res.statusText );
       dispatch(clearCart());
       dispatch(resetOrder());
+      navigate("/");
     } catch (error: any) {
-      console.error(
-        "❌ Order error:",
-        error?.response?.status,
-        error?.response?.data || error.message,
-      );
+      showAlert("error", `Error ${error.response.status}: ${error.response.data.message}`);
     }
-  }; 
+  };
 
   return (
     <div className="w-screen h-screen flex justify-center bg-white">
-        <MiniNavBar
-          leftChild={<ArrowLeft/>}
-          rightChild={<ShoppingCart/>}
-          pageName="Checkout"
-          goBack="/cart"
-          goTo="/cart"
-        />
+      <MiniNavBar
+        leftChild={<ArrowLeft />}
+        rightChild={<ShoppingCart />}
+        pageName="Checkout"
+        goBack="/cart"
+        goTo="/cart"
+      />
       <div className="pt-20 pb-32 max-w-3xl w-full">
-      
         <form
           action="submit"
           onSubmit={submitOrder}

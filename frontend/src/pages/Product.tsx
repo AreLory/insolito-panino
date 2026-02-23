@@ -1,16 +1,15 @@
-//Hooks
 import { useState, useEffect, useMemo } from "react";
-import { Link, useParams } from "react-router";
-import { useAuth } from "../context/AuthContext";
-import { useProduct } from "../hooks/useProduct";
-import { useProductCart } from "../hooks/useProductCart";
+import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 
-import type { Size } from "../types/products";
 import { selectTotalItems } from "../features/cart/cartSelectors";
 
-import { ArrowLeft, ShoppingCart } from "lucide-react";
-// Components
+import { useAuth } from "../context/AuthContext";
+import { useAlert } from "../context/AlertContext";
+
+import { useProduct } from "../hooks/useProduct";
+import { useProductCart } from "../hooks/useProductCart";
+
 import AddToCartBar from "../components/menu/AddToCartBar";
 import CartCountingControls from "../components/cart/CartCountingControls";
 import SizeSelector from "../components/menu/SizeSelector";
@@ -18,10 +17,18 @@ import IngredientSelector from "../components/menu/IngredientSelector";
 import ExtraSelector from "../components/menu/ExtraSelector";
 import MiniNavBar from "../components/shared/MiniNavBar";
 
+import type { Size } from "../types/products";
+
+import { ArrowLeft, ShoppingCart } from "lucide-react";
+
 export default function Product() {
-  const { id } = useParams<{ id: string }>();
   const { isAuthenticated } = useAuth();
+  const { showAlert } = useAlert();
+
   const itemsQuantity = useSelector(selectTotalItems);
+
+  const { id } = useParams<{ id: string }>();
+  const product = useProduct(id);
 
   const [ingredientsExpanded, setIngredientsExpanded] = useState(false);
   const [extrasExpanded, setExtrasExpanded] = useState(false);
@@ -30,15 +37,34 @@ export default function Product() {
   const [removedIngredients, setRemovedIngredients] = useState<string[]>([]);
   const [selectedExtras, setSelectedExtras] = useState<Set<string>>(new Set());
 
-  const product = useProduct(id);
-
-  const { cartItem, quantity, addOne, removeOne } = useProductCart(
+  const { quantity, addOne, removeOne } = useProductCart(
     product,
     selectedSize,
     removedIngredients,
     Array.from(selectedExtras),
   );
 
+  //Update price on change size, extra or ingredient
+  const total = useMemo(() => {
+    if (!product) return 0;
+    const basePrice = product.basePrice;
+
+    const sizePrice = selectedSize?.price;
+
+    const extrasPrice = Array.from(selectedExtras).reduce((sum, id) => {
+      const extra = product.availableExtras.find((e) => e._id === id);
+      return sum + (extra?.price ?? 0);
+    }, 0);
+
+    const finalUnitPrice = sizePrice || basePrice;
+    if (quantity <= 0) {
+      return finalUnitPrice + extrasPrice;
+    } else {
+      return (finalUnitPrice + extrasPrice) * quantity;
+    }
+  }, [product, selectedSize, selectedExtras, quantity]);
+
+  //select first size in first render
   useEffect(() => {
     if (product) {
       setSelectedSize(product.sizes?.[0] || null);
@@ -60,24 +86,10 @@ export default function Product() {
     });
   };
 
-  const total = useMemo(() => {
-    if (!product) return 0;
-    const basePrice = product.basePrice;
-
-    const sizePrice = selectedSize?.price;
-
-    const extrasPrice = Array.from(selectedExtras).reduce((sum, id) => {
-      const extra = product.availableExtras.find((e) => e._id === id);
-      return sum + (extra?.price ?? 0);
-    }, 0);
-
-    const finalUnitPrice = sizePrice || basePrice;
-    if (quantity <= 0) {
-      return finalUnitPrice + extrasPrice;
-    } else {
-      return (finalUnitPrice + extrasPrice) * quantity;
-    }
-  }, [product, selectedSize, selectedExtras, quantity]);
+  const handleAddToCart = () => {
+    addOne();
+    showAlert("success", "Item successfully added to cart");
+  };
 
   if (!product) return <div>Loading...</div>;
 
@@ -143,7 +155,7 @@ export default function Product() {
         {isAuthenticated && (
           <div className="bg-white mt-2 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              Quantità
+              Quantity
             </h2>
             <CartCountingControls
               onAddToCart={addOne}
@@ -154,7 +166,9 @@ export default function Product() {
         )}
       </div>
 
-      {isAuthenticated && <AddToCartBar price={total} onAddToCart={addOne} />}
+      {isAuthenticated && (
+        <AddToCartBar price={total} onAddToCart={handleAddToCart} />
+      )}
     </div>
   );
 }

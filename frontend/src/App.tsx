@@ -19,7 +19,8 @@ import Profile from "./pages/Profile";
 import Product from "./pages/Product";
 import Checkout from "./pages/Checkout";
 import OrderTracking from "./pages/OrderTracking";
-import Orders from "./pages/Orders";
+import OrdersHistory from "./pages/OrdersHistory";
+import { AlertContainer } from "./components/shared/Alert";
 
 
 
@@ -45,7 +46,7 @@ function AppLayout() {
         <Route path="/profile" element={isAuthenticated ? <Profile /> : <Login />} />
         <Route path="/checkout" element={isAuthenticated ? <Checkout/> : <Login/>}/>
         <Route path="/order-tracking" element={<OrderTracking />}/>
-        <Route path="/orders" element={<Orders/>}/>
+        <Route path="/orders-history" element={<OrdersHistory/>}/>
       </Routes>
     </>
   );
@@ -54,6 +55,7 @@ function AppLayout() {
 export default function App() {
   return (
     <HashRouter>
+      <AlertContainer/>
       <AppLayout />
     </HashRouter>
   );

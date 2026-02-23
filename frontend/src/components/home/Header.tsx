@@ -1,16 +1,20 @@
-import { ShoppingCart, Menu, User } from 'lucide-react';
-import { Link } from 'react-router';
+import { Link } from "react-router";
 
-interface HeaderProps {
+import { ShoppingCart, Menu, User } from "lucide-react";
+
+interface Props {
   cartItemCount: number;
   onMenuClick: () => void;
 }
 
-export default function Header({ cartItemCount, onMenuClick }: HeaderProps) {
+export default function Header({ cartItemCount, onMenuClick }: Props) {
   return (
-    <header className="sticky top-0 z-50 bg-linear-to-r from-orange-500 to-red-500 text-white shadow-lg">
+    <header className="sticky top-0 z-50 bg-linear-to-r from-red-500 to-purple-500 text-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-        <button onClick={onMenuClick} className="p-2 hover:bg-white/10 rounded-lg transition">
+        <button
+          onClick={onMenuClick}
+          className="p-2 hover:bg-white/10 rounded-lg transition"
+        >
           <Menu size={24} />
         </button>
 
@@ -19,13 +23,18 @@ export default function Header({ cartItemCount, onMenuClick }: HeaderProps) {
             <span className="text-2xl">🚚</span>
           </div>
           <div className="flex flex-col">
-            <h1 className="text-xl font-bold leading-tight">StreetBite</h1>
-            <p className="text-xs opacity-90">Food on Wheels</p>
+            <h1 className="text-xl font-bold leading-tight">
+              L'Insolito Panino
+            </h1>
+            <p className="text-xs opacity-90">Panini e Arrosticini</p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <Link to={'/cart'} className="p-2 hover:bg-white/10 rounded-lg transition relative">
+          <Link
+            to={"/cart"}
+            className="p-2 hover:bg-white/10 rounded-lg transition relative"
+          >
             <ShoppingCart size={24} />
             {cartItemCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-yellow-400 text-red-600 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
@@ -33,7 +42,10 @@ export default function Header({ cartItemCount, onMenuClick }: HeaderProps) {
               </span>
             )}
           </Link>
-          <Link to={'/profile'} className="p-2 hover:bg-white/10 rounded-lg transition">
+          <Link
+            to={"/profile"}
+            className="p-2 hover:bg-white/10 rounded-lg transition"
+          >
             <User size={24} />
           </Link>
         </div>

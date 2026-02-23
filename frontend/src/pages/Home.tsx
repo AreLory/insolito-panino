@@ -1,4 +1,3 @@
-// Hooks
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -8,14 +7,14 @@ import {
   selectActiveOrderLoading,
 } from "../features/activeOrder/activeOrderSelectors";
 import { selectCartItems } from "../features/cart/cartSelectors";
-// Components
+
 import Header from "../components/home/Header";
 import OrderStatus from "../components/home/OrderStatus";
 // import DailySpecial from "../components/home/DailySpecial";
 import MenuCategories from "../components/home/MenuCategories";
 // import OffersSection from "../components/home/OffersSection";
 import LocationSection from "../components/home/LocationSection";
-import ReviewSection from "../components/home/ReviewSection";
+// import ReviewSection from "../components/home/ReviewSection";
 import QuickAccess from "../components/home/QuickAccess";
 import BrandStory from "../components/home/BrandStory";
 
@@ -33,7 +32,6 @@ const Home = () => {
   }, [order, dispatch]);
 
   if (loading) return <div>Loading...</div>;
-  if (!order) return <div>No active order</div>;
 
   // !!!!! Cancellare
 
@@ -57,36 +55,36 @@ const Home = () => {
   //   },
   // ];
 
-  // todo: Replace with Google Reviews
-  const reviews = [
-    {
-      id: "1",
-      userName: "Marco Rossi",
-      rating: 5,
-      comment:
-        "Il miglior burger che abbia mai mangiato! Ingredienti freschi e sapore incredibile. Tornerò sicuramente!",
-      likes: 24,
-      date: "2 giorni fa",
-    },
-    {
-      id: "2",
-      userName: "Laura Bianchi",
-      rating: 5,
-      comment:
-        "Servizio veloce e cibo delizioso. Le patatine sono croccanti al punto giusto. Consigliato!",
-      likes: 18,
-      date: "5 giorni fa",
-    },
-    {
-      id: "3",
-      userName: "Giuseppe Verde",
-      rating: 4,
-      comment:
-        "Ottimo rapporto qualità-prezzo. Porzioni generose e personale gentile.",
-      likes: 12,
-      date: "1 settimana fa",
-    },
-  ];
+  // // todo: Replace with Google Reviews
+  // const reviews = [
+  //   {
+  //     id: "1",
+  //     userName: "Marco Rossi",
+  //     rating: 5,
+  //     comment:
+  //       "Il miglior burger che abbia mai mangiato! Ingredienti freschi e sapore incredibile. Tornerò sicuramente!",
+  //     likes: 24,
+  //     date: "2 giorni fa",
+  //   },
+  //   {
+  //     id: "2",
+  //     userName: "Laura Bianchi",
+  //     rating: 5,
+  //     comment:
+  //       "Servizio veloce e cibo delizioso. Le patatine sono croccanti al punto giusto. Consigliato!",
+  //     likes: 18,
+  //     date: "5 giorni fa",
+  //   },
+  //   {
+  //     id: "3",
+  //     userName: "Giuseppe Verde",
+  //     rating: 4,
+  //     comment:
+  //       "Ottimo rapporto qualità-prezzo. Porzioni generose e personale gentile.",
+  //     likes: 12,
+  //     date: "1 settimana fa",
+  //   },
+  // ];
 
   const quickAccessItems = [
     {
@@ -100,23 +98,23 @@ const Home = () => {
       id: "2",
       icon: "history" as const,
       label: "Ordini",
-      link: "/orders",
+      link: "/orders-history",
       color: "bg-gradient-to-br from-blue-400 to-cyan-400",
     },
-    {
-      id: "3",
-      icon: "heart" as const,
-      label: "Preferiti",
-      link: "/",
-      color: "bg-gradient-to-br from-red-400 to-pink-400",
-    },
-    {
-      id: "4",
-      icon: "settings" as const,
-      label: "Impostazioni",
-      link: "/",
-      color: "bg-gradient-to-br from-gray-400 to-gray-500",
-    },
+    // {
+    //   id: "3",
+    //   icon: "heart" as const,
+    //   label: "Preferiti",
+    //   link: "/",
+    //   color: "bg-gradient-to-br from-red-400 to-pink-400",
+    // },
+    // {
+    //   id: "4",
+    //   icon: "settings" as const,
+    //   label: "Impostazioni",
+    //   link: "/",
+    //   color: "bg-gradient-to-br from-gray-400 to-gray-500",
+    // },
   ];
 
   return (
@@ -125,12 +123,11 @@ const Home = () => {
         cartItemCount={cartItemsQuantity}
         onMenuClick={() => console.log("Menu clicked")}
       />
-      <OrderStatus
-        hasActiveOrder={order ? true : false}
+      {order && <OrderStatus
         orderStatus={order.status}
         // todo: time calculation
         estimatedTime={20}
-      />
+      />}
       {/* <DailySpecial
         name="Double Bacon Burger"
         description="Doppio hamburger 200g, bacon croccante, cheddar, salsa BBQ speciale, insalata e pomodoro"
@@ -145,7 +142,7 @@ const Home = () => {
       {/* <OffersSection offers={offers} /> */}
       
       <LocationSection />
-      <ReviewSection reviews={reviews} averageRating={4.8} totalReviews={247} />
+      {/* <ReviewSection reviews={reviews} averageRating={4.8} totalReviews={247} /> */}
       <QuickAccess items={quickAccessItems} />
       <BrandStory
         title="La Nostra Storia"
@@ -155,7 +152,7 @@ const Home = () => {
       <div className="sticky bottom-0 p-4 bg-linear-to-t from-gray-50 to-transparent">
         {cart.length > 0 && (
           <button className="w-full bg-linear-to-r from-orange-500 to-red-500 text-white py-4 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-[1.02] transition flex items-center justify-center gap-2">
-            🛒 Vai al Carrello ({cartItemsQuantity} prodotti)
+            🛒 Go to cart ({cartItemsQuantity} items)
           </button>
         )}
       </div>

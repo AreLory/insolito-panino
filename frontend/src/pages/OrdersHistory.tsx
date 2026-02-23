@@ -1,22 +1,33 @@
 import { useEffect, useState } from "react";
-import { api } from "../config/axios";
-import type { Order } from "../types/order";
 
-import { ArrowLeft, HomeIcon } from "lucide-react";
-//Components
+import { useAlert } from "../context/AlertContext";
+
 import MiniNavBar from "../components/shared/MiniNavBar";
 import OrderCard from "../components/order/OrderCard";
 
-export default function Orders() {
-  const [ordersList, setOrdersList] = useState<Order[]>([]);
+import { api } from "../config/axios";
 
+import type { Order } from "../types/order";
+
+import { ArrowLeft, HomeIcon } from "lucide-react";
+
+
+
+export default function OrdersHistory() {
+  const {showAlert} = useAlert()
+  
+  const [ordersList, setOrdersList] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(false)
+  
   const getOrdersList = async () => {
+    setLoading(true)
     try {
       const res = await api.get("/orders");
-      console.log(res.data);
       setOrdersList(res.data);
     } catch (error) {
-      console.error("Error to fetch orders", error);
+      showAlert( 'error' , "Error to fetch orders" + error);
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -24,6 +35,8 @@ export default function Orders() {
     getOrdersList();
   }, []);
 
+  if (loading) return <p>Loading ...</p>
+  
   return (
     <div className="min-h-screen bg-gray-50">
       <MiniNavBar

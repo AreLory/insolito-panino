@@ -1,18 +1,20 @@
-//Hooks
 import { useEffect, useState } from "react";
+
+import { useAlert } from "../../context/AlertContext";
+
+import ProductCard from "./ProductCard";
 
 import axios from "axios";
 import API_BASE_URL from "../../config/api";
 
-//interfaces
 import type { Category, Products } from "../../types/products";
-//components
-import ProductCard from "./ProductCard";
 
 interface Props {
   category: Category;
 }
 export default function ProductList({ category }: Props) {
+  const {showAlert} = useAlert()
+  
   const [productList, setProductList] = useState<Products[]>([]);
 
   const getProductList = async () => {
@@ -26,7 +28,7 @@ export default function ProductList({ category }: Props) {
       }));
       setProductList(productsWithId);
     } catch (error) {
-      console.error("Error to fetch product", error);
+      showAlert('error', "Error to fetch products. Please try again");
     }
   };
 

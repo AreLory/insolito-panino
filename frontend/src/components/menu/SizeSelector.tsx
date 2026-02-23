@@ -14,7 +14,7 @@ export default function SizeSelector({
   return (
           <div className="bg-white mt-2 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              Scegli la taglia
+              Choose size
             </h2>
             <div className="grid grid-cols-3 gap-3">
               {sizes.map((size) => (

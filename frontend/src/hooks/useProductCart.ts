@@ -1,4 +1,3 @@
-//Hooks
 import { useDispatch, useSelector } from "react-redux";
 
 import { selectCartItems } from "../features/cart/cartSelectors";
@@ -8,15 +7,14 @@ import {
   removeFromCart,
 } from "../features/cart/cartSlice";
 
-//interfaces
-import type { Products, Size } from "../types/products";
+import type { AvailableExtra, Products, Size } from "../types/products";
 import type { CartItem } from "../types/cart";
 
 export function useProductCart(
   item: Products | null,
   selectedSize: Size | null,
   removedIngredients: string[],
-  selectedExtras: string[] = [], // nuovo parametro
+  selectedExtras: string[] = [], 
 ) {
   const dispatch = useDispatch();
   const cartItems: CartItem[] = useSelector(selectCartItems);
@@ -32,12 +30,13 @@ export function useProductCart(
   }
 
   const selectedExtrasArray = (selectedExtras ?? []).map((id) => {
-    const found = (item.availableExtras || []).find((ae: any) => String(ae._id) === String(id));
+    const found = (item.availableExtras || []).find((ae: AvailableExtra) => ae._id === id);
     if (found) return { _id: found._id, name: found.name, price: found.price };
     return { _id: id, name: "", price: 0 };
   });
 
   const unit = selectedSize ? selectedSize.price : item.basePrice;
+
   const totalItemPrice = unit + (selectedExtrasArray.reduce((s, e) => s + (e.price || 0), 0) || 0);
 
   const selectedItem: CartItem = {
@@ -51,6 +50,7 @@ export function useProductCart(
     totalItemPrice,
   };
 
+  //Check if selectedItem is already in cart 
   const cartItem = cartItems.find((i) => {
     const extrasIds = (i.selectedExtras || [])
       .map((e: any) => (typeof e === "string" ? e : e._id))

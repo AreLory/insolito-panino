@@ -1,33 +1,45 @@
 import { useEffect, useState } from "react";
-import ProductList from "../components/menu/ProductList";
-import axios from "axios";
-import API_BASE_URL from "../config/api";
-import type { Category } from "../types/products";
-import MiniNavBar from "../components/shared/MiniNavBar";
-import { ArrowLeft, ShoppingCart } from "lucide-react";
 import { useSelector } from "react-redux";
+
 import { selectTotalItems } from "../features/cart/cartSelectors";
 
+import { useAlert } from "../context/AlertContext";
+
+import ProductList from "../components/menu/ProductList";
+import MiniNavBar from "../components/shared/MiniNavBar";
+
+import axios from "axios";
+import API_BASE_URL from "../config/api";
+
+import type { Category } from "../types/products";
+
+import { ArrowLeft, ShoppingCart } from "lucide-react";
+
+
+
+
 export default function Menu() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const {showAlert} = useAlert()
+  
   const itemsQuantity = useSelector(selectTotalItems)
+  
+  const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null,
   );
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const getCategories = async () => {
+    setLoading(true)
     try {
       const res = await axios.get(`${API_BASE_URL}/categories`);
-      
       setCategories(res.data);
 
       if (res.data.length > 0){
         setSelectedCategory(res.data[0]);
       }
-
     } catch (error) {
-      console.error("Error to fetch categories", error);
+      showAlert('error', "Error to fetch categories:" + error);
     } finally {
       setLoading(false)
     }

@@ -1,4 +1,5 @@
 import type { AvailableExtra } from "../../types/products";
+
 import { ChevronDown, ChevronUp } from "lucide-react";
 interface Props {
   isExpanded: boolean;
@@ -25,11 +26,11 @@ export default function ExtraSelector({
           >
             <div className="flex items-center gap-3">
               <h2 className="text-lg font-semibold text-gray-900">
-                Aggiungi extra
+                Add an extra ingredient
               </h2>
               {selectedExtras > 0 && (
                 <span className="bg-orange-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
-                  {selectedExtras.size} selezionati
+                  {selectedExtras.size} selected
                 </span>
               )}
             </div>

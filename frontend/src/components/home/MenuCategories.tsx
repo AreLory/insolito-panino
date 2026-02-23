@@ -1,28 +1,30 @@
-import { ChevronRight, UtensilsIcon } from "lucide-react";
 import { useEffect } from "react";
-import type { Category } from "../../types/products";
+import { Link } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
+
 import { fetchCategories } from "../../features/categories/categoriesSlice";
 import {
   selectCategories,
   selectCategoriesLoading,
 } from "../../features/categories/categoriesSelectors";
 import { fetchProducts } from "../../features/products/productsSlice";
-import { Link } from "react-router";
+
+import type { Category } from "../../types/products";
+
+import { ChevronRight, UtensilsIcon } from "lucide-react";
 
 export default function MenuCategories() {
   const dispatch = useDispatch();
   const categories = useSelector(selectCategories);
   const loading = useSelector(selectCategoriesLoading);
 
-  // Fetch solo se necessario
   useEffect(() => {
     dispatch(fetchCategories());
     dispatch(fetchProducts());
   }, [dispatch]);
 
   if (loading) return <p>Loading ...</p>;
-  if (!categories) return <p>Categories not found</p>;
+  if (!categories) return 
 
   return (
     <div className="mx-4 mt-8">

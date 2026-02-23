@@ -1,32 +1,29 @@
-//Hooks
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// Types
-import type { Order, OrderItem } from "../types/order";
-// Components
-import OrderItemCard from "../components/order/OrderItemCard";
-import OrderInfo from "../components/order/OrderInfo";
 import { Link } from "react-router";
-// Redux
+
 import {
   selectActiveOrder,
   selectActiveOrderLoading,
 } from "../features/activeOrder/activeOrderSelectors";
-import {fetchActiveOrder} from "../features/activeOrder/activeOrderSlice";
+import { fetchActiveOrder } from "../features/activeOrder/activeOrderSlice";
 
-// Assets
+import OrderItemCard from "../components/order/OrderItemCard";
+import OrderInfo from "../components/order/OrderInfo";
+
+import type { Order, OrderItem } from "../types/order";
+
 import {
   ChevronLeft,
   MoreHorizontal,
   Utensils,
   CreditCard,
-  Bike
+  Bike,
 } from "lucide-react";
-
 
 const OrderTracking = () => {
   const dispatch = useDispatch();
-  const order:Order| null = useSelector(selectActiveOrder);
+  const order: Order | null = useSelector(selectActiveOrder);
   const loading = useSelector(selectActiveOrderLoading);
 
   useEffect(() => {
@@ -35,15 +32,16 @@ const OrderTracking = () => {
     }
   }, [order, dispatch]);
 
-  if (!order) return <p>No order found</p>
-  if (loading) return <p>Loading...</p> 
-
-
+  if (!order) return <p>No order found</p>;
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="flex flex-col flex-1 pb-32">
       <div className="px-6 py-8 flex items-center relative">
-        <Link to={'/'} className="w-10 h-10 flex items-center justify-center bg-slate-50 rounded-full text-slate-400 hover:bg-slate-100 transition-colors">
+        <Link
+          to={"/"}
+          className="w-10 h-10 flex items-center justify-center bg-slate-50 rounded-full text-slate-400 hover:bg-slate-100 transition-colors"
+        >
           <ChevronLeft size={24} />
         </Link>
         <div className="flex-1 text-center">
@@ -57,7 +55,6 @@ const OrderTracking = () => {
       </div>
 
       <div className="px-6 space-y-6">
-
         <div className="p-5 bg-[#FFF2F2] border border-[#FFECEC] rounded-[2.5rem] flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-[#FF3B30] rounded-full flex items-center justify-center text-white">
@@ -83,7 +80,10 @@ const OrderTracking = () => {
 
         <div className="space-y-4">
           {order.items.map((item: OrderItem) => (
-            <OrderItemCard key={`${item._id}-${item.selectedSize?.label}`} item={item} />
+            <OrderItemCard
+              key={`${item._id}-${item.selectedSize?.label}`}
+              item={item}
+            />
           ))}
         </div>
 

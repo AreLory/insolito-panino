@@ -1,7 +1,9 @@
+import type { ReactNode } from "react";
+
 interface Option {
   name: string;
   value: string;
-  img:string;
+  img: ReactNode;
 }
 
 interface Props {
@@ -29,7 +31,7 @@ export default function Select({
             key={opt.value}
           >
             <h1 className="font-semibold">{opt.name}</h1>
-            <img src={opt.img} alt={opt.name} className="size-10"/>
+            {opt.img}
           </div>
         ))}
       </div>

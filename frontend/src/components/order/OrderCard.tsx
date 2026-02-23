@@ -1,7 +1,10 @@
 import { useState } from "react";
-import type { Order, OrderItem } from "../../types/order";
-import { ChevronDown, ChevronUp } from "lucide-react";
+
 import OrderItemCard from "./OrderItemCard";
+
+import type { Order, OrderItem } from "../../types/order";
+
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface Props {
   order: Order;

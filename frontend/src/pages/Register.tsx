@@ -1,13 +1,16 @@
-//Hooks
 import React, { useState } from "react";
+import { redirect } from "react-router";
+
+import { useAlert } from "../context/AlertContext";
+
+import Input from "../components/shared/Input";
 
 import axios from "axios";
 import API_BASE_URL from "../config/api";
-import { redirect } from "react-router";
-//Components
-import Input from "../components/shared/Input";
 
 export default function Register() {
+  const { showAlert } = useAlert();
+
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -50,9 +53,27 @@ export default function Register() {
         email,
         password,
       });
+      showAlert("success", `Successfully registered`);
       redirect("/");
-    } catch (error) {
-      console.log(error);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        switch (error.response.status) {
+          case 400:
+            showAlert("error", "Bad request: missing fields");
+            break;
+          case 409:
+            showAlert("error", `Conflict: ${error.response.data.error}`);
+            break;
+          case 500:
+            showAlert("error", error.message);
+            break;
+          default:
+            showAlert("error", `Unexpected error: ${error.response.status}`);
+        }
+      } else {
+        showAlert("error", "Network error or unexpected error" + error);
+        return { error: "Network error" };
+      }
     } finally {
       setLoading(false);
     }
@@ -61,10 +82,11 @@ export default function Register() {
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md flex flex-col items-center">
-        <form onSubmit={userRegister} className="bg-white rounded-2xl shadow-xl p-8 w-full">
-          <h1 className="text-3xl text-shade font-bold text-center">
-            Sign Up
-          </h1>
+        <form
+          onSubmit={userRegister}
+          className="bg-white rounded-2xl shadow-xl p-8 w-full"
+        >
+          <h1 className="text-3xl text-shade font-bold text-center">Sign Up</h1>
           <p className="text-gray-500 text-center">Register here for order</p>
           {fields.map((field) => (
             <Input

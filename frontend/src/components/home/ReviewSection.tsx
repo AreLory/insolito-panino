@@ -19,7 +19,7 @@ export default function ReviewSection({ reviews, averageRating, totalReviews }: 
   return (
     <div className="mx-4 mt-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold text-gray-800">Cosa Dicono di Noi</h2>
+        <h2 className="text-2xl font-bold text-gray-800">Customers Reviews</h2>
         <div className="flex items-center gap-2 bg-yellow-50 px-4 py-2 rounded-full">
           <Star size={20} className="fill-yellow-400 text-yellow-400" />
           <span className="font-bold text-gray-800">{averageRating}</span>
@@ -32,11 +32,11 @@ export default function ReviewSection({ reviews, averageRating, totalReviews }: 
           {reviews.map((review) => (
             <div
               key={review.id}
-              className="flex-shrink-0 w-80 bg-white rounded-2xl p-5 shadow-lg snap-start"
+              className="flex-linear-0 w-80 bg-white rounded-2xl p-5 shadow-lg snap-start"
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-red-400 rounded-full flex items-center justify-center text-white font-bold">
+                  <div className="w-10 h-10 bg-linear-to-br from-orange-400 to-red-400 rounded-full flex items-center justify-center text-white font-bold">
                     {review.userName.charAt(0)}
                   </div>
                   <div>
@@ -59,7 +59,7 @@ export default function ReviewSection({ reviews, averageRating, totalReviews }: 
 
               <div className="flex items-center gap-1 text-gray-400 text-xs">
                 <ThumbsUp size={14} />
-                <span>{review.likes} persone lo hanno trovato utile</span>
+                <span>{review.likes} people found this helpful</span>
               </div>
             </div>
           ))}

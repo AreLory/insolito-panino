@@ -1,22 +1,22 @@
 import { ChevronRight } from 'lucide-react';
 
-interface BrandStoryProps {
+interface Props {
   title: string;
   story: string;
   imageUrl: string;
 }
 
-export default function BrandStory({ title, story, imageUrl }: BrandStoryProps) {
+export default function BrandStory({ title, story, imageUrl }: Props) {
   return (
     <div className="mx-4 mt-8 mb-8">
-      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl overflow-hidden shadow-xl">
+      <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-3xl overflow-hidden shadow-xl">
         <div className="relative h-48">
           <img
             src={imageUrl}
             alt="Brand Story"
             className="w-full h-full object-cover opacity-60"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-gray-900 to-transparent" />
           <div className="absolute bottom-4 left-6">
             <h2 className="text-2xl font-bold text-white mb-1">{title}</h2>
           </div>

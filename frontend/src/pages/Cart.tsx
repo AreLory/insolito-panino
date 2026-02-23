@@ -1,15 +1,7 @@
-//hooks
+import { useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router";
+
 import { useSelector, useDispatch } from "react-redux";
-//components
-import CartItemCard from "../components/cart/CartItemCard";
-import { Link } from "react-router";
-import MiniNavBar from "../components/shared/MiniNavBar";
-
-//interfaces
-import type { CartItem } from "../types/cart";
-
-import { ArrowLeft, TrashIcon } from "lucide-react";
-
 import { clearCart, getCartItemKey } from "../features/cart/cartSlice";
 import {
   selectCartItems,
@@ -17,34 +9,64 @@ import {
   selectTotalItems,
 } from "../features/cart/cartSelectors";
 
+import { useAlert } from "../context/AlertContext";
+
+import CartItemCard from "../components/cart/CartItemCard";
+import MiniNavBar from "../components/shared/MiniNavBar";
+
+import type { CartItem } from "../types/cart";
+
+import { ArrowLeft, TrashIcon } from "lucide-react";
+
 export default function Cart() {
-  const cart = useSelector(selectCartItems);
-  const total: number = useSelector(selectCartSubtotal);
+  const { showAlert } = useAlert();
+
   const dispatch = useDispatch();
+  const cartItems: CartItem[] = useSelector(selectCartItems);
+  const total: number = useSelector(selectCartSubtotal);
   const totalItems = useSelector(selectTotalItems);
-  const clear = () => {
+
+  const navigate = useNavigate();
+
+  const prevLength = useRef(cartItems.length);
+
+  useEffect(() => {
+    if (prevLength.current > 0 && cartItems.length === 0) {
+      showAlert("warning", "Empty cart, redirecting in 3 seconds");
+
+      const timer = setTimeout(() => {
+        navigate("/menu");
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+
+    prevLength.current = cartItems.length;
+  }, [cartItems, navigate]);
+
+  const handleClear = () => {
     dispatch(clearCart());
+    showAlert("success", "Cart cleared");
   };
 
   return (
     <div className="min-h-screen">
-      <MiniNavBar 
-       leftChild={<ArrowLeft/>}
-       rightChild={<TrashIcon/>}
-       pageName="My Cart"
-       goBack="/menu"
-       goTo="/checkout"
-       onClickAction={clear}
-       />
+      <MiniNavBar
+        leftChild={<ArrowLeft />}
+        rightChild={<TrashIcon />}
+        pageName="My Cart"
+        goBack="/menu"
+        goTo="/checkout"
+        onClickAction={handleClear}
+      />
       <div className="pt-20 pb-32 max-w-2xl mx-auto">
-       
         <div className="flex flex-col items-center bg-white">
-          {cart?.map((item: CartItem) => (
+          {cartItems?.map((item: CartItem) => (
             <CartItemCard item={item} key={getCartItemKey(item)} />
           ))}
         </div>
-        {cart.length > 0 && (
-          <div className="flex flex-col items-center bg-white shadow-2xl w-full max-w-3xl absolute bottom-25 rounded-2xl">
+        {cartItems.length > 0 && (
+          <div className="flex flex-col items-center bg-white shadow-2xl w-full max-w-3xl absolute bottom-0 rounded-2xl">
             <div className="w-full pt-6 space-y-3 pb-4 px-6">
               <div className="flex justify-between text-slate-500 text-sm font-medium">
                 <span>Products:</span>
