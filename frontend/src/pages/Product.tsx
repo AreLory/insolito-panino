@@ -16,6 +16,7 @@ import SizeSelector from "../components/menu/SizeSelector";
 import IngredientSelector from "../components/menu/IngredientSelector";
 import ExtraSelector from "../components/menu/ExtraSelector";
 import MiniNavBar from "../components/shared/MiniNavBar";
+import Loader from "../components/shared/Loader";
 
 import type { Size } from "../types/products";
 
@@ -91,7 +92,7 @@ export default function Product() {
     showAlert("success", "Item successfully added to cart");
   };
 
-  if (!product) return <div>Loading...</div>;
+  if (!product) return <Loader/>
 
   return (
     <div className="min-h-screen bg-gray-50">

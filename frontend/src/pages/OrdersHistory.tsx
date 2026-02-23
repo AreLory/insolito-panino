@@ -10,6 +10,7 @@ import { api } from "../config/axios";
 import type { Order } from "../types/order";
 
 import { ArrowLeft, HomeIcon } from "lucide-react";
+import Loader from "../components/shared/Loader";
 
 
 
@@ -35,7 +36,7 @@ export default function OrdersHistory() {
     getOrdersList();
   }, []);
 
-  if (loading) return <p>Loading ...</p>
+  if (loading) return <Loader/>
   
   return (
     <div className="min-h-screen bg-gray-50">

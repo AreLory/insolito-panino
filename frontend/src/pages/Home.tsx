@@ -17,6 +17,7 @@ import LocationSection from "../components/home/LocationSection";
 // import ReviewSection from "../components/home/ReviewSection";
 import QuickAccess from "../components/home/QuickAccess";
 import BrandStory from "../components/home/BrandStory";
+import Loader from "../components/shared/Loader";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -30,8 +31,6 @@ const Home = () => {
       dispatch(fetchActiveOrder());
     }
   }, [order, dispatch]);
-
-  if (loading) return <div>Loading...</div>;
 
   // !!!!! Cancellare
 
@@ -123,6 +122,7 @@ const Home = () => {
         cartItemCount={cartItemsQuantity}
         onMenuClick={() => console.log("Menu clicked")}
       />
+      {loading && <Loader/>}
       {order && <OrderStatus
         orderStatus={order.status}
         // todo: time calculation

@@ -14,15 +14,13 @@ import API_BASE_URL from "../config/api";
 import type { Category } from "../types/products";
 
 import { ArrowLeft, ShoppingCart } from "lucide-react";
-
-
-
+import Loader from "../components/shared/Loader";
 
 export default function Menu() {
-  const {showAlert} = useAlert()
-  
-  const itemsQuantity = useSelector(selectTotalItems)
-  
+  const { showAlert } = useAlert();
+
+  const itemsQuantity = useSelector(selectTotalItems);
+
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null,
@@ -30,18 +28,17 @@ export default function Menu() {
   const [loading, setLoading] = useState(false);
 
   const getCategories = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const res = await axios.get(`${API_BASE_URL}/categories`);
       setCategories(res.data);
-
-      if (res.data.length > 0){
+      if (res.data.length > 0) {
         setSelectedCategory(res.data[0]);
       }
     } catch (error) {
-      showAlert('error', "Error to fetch categories:" + error);
+      showAlert("error", "Error to fetch categories:" + error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -49,18 +46,18 @@ export default function Menu() {
     getCategories();
   }, []);
 
-  if (loading) return <p>Loading ...</p>;
-  if (!selectedCategory) return <p>No categories found</p>;
+  if (loading) return <Loader />;
+  if (!selectedCategory) return;
 
   return (
     <div className="w-screen h-screen flex flex-col">
-      <MiniNavBar 
-      leftChild={<ArrowLeft/>}
-      rightChild={<ShoppingCart />}
-      pageName="Menu"
-      badgeCount={itemsQuantity}
-      goBack="/"
-      goTo="/cart"
+      <MiniNavBar
+        leftChild={<ArrowLeft />}
+        rightChild={<ShoppingCart />}
+        pageName="Menu"
+        badgeCount={itemsQuantity}
+        goBack="/"
+        goTo="/cart"
       />
       <div className="pt-20 pb-32 max-w-2xl mx-auto flex flex-col items-center justify-center">
         <h1 className="text-xl font-bold">Categories</h1>

@@ -5,6 +5,7 @@ import { useAlert } from "../context/AlertContext";
 
 import Input from "../components/shared/Input";
 import MiniNavBar from "../components/shared/MiniNavBar";
+import Loader from "../components/shared/Loader";
 
 import { api } from "../config/axios";
 
@@ -66,6 +67,7 @@ export default function Profile() {
   });
 
   const getInfo = async () => {
+    setLoading(true);
     try {
       const profileInfo = await api.get("/users/me");
       const { fullName, email, phoneNumber, address }: IProfile =
@@ -74,6 +76,8 @@ export default function Profile() {
       setUser({ fullName, email, phoneNumber, address });
     } catch (error) {
       console.log("Error", error);
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -137,6 +141,9 @@ export default function Profile() {
     showAlert("info", "Edit action canceled");
     setIsEditing(false);
   };
+
+  
+  if (loading) return <Loader/>
 
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
@@ -230,9 +237,6 @@ export default function Profile() {
             </div>
           )}
       </div>
-
-      {/* todo: <Loader/> */}
-      {loading && <p>Updating...</p>}
     </div>
   );
 }

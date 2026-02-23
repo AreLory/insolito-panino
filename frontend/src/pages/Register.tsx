@@ -3,6 +3,7 @@ import { redirect } from "react-router";
 
 import { useAlert } from "../context/AlertContext";
 
+import Loader from "../components/shared/Loader";
 import Input from "../components/shared/Input";
 
 import axios from "axios";
@@ -79,6 +80,8 @@ export default function Register() {
     }
   };
 
+  if (loading) return <Loader/>
+
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md flex flex-col items-center">
@@ -88,6 +91,7 @@ export default function Register() {
         >
           <h1 className="text-3xl text-shade font-bold text-center">Sign Up</h1>
           <p className="text-gray-500 text-center">Register here for order</p>
+
           {fields.map((field) => (
             <Input
               key={field.label}

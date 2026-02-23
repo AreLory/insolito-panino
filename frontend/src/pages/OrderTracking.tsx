@@ -10,6 +10,7 @@ import { fetchActiveOrder } from "../features/activeOrder/activeOrderSlice";
 
 import OrderItemCard from "../components/order/OrderItemCard";
 import OrderInfo from "../components/order/OrderInfo";
+import Loader from "../components/shared/Loader";
 
 import type { Order, OrderItem } from "../types/order";
 
@@ -33,7 +34,8 @@ const OrderTracking = () => {
   }, [order, dispatch]);
 
   if (!order) return <p>No order found</p>;
-  if (loading) return <p>Loading...</p>;
+
+  if (loading) return <Loader/>;
 
   return (
     <div className="flex flex-col flex-1 pb-32">

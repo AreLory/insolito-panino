@@ -8,6 +8,7 @@ import axios from "axios";
 import API_BASE_URL from "../../config/api";
 
 import type { Category, Products } from "../../types/products";
+import Loader from "../shared/Loader";
 
 interface Props {
   category: Category;
@@ -16,8 +17,10 @@ export default function ProductList({ category }: Props) {
   const {showAlert} = useAlert()
   
   const [productList, setProductList] = useState<Products[]>([]);
+  const [loading, setLoading] = useState(false)
 
   const getProductList = async () => {
+    setLoading(true)
     try {
       const res = await axios.get(
         `${API_BASE_URL}/products?category=${category._id}`,
@@ -29,13 +32,18 @@ export default function ProductList({ category }: Props) {
       setProductList(productsWithId);
     } catch (error) {
       showAlert('error', "Error to fetch products. Please try again");
+    }finally {
+      setLoading(false)
     }
+    
   };
 
   useEffect(() => {
     getProductList();
   }, [category]);
 
+  if (loading) return <Loader/>
+  
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-xl font-bold">{category.name}</h1>

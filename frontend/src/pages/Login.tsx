@@ -5,6 +5,7 @@ import { useAlert } from "../context/AlertContext";
 
 import Input from "../components/shared/Input";
 import axios from "axios";
+import Loader from "../components/shared/Loader";
 
 const Login = () => {
   const { login } = useAuth();
@@ -43,6 +44,8 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  if (loading) return <Loader/>
 
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
