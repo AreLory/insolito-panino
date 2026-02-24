@@ -48,7 +48,7 @@ export default function MenuCategories() {
             />
 
             <div className="relative">
-              <div className="text-4xl mb-3">{category.emoji}</div>
+              <img src={category.img} alt={category.emoji} className="md:max-h-30 max-h-20"/>
               <h3 className="font-bold text-gray-800 text-lg mb-1">
                 {category.name}
               </h3>

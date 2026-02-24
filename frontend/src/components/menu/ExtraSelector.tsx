@@ -57,7 +57,7 @@ export default function ExtraSelector({
                     <span className="text-gray-700">{extra.name}</span>
                   </div>
                   <span className="font-semibold text-orange-600">
-                    +€{extra.price.toFixed(2)}
+                    {extra.price != 0 && `+€ ${extra.price.toFixed(2)}` }
                   </span>
                 </label>
               ))}

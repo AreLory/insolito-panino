@@ -10,6 +10,7 @@ import { MinusCircle, PlusCircle, X } from "lucide-react";
 export default function CartItemCard({ item }: { item: CartItem }) {
   const productForHook: Products = {
     _id: item._id,
+    imageUrl: item.imageUrl,
     name: item.name,
     basePrice: item.unitPrice,
     category: "burger",
@@ -46,31 +47,31 @@ export default function CartItemCard({ item }: { item: CartItem }) {
     const total = (sizePrice + extrasPrice) * (cartItem.quantity ?? 0);
     return total.toFixed(2);
   };
-  
+
   return (
-    <div className="relative rounded-2xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-all">
+    <div className="relative rounded-2xl p-4 mx-4 border border-gray-200 shadow-sm hover:shadow-md transition-all bg-white">
       <button
         onClick={removeAll}
-        className="absolute top-3 right-3 p-1.5 rounded-full hover:bg-gray-100 transition text-gray-400 hover:text-gray-700"
+        className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-100 transition text-gray-400 hover:text-gray-700"
       >
         <X size={18} />
       </button>
 
-      <div className="flex gap-10">
-        <div className="w-28 h-28 shrink-0">
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-10">
+        <div className="w-full sm:w-28 h-28 shrink-0 flex justify-center">
           <img
             alt="panino"
-            className="w-full h-full object-cover rounded-xl bg-gray-100"
+            className=" h-full object-cover rounded-xl bg-gray-100"
+            src={cartItem?.imageUrl}
           />
         </div>
 
-        <div className="flex flex-col flex-1 justify-between pr-6">
+        <div className="flex flex-col flex-1 justify-between pr-0 sm:pr-6">
           <div className="space-y-2">
             <div>
               <h3 className="text-lg font-semibold text-gray-900 leading-tight">
                 {cartItem?.name}
               </h3>
-
               {cartItem?.selectedSize && (
                 <p className="text-sm text-gray-500 mt-0.5">
                   {cartItem.selectedSize.label}
@@ -79,7 +80,7 @@ export default function CartItemCard({ item }: { item: CartItem }) {
             </div>
 
             {cartItem?.removedIngredients &&
-              cartItem?.removedIngredients?.length > 0 && (
+              cartItem.removedIngredients.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {cartItem.removedIngredients.map((i) => (
                     <span
@@ -108,7 +109,7 @@ export default function CartItemCard({ item }: { item: CartItem }) {
             )}
           </div>
 
-          <div className="flex items-center justify-between mt-4 w-60">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-4 w-full sm:w-60 gap-3 sm:gap-0">
             <div className="text-right">
               <p className="text-xs text-gray-400">Totale</p>
               <p className="text-xl font-bold text-gray-900">€ {showTotal()}</p>

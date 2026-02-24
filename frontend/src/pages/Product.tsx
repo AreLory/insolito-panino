@@ -100,25 +100,25 @@ export default function Product() {
         leftChild={<ArrowLeft />}
         rightChild={<ShoppingCart />}
         badgeCount={itemsQuantity}
-        pageName={product.name}
+        pageName={product.name.toUpperCase()}
         goBack="/menu"
         goTo="/cart"
       />
 
       <div className="pt-20 pb-32 max-w-2xl mx-auto">
         <div className="bg-white">
-          <div className="relative h-72 overflow-hidden">
+          <div className="relative h-72 overflow-hidden flex justify-center">
             {product.imageUrl && (
               <img
                 src={product.imageUrl}
                 alt={product.name}
-                className="w-full h-full object-cover"
+                className="h-full object-cover"
               />
             )}
           </div>
           <div className="p-6">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {product.name} {selectedSize?.label}
+              {product.name.toUpperCase()} {selectedSize?.label.toUpperCase()}
             </h1>
             {product.description && (
               <p className="text-gray-600 mb-4">{product.description}</p>
@@ -137,13 +137,13 @@ export default function Product() {
           />
         )}
 
-        <IngredientSelector
+        {product.ingredients.length > 0 && <IngredientSelector
           ingredients={product.ingredients}
           isExpanded={ingredientsExpanded}
           removedIngredients={removedIngredients}
           onSetIngredientsExpanded={setIngredientsExpanded}
           onToggleIngredient={removeIngredient}
-        />
+        />}
 
         <ExtraSelector
           extras={product.availableExtras}

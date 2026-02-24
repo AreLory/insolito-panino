@@ -54,32 +54,36 @@ export default function Menu() {
       <MiniNavBar
         leftChild={<ArrowLeft />}
         rightChild={<ShoppingCart />}
-        pageName="Menu"
+        pageName='Menu'
         badgeCount={itemsQuantity}
         goBack="/"
         goTo="/cart"
       />
-      <div className="pt-20 pb-32 max-w-2xl mx-auto flex flex-col items-center justify-center">
-        <h1 className="text-xl font-bold">Categories</h1>
-        <div className="flex flex-row w-full sm:overflow-auto md:justify-center">
+      <div className="pt-20 pb-16 max-w-5xl mx-auto px-4">
+        <div className="flex gap-3 overflow-x-auto pb-2 md:justify-center">
           {categories.map((cat) => (
             <button
               key={cat._id}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-2 py-1  rounded cursor-pointer text-primary min-w-20 max-w-30 w-16 text-xs shadow ml-3 ${
-                selectedCategory?.slug == cat.slug
-                  ? "bg-primary text-white transition-colors"
-                  : ""
-              }`}
+              className={`
+          px-5 py-2 rounded-full whitespace-nowrap
+          text-sm font-medium transition-all duration-300
+          border
+          ${
+            selectedCategory?.slug === cat.slug
+              ? "bg-primary text-white border-primary shadow-md"
+              : "bg-white text-gray-700 border-gray-200 hover:border-primary hover:text-primary"
+          }
+        `}
             >
-              <img src={cat.img} alt={cat.slug} />
-              <p>{cat.name}</p>
+              {cat.name}
             </button>
           ))}
         </div>
-      </div>
-      <div className="mt-2">
-        <ProductList category={selectedCategory} />
+
+        <div className="mt-10">
+          <ProductList category={selectedCategory} />
+        </div>
       </div>
     </div>
   );

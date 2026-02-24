@@ -1,5 +1,6 @@
 export interface CartItem {
   _id: string;
+  imageUrl:string,
   name: string;
   unitPrice: number;
 

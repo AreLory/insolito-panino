@@ -13,7 +13,7 @@ export interface Products {
   sizes?: Size[];
   ingredients: Ingredient[];
   availableExtras: AvailableExtra[];
-  imageUrl?: string;
+  imageUrl: string;
   available?: boolean;
   description?: string;
   quantity?: number;

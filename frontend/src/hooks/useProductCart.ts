@@ -42,6 +42,7 @@ export function useProductCart(
   const selectedItem: CartItem = {
     _id: item._id,
     name: item.name,
+    imageUrl: item.imageUrl,
     unitPrice: item.basePrice,
     selectedSize: selectedSize ? { label: selectedSize.label, price: selectedSize.price } : null,
     removedIngredients: removedIngredients ?? [],

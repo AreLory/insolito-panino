@@ -49,7 +49,7 @@ export default function OrdersHistory() {
       />
 
       <div className="pt-20 pb-32 max-w-2xl mx-auto">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 px-4">
           {ordersList.length > 0 ?
             ordersList.map((order) => <OrderCard order={order} key={order._id}/>) : <p>No orders found, go to menu to do a new order</p>}
         </div>
