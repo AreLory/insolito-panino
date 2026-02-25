@@ -1,18 +1,20 @@
 import { NextFunction, Response, Request } from "express";
-import { Error } from "mongoose";
 
-export const asyncHandler = (fn: Function) => 
-  (req: Request, res: Response, next: NextFunction) => 
-    Promise.resolve(fn(req, res, next)).catch(next);
+export const asyncHandler =
+  (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    return Promise.resolve(fn(req, res, next)).catch(next);
+  };
 
 export const errorMiddleware = (
-  err: Error,
+  err: any,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const status = err instanceof Error.ValidationError ? 400 : 500;
-  res.status(status).json({ 
-    error: err.message || "Server error" 
+  console.error("🔥 ERROR:", err);
+
+  res.status(500).json({
+    error: err.message || "Server error",
   });
 };

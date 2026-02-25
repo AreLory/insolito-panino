@@ -1,4 +1,6 @@
 import * as dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import mongoose from "mongoose";
 
@@ -10,7 +12,7 @@ import productsRouter from "./routes/productsRoute";
 import extrasRouter from "./routes/extrasRoute";
 import categoriesRouter from './routes/categoriesRoute'
 
-dotenv.config();
+
 const cors = require("cors");
 
 const jwtSecret = process.env.JWT
@@ -36,7 +38,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(errorMiddleware);
+
 
 app.use("/api", userRouter);
 app.use("/api", ordersRouter);
@@ -59,3 +61,4 @@ async function startServer() {
 }
 
 startServer();
+app.use(errorMiddleware);
