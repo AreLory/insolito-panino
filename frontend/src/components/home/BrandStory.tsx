@@ -26,7 +26,7 @@ export default function BrandStory({ title, story, imageUrl }: Props) {
           <p className="text-gray-300 text-sm mb-4 leading-relaxed">{story}</p>
 
           <button className="bg-white text-gray-800 px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:gap-3 transition-all group">
-            Scopri la nostra storia
+            Discover our history
             <ChevronRight size={20} className="group-hover:translate-x-1 transition" />
           </button>
         </div>

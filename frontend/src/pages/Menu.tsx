@@ -59,7 +59,7 @@ export default function Menu() {
         goBack="/"
         goTo="/cart"
       />
-      <div className="pt-20 pb-16 max-w-5xl mx-auto px-4">
+      <div className="pt-20 pb-16 max-w-5xl md:mx-auto px-4">
         <div className="flex gap-3 overflow-x-auto pb-2 md:justify-center">
           {categories.map((cat) => (
             <button
@@ -71,8 +71,8 @@ export default function Menu() {
           border
           ${
             selectedCategory?.slug === cat.slug
-              ? "bg-primary text-white border-primary shadow-md"
-              : "bg-white text-gray-700 border-gray-200 hover:border-primary hover:text-primary"
+              ? "bg-gray-800 text-white border-orange-700 shadow-md"
+              : "bg-white text-gray-700 border-gray-200 hover:border-orange-700 hover:text-black"
           }
         `}
             >

@@ -7,7 +7,6 @@ import jwt from "jsonwebtoken";
 
 const jwtSecret = process.env.JWT as string;
 
-// Register
 export const createUser = async (req: Request, res: Response) => {
   try {
     const { fullName, email, password, phoneNumber, address } = req.body;
@@ -42,7 +41,6 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
-// Login
 export const userLogin = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -68,12 +66,10 @@ export const userLogin = async (req: Request, res: Response) => {
   }
 };
 
-// Logout
 export const userLogout = async (req: Request, res: Response) => {
-  res.status(200).json({message: 'Loagout successful'});
+  res.status(200).json({message: 'Logout successful'});
 };
 
-// GET /users/me
 export const getCurrentUser = async (req: Request, res: Response) => {
   try {
     const user = await User.findById(req.userId).select("-password");
@@ -90,7 +86,6 @@ export const getCurrentUser = async (req: Request, res: Response) => {
   }
 };
 
-// Update Profile
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const allowedUpdates = ["fullName", "phoneNumber", "address", "password"];
@@ -119,8 +114,6 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 };
 
-// ! Admin only
-// Get Users
 export const getUsers = async (req: Request, res: Response) => {
   try {
     const allUsers = await User.find();

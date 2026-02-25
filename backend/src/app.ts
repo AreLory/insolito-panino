@@ -18,7 +18,7 @@ import extrasRouter from "./routes/extrasRoute";
 import categoriesRouter from './routes/categoriesRoute'
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
 
 app.use(cors({
   origin: [
@@ -35,21 +35,18 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
 app.use("/api", userRouter);
 app.use("/api", ordersRouter);
 app.use("/api", extrasRouter);
 app.use("/api", productsRouter);
 app.use("/api", categoriesRouter);
 
-
-// Server + DB
 async function startServer() {
   try {
     await mongoose.connect(process.env.MONGO_URI as string);
     console.log("✅ MongoDB connected");
 
-    app.listen(PORT, () => {
+    app.listen(PORT,"0.0.0.0", () => {
       console.log(`🚀 Server running on port ${PORT}`);
     });
   } catch (error) {

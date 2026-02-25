@@ -4,34 +4,13 @@ import { ShoppingCart, Menu, User } from "lucide-react";
 
 interface Props {
   cartItemCount: number;
-  onMenuClick: () => void;
 }
 
-export default function Header({ cartItemCount, onMenuClick }: Props) {
+export default function Header({ cartItemCount }: Props) {
   return (
-    <header className="sticky top-0 z-50 bg-linear-to-r from-red-500 to-purple-500 text-white shadow-lg">
+    <header className="sticky top-0 z-50 bg-linear-to-r from-black to-gray-900 text-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-        <button
-          onClick={onMenuClick}
-          className="p-2 hover:bg-white/10 rounded-lg transition"
-        >
-          <Menu size={24} />
-        </button>
-
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-            <span className="text-2xl">🚚</span>
-          </div>
-          <div className="flex flex-col">
-            <h1 className="text-xl font-bold leading-tight">
-              L'Insolito Panino
-            </h1>
-            <p className="text-xs opacity-90">Panini e Arrosticini</p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Link
+        <Link
             to={"/cart"}
             className="p-2 hover:bg-white/10 rounded-lg transition relative"
           >
@@ -42,6 +21,21 @@ export default function Header({ cartItemCount, onMenuClick }: Props) {
               </span>
             )}
           </Link>
+
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+            <span className="text-2xl">🚚</span>
+          </div>
+          <div className="flex flex-col">
+            <h1 className="text-xl font-bold leading-tight">
+              The unusual burger
+            </h1>
+            <p className="text-xs opacity-90">More than a burger</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          
           <Link
             to={"/profile"}
             className="p-2 hover:bg-white/10 rounded-lg transition"

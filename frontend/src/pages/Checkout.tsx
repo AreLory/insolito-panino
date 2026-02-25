@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
-import { selectCartItems } from "../features/cart/cartSelectors";
+import { selectCartItems, selectTotalItems } from "../features/cart/cartSelectors";
 import { clearCart } from "../features/cart/cartSlice";
 import { resetOrder } from "../features/checkout/checkoutSlice";
 
@@ -27,13 +27,13 @@ import {
   Utensils,
 } from "lucide-react";
 
-
 export default function Checkout() {
   const { showAlert } = useAlert();
 
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
+
   const cart = useSelector(selectCartItems);
+  const itemCount = useSelector(selectTotalItems)
   const dispatch = useDispatch();
 
   const {
@@ -106,12 +106,15 @@ export default function Checkout() {
       };
 
       const res = await api.post<Order>("/orders", orderDTO);
-      showAlert("success",'Order: '+ res.statusText );
+      showAlert("success", "Order: " + res.statusText);
       dispatch(clearCart());
       dispatch(resetOrder());
       navigate("/");
     } catch (error: any) {
-      showAlert("error", `Error ${error.response.status}: ${error.response.data.message}`);
+      showAlert(
+        "error",
+        `Error ${error.response.status}: ${error.response.data.message}`,
+      );
     }
   };
 
@@ -121,6 +124,7 @@ export default function Checkout() {
         leftChild={<ArrowLeft />}
         rightChild={<ShoppingCart />}
         pageName="Checkout"
+        badgeCount={itemCount}
         goBack="/cart"
         goTo="/cart"
       />
@@ -128,12 +132,12 @@ export default function Checkout() {
         <form
           action="submit"
           onSubmit={submitOrder}
-          className="flex w-full justify-center"
+          className="flex flex-col w-full items-center justify-center"
         >
-          <div className="flex h-full w-full shadow-2xl max-w-3xl rounded-2xl">
+          <div className="flex w-full shadow-2xl max-w-3xl rounded-2xl">
             <div className="flex flex-col items-center w-full gap-4">
               <div className="w-full flex flex-col items-center p-4">
-                <h2>Choose a Payment Method</h2>
+                <h2 className="text-lg font-semibold">Choose a Payment Method</h2>
                 <Select
                   selectedOption={selectedPaymentOption}
                   onChooseOption={(option) => changePaymentMethod(option.value)}
@@ -141,49 +145,54 @@ export default function Checkout() {
                 />
               </div>
               <div className="w-full flex flex-col items-center p-4">
-                <h2>Choose a Order Type</h2>
+                <h2 className="text-lg font-semibold">Choose a Order Type</h2>
                 <Select
                   selectedOption={selectedOrderTypeOption}
                   onChooseOption={(option) => changeOrderType(option.value)}
                   optionList={orderTypesList}
                 />
               </div>
-              <div className="w-full flex flex-col items-center p-4">
-                <h2>Add a note</h2>
+              <div className="w-full flex flex-col items-center py-4 px-8">
+                <h2 className="text-lg font-semibold">Add a note</h2>
                 <textarea
                   value={order.notes}
                   onChange={(e) => changeNotes(e.target.value)}
                   placeholder="Add a note..."
+                  className="w-full px-8 border accent-orange-500 rounded-lg"
                 />
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-center bg-white shadow-2xl w-full max-w-3xl absolute bottom-0 rounded-2xl">
-            <div className="w-full pt-6 space-y-3 pb-4 px-6">
-              <div className="flex justify-between text-slate-500 text-sm font-medium">
-                <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
-              </div>
-              {order.orderType === "delivery" && (
+          <div className="fixed bottom-0 w-full flex justify-center">
+            <div className="w-full max-w-3xl bg-white rounded-t-2xl shadow-2xl">
+              <div className="w-full pt-6 space-y-3 pb-4 px-6">
                 <div className="flex justify-between text-slate-500 text-sm font-medium">
-                  <span>Delivery Fee</span>
-                  <span>+ ${(2.5).toFixed(2)}</span>
+                  <span>Subtotal</span>
+                  <span>${subtotal.toFixed(2)}</span>
                 </div>
-              )}
-              <div className="flex justify-between items-center pt-4 border-t border-slate-100">
-                <span className="text-xl font-bold text-slate-800">Total</span>
-                <span className="text-3xl font-bold text-[#FF3B30]">
-                  ${total.toFixed(2)}
-                </span>
+                {order.orderType === "delivery" && (
+                  <div className="flex justify-between text-slate-500 text-sm font-medium">
+                    <span>Delivery Fee</span>
+                    <span>+ ${(2.5).toFixed(2)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between items-center pt-4 border-t border-slate-100">
+                  <span className="text-xl font-bold text-slate-800">
+                    Total
+                  </span>
+                  <span className="text-3xl font-bold text-[#FF3B30]">
+                    ${total.toFixed(2)}
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="h-20 py-4 px-8 mb-2 flex w-full">
-              <button
-                type="submit"
-                className="w-full bg-[#FF3B30] text-white py-5 rounded-3xl font-bold flex items-center justify-center gap-2 shadow-xl shadow-[#FF3B30]/20 hover:bg-[#E03429] transition-all active:scale-[0.98]"
-              >
-                <span>Submit Order</span>
-              </button>
+              <div className="px-6 pb-6 pt-4">
+                <button
+                  type="submit"
+                  className="w-full bg-linear-to-r from-orange-700 to-orange-500 text-white py-4 sm:py-5 rounded-3xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-orange-200 hover:from-orange-800 hover:to-orange-700 transition-all active:scale-[0.98]"
+                >
+                  <span>Submit Order</span>
+                </button>
+              </div>
             </div>
           </div>
         </form>

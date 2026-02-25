@@ -1,6 +1,5 @@
 import {
   CreateOrderBody,
-  IOrder,
   IOrderItem,
   OrderType,
 } from "../types/IOrders";
@@ -12,11 +11,10 @@ import mongoose, { Types } from "mongoose";
 import { IProduct } from "../types/IProducts";
 import { IExtras } from "../types/IExtras";
 
-//Orders List
 export const getAllOrders = async (req: Request, res: Response) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.userId);
-    const orders = await Orders.find({user: userId});
+    const orders = await Orders.find({user: userId}).sort({ _id: -1 });
     res.status(200).json(orders);
   } catch (error) {
     if (error instanceof Error) {
@@ -26,7 +24,7 @@ export const getAllOrders = async (req: Request, res: Response) => {
     }
   }
 };
-//Get Order Info
+
 export const getOrder = async (req: Request, res: Response) => {
   try {
     const ordId = req.params.id;
@@ -40,21 +38,14 @@ export const getOrder = async (req: Request, res: Response) => {
     }
   }
 };
-//Get my last orders
-export const getMyLastOrder = async (req: Request, res: Response) => {
+
+export const getActiveOrder = async (req: Request, res: Response) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.userId);
     const order = await Orders.findOne({ user: userId }).sort({ _id: -1 });
-    if (!order) {
-      return res.status(404).json({ error: "order not found" });
-    }
-    console.log({
-      userId: req.userId,
-      isObjectId: req.userId instanceof Types.ObjectId,
-    });
-    res.status(200).json(order);
+
+    res.status(200).json(order ?? null);
   } catch (error) {
-    console.error("🔥 GET MY ORDERS ERROR:", error);
     if (error instanceof Error) {
       return res.status(500).json({ error: error.message });
     }
@@ -62,11 +53,8 @@ export const getMyLastOrder = async (req: Request, res: Response) => {
   }
 };
 
-//Create Order
 export const createOrder = async (req: Request, res: Response) => {
   try {
-    console.log("🔥 createOrder chiamata");
-
     if (!req.userId) {
       return res.status(401).json({ error: "User not authenticated" });
     }
@@ -89,10 +77,6 @@ export const createOrder = async (req: Request, res: Response) => {
     const products: IProduct[] = await Products.find({
       _id: { $in: productIds },
     });
-
-    console.log("Items ricevuti:", items);
-    console.log("Product IDs estratti:", productIds);
-    console.log("Prodotti trovati:", products.length);
 
     const missing = productIds.filter(
       (id) => !products.some((p) => p._id.equals(id)),
@@ -180,7 +164,6 @@ export const createOrder = async (req: Request, res: Response) => {
 
     return res.status(201).json(newOrder);
   } catch (error) {
-    console.error("❌ Error creating order:", error);
     if (error instanceof Error) {
       return res.status(500).json({ error: error.message });
     } else {
@@ -189,7 +172,6 @@ export const createOrder = async (req: Request, res: Response) => {
   }
 };
 
-// Delete Order
 export const deleteOrder = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -206,7 +188,6 @@ export const deleteOrder = async (req: Request, res: Response) => {
   }
 };
 
-// Update Order
 export const updateOrder = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;

@@ -105,7 +105,7 @@ export default function Register() {
 
           <button
             type="submit"
-            className="w-full mt-6 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200"
+            className="w-full mt-6 px-4 py-2.5 bg-linear-to-r from-purple-600 to-blue-500 hover:to-purple-700 cursor-pointer text-white rounded-lg font-medium  transition-colors duration-200"
           >
             Save
           </button>

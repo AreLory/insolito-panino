@@ -200,14 +200,14 @@ export default function Profile() {
             <div className="mt-6">
               <button
                 type="submit"
-                className="w-full mt-6 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200"
+                className="w-full mt-6 px-4 py-2.5 bg-linear-to-r from-purple-600 to-blue-500 text-white rounded-lg font-medium hover:to-purple-700 transition-colors duration-200"
               >
                 Save
               </button>
               <button
                 type="button"
                 onClick={() => handleCancel()}
-                className="w-full mt-6 px-4 py-2.5 bg-red-500 text-white rounded-lg font-medium hover:bg-red-700 transition-colors duration-200"
+                className="w-full mt-6 px-4 py-2.5  bg-linear-to-r from-red-600 to-orange-600 text-white rounded-lg font-medium hover:to-red-700 transition-colors duration-200"
               >
                 Cancel
               </button>
@@ -221,7 +221,7 @@ export default function Profile() {
                 onClick={() => {
                   setIsEditing(true);
                 }}
-                className="w-full mt-6 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200"
+                className="w-full mt-6 px-4 py-2.5  bg-linear-to-r from-purple-600 to-blue-500 hover:to-purple-700  text-white rounded-lg font-medium transition-colors duration-200"
               >
                 Edit
               </button>
@@ -230,7 +230,7 @@ export default function Profile() {
                 onClick={() => {
                   logout();
                 }}
-                className="w-full mt-6 px-4 py-2.5 bg-red-500 text-white rounded-lg font-medium hover:bg-red-700 transition-colors duration-200"
+                className="w-full mt-6 px-4 py-2.5  bg-linear-to-r from-red-600 to-orange-600 hover:bg-red-700 text-white rounded-lg font-medium  transition-colors duration-200"
               >
                 Log out
               </button>

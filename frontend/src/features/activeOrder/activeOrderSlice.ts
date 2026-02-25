@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { Order } from "../../types/order";
 import API_BASE_URL from "../../config/api";
-import {api }from "../../config/axios";
+import { api } from "../../config/axios";
 
 interface ActiveOrderState {
   data: Order | null;
@@ -15,20 +15,23 @@ const initialState: ActiveOrderState = {
   error: null,
 };
 
-export const fetchActiveOrder = createAsyncThunk<Order | null, void, { rejectValue: string }>(
-  "activeOrder/fetch",
-  async (_, thunkAPI) => {
-    try {
-      const res = await api.get(`${API_BASE_URL}/orders/last`);
-      return res.data;
-    } catch (error: any) {
-      console.error(error);
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Network error"
-      );
+export const fetchActiveOrder = createAsyncThunk<
+  Order | null,
+  void,
+  { rejectValue: string }
+>("activeOrder/fetch", async (_, thunkAPI) => {
+  try {
+    const res = await api.get(`${API_BASE_URL}/orders/active`);
+    return res.data;
+  } catch (error: any) {
+    if (error.response?.status === 404) {
+      return null;
     }
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || "Network error",
+    );
   }
-);
+});
 
 const activeOrderSlice = createSlice({
   name: "activeOrder",
@@ -57,6 +60,5 @@ const activeOrderSlice = createSlice({
 });
 
 export const { clearActiveOrder } = activeOrderSlice.actions;
-
 
 export default activeOrderSlice.reducer;

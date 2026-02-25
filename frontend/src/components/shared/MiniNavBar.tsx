@@ -24,11 +24,11 @@ export default function MiniNavBar({
   }
 
   return (
-    <div className="fixed top-0 left-0 right-0 bg-white shadow-sm z-10">
+    <div className="fixed top-0 left-0 right-0 bg-linear-to-r from-black to-gray-900 shadow-sm z-10 text-white">
       <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
         <Link
           to={goBack}
-          className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          className="p-2 hover:bg-gray-800 rounded-full transition-colors"
           aria-label="Torna indietro"
         >
           {leftChild}
@@ -36,7 +36,7 @@ export default function MiniNavBar({
         <h2 className="text-xl font-semibold">{pageName}</h2>
         {onClickAction ? (
           <button
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors relative"
+            className="p-2 hover:bg-gray-800 rounded-full transition-colors relative"
             onClick={onClickAction}
           >
             {rightChild}
@@ -44,11 +44,11 @@ export default function MiniNavBar({
         ) : (
           <Link
             to={goTo}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors relative"
+            className="p-2 hover:bg-gray-800 rounded-full transition-colors relative"
           >
             {rightChild}
             {badgeCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold">
+              <span className="absolute -top-1 -right-1 bg-yellow-400 text-red-600 text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold">
                 {badgeCount}
               </span>
             )}

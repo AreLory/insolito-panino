@@ -3,25 +3,21 @@ import {
   createOrder,
   deleteOrder,
   getAllOrders,
-  getMyLastOrder,
+  getActiveOrder,
   getOrder,
   updateOrder,
 } from "../controllers/ordersController";
 import { authMiddleware } from "../middlewares/authMiddleware";
 const router = express.Router();
 
-// ! User
-
-router.post("/orders",authMiddleware, createOrder);
-router.get("/orders",authMiddleware, getAllOrders);
-router.get("/orders/last",authMiddleware, getMyLastOrder);
+router.post("/orders", authMiddleware, createOrder);
+router.get("/orders", authMiddleware, getAllOrders);
+router.get("/orders/active", authMiddleware, getActiveOrder);
 router.get("/orders/:id", getOrder);
 router.delete("/orders/:id", deleteOrder);
 
-
 // ! Admin only
 
-router.patch("/orders/:id", updateOrder);
-
+router.patch("/admin/orders/:id", updateOrder);
 
 export default router;

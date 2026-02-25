@@ -18,14 +18,14 @@ export default function Select({
   onChooseOption,
 }: Props) {
   return (
-    <div className="w-full h-20 p-4">
+    <div className="w-full h-20 p-4 ">
       <div className="flex w-full justify-around gap-4">
         {optionList.map((opt) => (
           <div
-            className={`rounded-lg w-full flex flex-col items-center cursor-pointer ${
+            className={`rounded-lg w-full flex flex-col items-center   ${
               selectedOption?.value === opt.value
                 ? "scale-90 shadow-inner"
-                : "shadow-xl border-b-4 border border-primary"
+                : "shadow-xl border-b-4 border hover:bg-gray-50 cursor-pointer"
             }`}
             onClick={() => onChooseOption(opt)}
             key={opt.value}

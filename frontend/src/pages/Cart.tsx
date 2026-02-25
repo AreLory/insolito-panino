@@ -78,7 +78,7 @@ export default function Cart() {
             </div>
             <div className="flex justify-between items-center pt-4 border-t border-slate-100">
               <span className="text-xl font-bold text-slate-800">Total</span>
-              <span className="text-3xl font-bold text-[#FF3B30]">
+              <span className="text-3xl font-bold text-orange-500">
                 ${total.toFixed(2)}
               </span>
             </div>
@@ -87,7 +87,7 @@ export default function Cart() {
           <div className="px-6 pb-6 pt-4">
             <Link
               to="/checkout"
-              className="w-full bg-[#FF3B30] text-white py-4 sm:py-5 rounded-3xl font-bold flex items-center justify-center gap-2 shadow-xl shadow-[#FF3B30]/20 hover:bg-[#E03429] transition-all active:scale-[0.98]"
+              className="w-full bg-linear-to-r from-orange-700 to-orange-500 text-white py-4 sm:py-5 rounded-3xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-orange-200 hover:from-orange-800 hover:to-orange-700 transition-all active:scale-[0.98]"
             >
               <span>Checkout</span>
             </Link>

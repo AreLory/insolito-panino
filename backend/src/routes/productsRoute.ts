@@ -8,7 +8,6 @@ import {
 } from "../controllers/productsController";
 const router = express.Router();
 
-// * User GET
 router.get("/products", getAllProducts);
 router.get("/products/:id", getProduct);
 

@@ -13,7 +13,6 @@ export const authMiddleware = (
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    console.log("⚠️ Missing authorization header");
     return res.status(401).json({ error: "Missing token" });
   }
 
@@ -26,7 +25,6 @@ export const authMiddleware = (
 
     next();
   } catch (error) {
-    console.error("❌ Invalid token:", error);
     res.status(401).json({ error: "Invalid token" });
   }
 };

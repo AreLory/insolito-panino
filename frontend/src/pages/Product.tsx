@@ -146,7 +146,7 @@ export default function Product() {
         />}
 
         <ExtraSelector
-          extras={product.availableExtras}
+          extras={product.availableExtras.sort((a, b)=> a.price - b.price )}
           isExpanded={extrasExpanded}
           selectedExtras={selectedExtras}
           onSetExpanded={setExtrasExpanded}

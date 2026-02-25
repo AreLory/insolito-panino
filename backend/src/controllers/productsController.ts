@@ -3,7 +3,6 @@ import Products from "../models/products";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 
-//Products List
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
     const category = req.query.category as string | undefined;
@@ -20,7 +19,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
     });
   }
 };
-//Get Product Info
+
 export const getProduct = async (req: Request, res: Response) => {
   try {
     const prodId = req.params.id;
@@ -35,8 +34,6 @@ export const getProduct = async (req: Request, res: Response) => {
   }
 };
 
-// ! Admin only
-//Create Product
 export const createProduct = async (req: Request, res: Response) => {
   try {
     const {
@@ -74,7 +71,6 @@ export const createProduct = async (req: Request, res: Response) => {
   }
 };
 
-//Delete Product
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -85,13 +81,12 @@ export const deleteProduct = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    res.status(204).send(); // No Content
+    res.status(204).send(); 
   } catch (error) {
     res.status(500).json({ error: "Server error" });
   }
 };
 
-//Update Product
 export const updateProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;

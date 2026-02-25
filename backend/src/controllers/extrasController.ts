@@ -2,7 +2,6 @@ import Extras from "../models/extras";
 import { IExtras } from "../types/IExtras";
 import { Request, Response } from "express";
 
-//Extras List
 export const getAllExtras = async (req: Request, res: Response) => {
   try {
     const extras =await Extras.find();
@@ -15,7 +14,7 @@ export const getAllExtras = async (req: Request, res: Response) => {
     }
   }
 };
-// Get one extra info
+
 export const getExtra = async (req: Request, res: Response) => {
   try {
     const {id} = req.params;
@@ -30,7 +29,6 @@ export const getExtra = async (req: Request, res: Response) => {
   }
 };
 
-// Create Extra
 export const createExtra = async (req: Request, res: Response) => {
   try {
     const { name, price, available } = req.body;
@@ -52,7 +50,6 @@ export const createExtra = async (req: Request, res: Response) => {
   }
 };
 
-//Delete Extra
 export const deleteExtra = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -67,7 +64,6 @@ export const deleteExtra = async (req: Request, res: Response) => {
   }
 };
 
-//Update Extra
 export const updateExtra = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;

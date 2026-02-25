@@ -2,7 +2,6 @@ import Categories from "../models/categories";
 import { ICategories } from "../types/ICategories";
 import { Request, Response } from "express";
 
-//Categories List
 export const getAllCategories = async (req: Request, res: Response) => {
   try {
     const extras = await Categories.find();
@@ -16,7 +15,6 @@ export const getAllCategories = async (req: Request, res: Response) => {
   }
 };
 
-// Create Categories
 export const createCategories = async (req: Request, res: Response) => {
   try {
     const { name, slug, emoji, img, description, active} = req.body;
@@ -41,7 +39,6 @@ export const createCategories = async (req: Request, res: Response) => {
   }
 };
 
-//Delete Categories
 export const deleteCategories = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -56,7 +53,6 @@ export const deleteCategories = async (req: Request, res: Response) => {
   }
 };
 
-//Update Categories
 export const updateCategories = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;

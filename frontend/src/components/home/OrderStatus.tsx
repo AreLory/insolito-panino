@@ -4,15 +4,15 @@ import { Clock, ChevronRight } from "lucide-react";
 
 interface OrderStatusProps {
   orderStatus?: string;
-  estimatedTime?: number;
+  // estimatedTime?: number;
 }
 
 export default function OrderStatus({
   orderStatus,
-  estimatedTime,
+  // estimatedTime,
 }: OrderStatusProps) {
   return (
-    <div className="cursor-pointer bg-linear-to-r from-green-500 to-emerald-600 text-white rounded-2xl p-5 shadow-lg mx-4 mt-4">
+    <div className="cursor-pointer bg-linear-to-r from-orange-700 to-orange-500 text-white rounded-2xl p-5 shadow-lg mx-4 mt-4">
       <Link
         to={"/order-tracking"}
         className="flex items-center justify-between"
@@ -22,16 +22,16 @@ export default function OrderStatus({
             <Clock size={24} />
           </div>
           <div>
-            <p className="text-sm opacity-90">Il tuo ordine</p>
-            <p className="font-bold text-lg">{orderStatus}</p>
-            {estimatedTime && (
+            <p className="text-sm opacity-90">Your order</p>
+            <p className="font-bold text-lg">{orderStatus?.toUpperCase()}</p>
+            {/* {estimatedTime && (
               <p className="text-sm opacity-90">
-                Pronto tra {estimatedTime} min
+                Ready in {estimatedTime} min
               </p>
-            )}
+            )} */}
           </div>
         </div>
-        <button className="bg-white text-green-600 p-3 rounded-full hover:scale-105 transition">
+        <button className="bg-white text-orange-600 p-3 rounded-full hover:scale-105 transition">
           <ChevronRight size={24} />
         </button>
       </Link>

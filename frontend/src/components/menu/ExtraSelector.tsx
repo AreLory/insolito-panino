@@ -52,7 +52,7 @@ export default function ExtraSelector({
                       type="checkbox"
                       checked={selectedExtras.has(extra._id)}
                       onChange={() => onToggleExtra(extra._id)}
-                      className="w-5 h-5 text-orange-500 border-gray-300 rounded focus:ring-orange-500 cursor-pointer"
+                      className="w-5 h-5 text-orange-500 border-gray-300 rounded focus:ring-orange-500 accent-orange-500 cursor-pointer"
                     />
                     <span className="text-gray-700">{extra.name}</span>
                   </div>

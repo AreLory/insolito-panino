@@ -38,15 +38,15 @@ function AppLayout() {
   return (
     <>
       <Routes>
-        <Route path="/" element={isAuthenticated ? <Home /> : <Login />} />
+        <Route path="/" element={ <Home /> } />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/register" element={<Register />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/cart" element={isAuthenticated ? <Cart /> : <Login />} />
         <Route path="/profile" element={isAuthenticated ? <Profile /> : <Login />} />
         <Route path="/checkout" element={isAuthenticated ? <Checkout/> : <Login/>}/>
-        <Route path="/order-tracking" element={<OrderTracking />}/>
-        <Route path="/orders-history" element={<OrdersHistory/>}/>
+        <Route path="/order-tracking" element={isAuthenticated ? <OrderTracking/> : <Login/>}/>
+        <Route path="/orders-history" element={isAuthenticated ? <OrdersHistory/> : <Login/>}/>
       </Routes>
     </>
   );

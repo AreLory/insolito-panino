@@ -11,16 +11,13 @@ import { authMiddleware } from "../middlewares/authMiddleware";
 
 const router = express.Router();
 
-// ! For USERS
-
 router.post("/auth/register", createUser);
 router.post("/auth/login", userLogin);
 router.post("/auth/logout", authMiddleware, userLogout);
-
 router.get("/users/me", authMiddleware, getCurrentUser);
 router.patch("/users/me", authMiddleware, updateUser);
 
-// ! For ADMIN
-router.get("/users", getUsers);
+// ! Admin only
+router.get("/admin/users", getUsers);
 
 export default router;
