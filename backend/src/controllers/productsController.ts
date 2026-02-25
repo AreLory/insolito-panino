@@ -2,9 +2,10 @@ import { IProduct } from "../types/IProducts";
 import Products from "../models/products";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
+import { asyncHandler } from "../middlewares/errorHandler";
 
-export const getAllProducts = async (req: Request, res: Response) => {
-  try {
+export const getAllProducts = asyncHandler(
+  async (req: Request, res: Response) => {
     const category = req.query.category as string | undefined;
 
     const filter = category
@@ -13,29 +14,17 @@ export const getAllProducts = async (req: Request, res: Response) => {
 
     const products = await Products.find(filter).populate("category");
     res.status(200).json(products);
-  } catch (error) {
-    res.status(500).json({
-      error: error instanceof Error ? error.message : "Server error",
-    });
-  }
-};
+  },
+);
 
-export const getProduct = async (req: Request, res: Response) => {
-  try {
-    const prodId = req.params.id;
-    const product = await Products.findById(prodId).populate("availableExtras");
-    res.status(200).json(product);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message});
-    } else {
-      res.status(500).json({ error: "Server error" });
-    }
-  }
-};
+export const getProduct = asyncHandler(async (req: Request, res: Response) => {
+  const prodId = req.params.id;
+  const product = await Products.findById(prodId).populate("availableExtras");
+  res.status(200).json(product);
+});
 
-export const createProduct = async (req: Request, res: Response) => {
-  try {
+export const createProduct = asyncHandler(
+  async (req: Request, res: Response) => {
     const {
       name,
       category,
@@ -62,17 +51,11 @@ export const createProduct = async (req: Request, res: Response) => {
 
     await newProduct.save();
     res.status(200).json(newProduct);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "Server error" });
-    }
-  }
-};
+  },
+);
 
-export const deleteProduct = async (req: Request, res: Response) => {
-  try {
+export const deleteProduct = asyncHandler(
+  async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const product = await Products.findByIdAndDelete(id);
@@ -81,14 +64,12 @@ export const deleteProduct = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    res.status(204).send(); 
-  } catch (error) {
-    res.status(500).json({ error: "Server error" });
-  }
-};
+    res.status(204).send();
+  },
+);
 
-export const updateProduct = async (req: Request, res: Response) => {
-  try {
+export const updateProduct = asyncHandler(
+  async (req: Request, res: Response) => {
     const { id } = req.params;
     const change = req.body;
     const product = await Products.findByIdAndUpdate(
@@ -102,7 +83,5 @@ export const updateProduct = async (req: Request, res: Response) => {
     }
 
     res.status(200).json(product);
-  } catch (error) {
-    res.status(500).json({ error: "Server error" });
-  }
-};
+  },
+);

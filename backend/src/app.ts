@@ -1,21 +1,23 @@
 import * as dotenv from "dotenv";
-dotenv.config();
-
-
-const jwtSecret = process.env.JWT
-if (!jwtSecret) {
-  throw new Error("JWT is not defined");
-}
-
 import express from "express";
 import mongoose from "mongoose";
-const cors = require("cors");
+
+import { errorMiddleware } from "./middlewares/errorHandler";
 
 import userRouter from "./routes/userRoute";
 import ordersRouter from "./routes/ordersRoute";
 import productsRouter from "./routes/productsRoute";
 import extrasRouter from "./routes/extrasRoute";
 import categoriesRouter from './routes/categoriesRoute'
+
+dotenv.config();
+const cors = require("cors");
+
+const jwtSecret = process.env.JWT
+if (!jwtSecret) {
+  throw new Error("JWT is not defined");
+}
+
 
 const app = express();
 const PORT = Number(process.env.PORT) || 5000;
@@ -34,6 +36,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(errorMiddleware);
 
 app.use("/api", userRouter);
 app.use("/api", ordersRouter);
