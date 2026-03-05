@@ -1,73 +1,192 @@
-# React + TypeScript + Vite
+# 🍔 L'Insolito Panino – Street Food Ordering App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Web application for managing products and orders in a street food environment.
 
-Currently, two official plugins are available:
+This project was inspired by my direct experience working for several years at **L'Insolito Panino**, a street food business that allowed me to continue my studies. Working on the front line, I observed several recurring issues, especially during peak hours:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- long waiting times
+- difficulty consulting the menu
+- many customer questions about product ingredients
 
-## React Compiler
+For this reason, I decided to develop a web application designed for similar businesses, with the goal of **optimizing the ordering process**, reducing the workload for staff interacting directly with customers, and making the purchasing experience faster and easier.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The app is primarily designed to **improve the customer experience**, focusing on a simple and intuitive interface. The goal is to reduce confusion while browsing the menu by clearly displaying ingredients, product variants, and customization options.
 
-## Expanding the ESLint configuration
+Since this is my first **full stack project**, I also focused heavily on code organization and project structure, trying to simulate a real team development environment and keeping the code as **modular and scalable** as possible.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# 🚀 Technologies Used
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Frontend
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- ![React](https://img.shields.io/badge/React-%2320232a.svg?logo=react&logoColor=%2361DAFB)
+- ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=fff)
+- ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=fff)
+- ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-%2338B2AC.svg?logo=tailwind-css&logoColor=white)
+-  ![Redux](https://img.shields.io/badge/Redux-764ABC?logo=redux&logoColor=fff)
+- ![Axios](https://img.shields.io/badge/Axios-5A29E4?logo=axios&logoColor=fff)
+- ![React Router](https://img.shields.io/badge/React%20Router-CA4245?logo=reactrouter&logoColor=fff)
+
+## Backend
+
+- ![Node.js](https://img.shields.io/badge/Node.js-6DA55F?logo=node.js&logoColor=white)
+- ![Express](https://img.shields.io/badge/Express-000000?logo=express&logoColor=fff)
+- ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?logo=mongodb&logoColor=fff)
+
+---
+
+# 📁 Project Structure (Frontend)
+
+
+```
+src
+┣ assets
+┃ ┗ img
+┣ components
+┃ ┣ cart
+┃ ┣ checkout
+┃ ┣ home
+┃ ┣ menu
+┃ ┣ order
+┃ ┗ shared
+┣ config
+┣ context
+┣ features
+┃ ┣ activeOrder
+┃ ┣ cart
+┃ ┣ categories
+┃ ┣ checkout
+┃ ┗ products
+┣ hooks
+┣ pages
+┣ store
+┣ types
+┣ utils
+┣ App.tsx
+┣ index.css
+┗ main.tsx
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+# 📁 Project Structure (Backend)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src
+ ┣ controllers
+ ┣ middlewares
+ ┣ models
+ ┣ routes
+ ┣ types
+ ┗ app.ts
+```
+
+The project structure separates:
+
+- **reusable components**
+- **pages**
+- **state management**
+- **application logic**
+
+This helps keep the code modular, scalable, and easy to maintain.
+
+---
+
+# Features
+
+- menu browsing
+- product customization
+- cart management
+- order creation
+- user authentication
+- global state management with Redux
+
+---
+
+# ⚛️ React Concepts Used
+
+One of the main goals of this project was not only to build a working application, but also to deepen my understanding of several React concepts that I had not fully mastered before.
+
+## State Management
+
+I used:
+
+- **useState** and **useEffect** for local state management and side effects such as API calls
+- **Redux Toolkit** and **React Context** for global state management
+
+### React Context
+
+Used for global functionalities such as:
+
+- authentication via **JWT tokens**
+- application **alert management**
+
+### Redux Toolkit
+
+Redux manages more structured application data through dedicated slices:
+
+- products
+- categories
+- cart
+- active order
+- checkout
+
+To improve performance, I used **createSelector** to create memoized selectors and optimize the recalculation of derived data, avoiding unnecessary component re-renders.
+
+---
+
+# 🪝 Custom Hooks
+
+I used many React hooks and library hooks, but I also created some **custom hooks** to isolate the logic of specific functionalities.
+
+In particular, I created hooks dedicated to handling API calls, separating the fetching logic from components and making the code more reusable and easier to read.
+
+---
+
+# 🔁 Conditional Rendering and Error Handling
+
+One area I focused on improving was **conditional rendering** and **error handling**, which were previously some of my weaker points.
+
+In addition to a standard **Loader** component for data fetching, I implemented a system of **custom alerts** that communicate the status of operations to the user:
+
+- success
+- error
+- warning
+- informational messages
+
+---
+
+# 🌐 API Calls
+
+The project requires multiple interactions with the backend, so I worked extensively with **asynchronous functions**, using:
+
+- `async / await`
+- `try / catch` blocks
+
+to properly handle errors and keep the UI in a consistent state.
+
+---
+
+# 🐞 Debugging and Development
+
+During development I frequently used debugging tools such as:
+
+- **Redux DevTools**
+- **console.log**
+
+to analyze the application state and identify possible data synchronization issues.
+
+This process helped me better understand the **data flow** within the application and how global state management works.
+
+---
+
+# 🎯 Project Goals
+
+This project allowed me to deepen my knowledge in several aspects of frontend and full stack development:
+
+- complex state management
+- scalable React project architecture
+- custom hook creation
+- asynchronous API handling
+- improved error handling
+- debugging and global state analysis
