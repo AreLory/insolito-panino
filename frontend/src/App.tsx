@@ -21,24 +21,25 @@ import Checkout from "./pages/Checkout";
 import OrderTracking from "./pages/OrderTracking";
 import OrdersHistory from "./pages/OrdersHistory";
 import { AlertContainer } from "./components/shared/Alert";
-
-
+import ProtectedRoute from "./utils/ProtectedRoute";
 
 function AppLayout() {
-  const { isAuthenticated } = useAuth();
-
   return (
     <>
       <Routes>
-        <Route path="/" element={ <Home /> } />
+        <Route path="/" element={<Home />} />
+        <Route path="/menu" element={<Menu />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/menu" element={<Menu />} />
-        <Route path="/cart" element={isAuthenticated ? <Cart /> : <Login />} />
-        <Route path="/profile" element={isAuthenticated ? <Profile /> : <Login />} />
-        <Route path="/checkout" element={isAuthenticated ? <Checkout/> : <Login/>}/>
-        <Route path="/order-tracking" element={isAuthenticated ? <OrderTracking/> : <Login/>}/>
-        <Route path="/orders-history" element={isAuthenticated ? <OrdersHistory/> : <Login/>}/>
+        <Route path="/login" element={<Login />} />
+        
+        <Route element={<ProtectedRoute />}>
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/order-tracking" element={<OrderTracking />} />
+          <Route path="/orders-history" element={<OrdersHistory />} />
+        </Route>
       </Routes>
     </>
   );
@@ -47,7 +48,7 @@ function AppLayout() {
 export default function App() {
   return (
     <HashRouter>
-      <AlertContainer/>
+      <AlertContainer />
       <AppLayout />
     </HashRouter>
   );

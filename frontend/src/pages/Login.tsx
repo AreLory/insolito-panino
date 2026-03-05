@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useAlert } from "../context/AlertContext";
 
+import { useNavigate } from "react-router";
+
 import Input from "../components/shared/Input";
 import Loader from "../components/shared/Loader";
 import { handleAxiosError } from "../utils/errorHandler";
@@ -11,6 +13,8 @@ const Login = () => {
   const { login } = useAuth();
   const { showAlert } = useAlert();
 
+  const navigate = useNavigate()
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,6 +25,7 @@ const Login = () => {
     try {
       await login(email, password);
       showAlert("success", "Login succesful");
+      navigate('/')
     } catch (error: unknown) {
       handleAxiosError(error, showAlert);
     } finally {

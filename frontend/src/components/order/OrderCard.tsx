@@ -62,7 +62,7 @@ export default function OrderCard({ order }: Props) {
           {isOrdItemsExpanded && (
             <div className="space-y-3">
               {order.items.map((item) => (
-                <OrderItemCard key={`${item.product}`} item={item} />
+                <OrderItemCard key={`${item.product}-${item.selectedSize?.label}-${item.removedIngredients.map((i)=>i)}-${item.selectedExtras.map((e)=>e.name)}`} item={item} />
               ))}
             </div>
           )}

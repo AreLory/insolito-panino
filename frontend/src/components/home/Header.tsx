@@ -28,7 +28,7 @@ export default function Header({ cartItemCount }: Props) {
           </div>
           <div className="flex flex-col">
             <h1 className="text-xl font-bold leading-tight">
-              The unusual burger
+              L'Insoltio Panino
             </h1>
             <p className="text-xs opacity-90">More than a burger</p>
           </div>
