@@ -1,143 +1,107 @@
-import IUser from "../interfaces/IUser";
-import User from "../models/user";
+import IUser from "../types/IUser";
+import User, { createUserSchema } from "../models/user";
+import { asyncHandler } from "../middlewares/errorHandler";
 
-import e, { Request, Response } from "express";
+import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const jwtSecret = process.env.JWT
+const jwtSecret = process.env.JWT as string;
 
+export const createUser = asyncHandler(async (req: Request, res: Response) => {
+  const parsed = createUserSchema.safeParse(req.body);
 
-// Register
-export const createUser = async (req: Request, res: Response) => {
-  try {
-    const {
-      firstName,
-      lastName,
-      email,
-      password,
-      phoneNumber,
-      address: { street, number },
-    } = req.body;
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser: IUser = new User({
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
-      phoneNumber,
-      address: {
-        street,
-        number,
-      },
+  if (!parsed.success) {
+    return res.status(400).json({
+      message: "Invalid data",
+      errors: parsed.error.message,
     });
-
-    await newUser.save();
-    res.status(201).send();
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "Server error" });
-    }
   }
-};
-
-// Login
-export const userLogin = async (req: Request, res: Response) => {
-  try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
-
-    const token = jwt.sign(
-      {id: user._id},
-      jwtSecret,
-      {expiresIn: '1h'}
-    )
-    res.status(200).json({ message: "Login successful", token });
-
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "Server error" });
-    }
+  const { fullName, email, password, phoneNumber, address } = parsed.data;
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return res.status(409).json({ error: "User already exists" });
   }
-};
 
-// Logout
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const newUser = new User({
+    fullName,
+    email,
+    password: hashedPassword,
+    phoneNumber,
+    address,
+  });
+
+  const token = jwt.sign({ id: newUser._id, email: newUser.email }, jwtSecret, {
+    expiresIn: "1h",
+  });
+
+  res.status(201).send({
+    message: "Registration successful",
+    user: newUser,
+    token,
+  });
+});
+
+export const userLogin = asyncHandler(async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) {
+    return res.status(401).json({ error: "Invalid credentials" });
+  }
+
+  const token = jwt.sign({ id: user._id }, jwtSecret, { expiresIn: "1h" });
+  res.status(200).json({ message: "Login successful", token });
+});
+
 export const userLogout = async (req: Request, res: Response) => {
-  res.status(204).send();
+  res.status(200).json({ message: "Logout successful" });
 };
 
-// GET /users/me
-export const getCurrentUser = async (req: Request, res: Response) => {
-  try {
-    const user = await User.findById(req.userId).select('-password');
+export const getCurrentUser = asyncHandler(
+  async (req: Request, res: Response) => {
+    const user = await User.findById(req.userId).select("-password");
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
     res.status(200).json(user);
+  },
+);
 
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "Server error" });
-    }
+export const updateUser = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.userId) {
+    res.status(401);
+    throw new Error("Unauthorized");
   }
-};
 
-// Update Profile
-export const updateUser = async (req:Request, res: Response) => {
-  try{
-    const allowedUpdates = ['firstName', 'lastName', 'phoneNumber', 'address', 'password'];
-    const change: any = {};
+  const { fullName, phoneNumber, address, password } = req.body;
+  const change: Record<string, any> = {};
 
-    for (const key of allowedUpdates) {
-      if (req.body[key] !== undefined) change[key] = req.body[key];
-    }
+  if (fullName !== undefined) change.fullName = fullName;
+  if (phoneNumber !== undefined) change.phoneNumber = phoneNumber;
+  if (address !== undefined) change.address = address;
+  if (password !== undefined) change.password = password;
 
-    // hash password se presente
-    if (change.password) {
-      change.password = await bcrypt.hash(change.password, 10);
-    }
-
-    const user = await User.findByIdAndUpdate(req.userId, { $set: change }, { new: true }).select('-password');
-    res.status(200).json(user);
-  }catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "Server error" });
-    }
+  if (change.password) {
+    change.password = await bcrypt.hash(change.password, 10);
   }
-}
 
+  const user = await User.findByIdAndUpdate(
+    req.userId,
+    { $set: change },
+    { new: true },
+  ).select("-password");
+  res.status(200).json(user);
+});
 
-
-
-// Get Users
-export const getUsers = async (req: Request, res: Response) => {
-  try {
-    const allUsers = await User.find();
-    res.status(200).json(allUsers);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "Server error" });
-    }
-  }
-};
+export const getUsers = asyncHandler(async (req: Request, res: Response) => {
+  const allUsers = await User.find();
+  res.status(200).json(allUsers);
+});

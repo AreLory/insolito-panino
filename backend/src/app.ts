@@ -1,40 +1,57 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
+import express from "express";
+import mongoose from "mongoose";
+
+import { errorMiddleware } from "./middlewares/errorHandler";
+
+import userRouter from "./routes/userRoute";
+import ordersRouter from "./routes/ordersRoute";
+import productsRouter from "./routes/productsRoute";
+import extrasRouter from "./routes/extrasRoute";
+import categoriesRouter from './routes/categoriesRoute'
+
+
+const cors = require("cors");
 
 const jwtSecret = process.env.JWT
 if (!jwtSecret) {
   throw new Error("JWT is not defined");
 }
 
-console.log("JWT:", process.env.JWT);
-
-
-import express from "express";
-import mongoose from "mongoose";
-
-import userRouter from "./routes/userRoute";
-
-
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 5000;
 
-// Middleware
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "http://192.168.1.134:5173",
+    "http://localhost:5174",
+    "http://localhost:3000",
+    "http://127.0.0.1:5173"
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use(userRouter);
 
+app.use("/api", userRouter);
+app.use("/api", ordersRouter);
+app.use("/api", extrasRouter);
+app.use("/api", productsRouter);
+app.use("/api", categoriesRouter);
 
-// Server + DB
 async function startServer() {
   try {
     await mongoose.connect(process.env.MONGO_URI as string);
     console.log("✅ MongoDB connected");
 
-    app.listen(PORT, () => {
+    app.listen(PORT,"0.0.0.0", () => {
       console.log(`🚀 Server running on port ${PORT}`);
     });
   } catch (error) {
@@ -44,11 +61,4 @@ async function startServer() {
 }
 
 startServer();
-
-
-
-const users = [{name: 'name'}]
-// Get Users
-app.get(  '/users' , (req, res) => {
-    res.json(users)
-})
+app.use(errorMiddleware);

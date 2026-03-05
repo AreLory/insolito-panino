@@ -1,0 +1,25 @@
+import { createSelector } from "@reduxjs/toolkit";
+import { selectCartSubtotal } from "../cart/cartSelectors";
+
+import type { RootState } from "../../store/store";
+
+export const selectOrderType = (state: RootState) => {
+  if (!state?.order?.orderType) return [];
+  return state?.order?.orderType
+};
+
+export const selectOrder =(state: RootState) => {
+  if (!state?.order) return [];
+  return state?.order
+};
+
+export const selectFinalTotal = createSelector([
+    selectCartSubtotal,
+    selectOrderType
+], (subtotal, orderType)=>{
+    if (orderType === 'delivery'){
+        return subtotal + 2.5
+    }
+
+    return subtotal;
+})
