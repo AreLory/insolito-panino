@@ -20,18 +20,19 @@ Since this is my first **full stack project**, I also focused heavily on code or
 
 ## Frontend
 
-- React
-- TypeScript
-- Redux Toolkit
-- React Context API
-- Axios
-- React Router
+- ![React](https://img.shields.io/badge/React-%2320232a.svg?logo=react&logoColor=%2361DAFB)
+- ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=fff)
+- ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=fff)
+- ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-%2338B2AC.svg?logo=tailwind-css&logoColor=white)
+-  ![Redux](https://img.shields.io/badge/Redux-764ABC?logo=redux&logoColor=fff)
+- ![Axios](https://img.shields.io/badge/Axios-5A29E4?logo=axios&logoColor=fff)
+- ![React Router](https://img.shields.io/badge/React%20Router-CA4245?logo=reactrouter&logoColor=fff)
 
 ## Backend
 
-- Node.js
-- Express
-- MongoDB
+- ![Node.js](https://img.shields.io/badge/Node.js-6DA55F?logo=node.js&logoColor=white)
+- ![Express](https://img.shields.io/badge/Express-000000?logo=express&logoColor=fff)
+- ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?logo=mongodb&logoColor=fff)
 
 ---
 
