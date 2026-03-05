@@ -5,8 +5,8 @@ import { Request, Response } from "express";
 
 export const getAllCategories = asyncHandler(
   async (req: Request, res: Response) => {
-    const extras = await Categories.find();
-    res.status(200).json(extras);
+    const categories = await Categories.find();
+    res.status(200).json(categories);
   },
 );
 
@@ -24,7 +24,7 @@ export const createCategories = asyncHandler(
     });
 
     await newCategories.save();
-    res.status(200).json(newCategories);
+    res.status(201).json(newCategories);
   },
 );
 

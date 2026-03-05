@@ -26,14 +26,6 @@ import { AlertContainer } from "./components/shared/Alert";
 
 function AppLayout() {
   const { isAuthenticated } = useAuth();
-  // const location = useLocation();
-
-
-  // const hideBottomNavRoutes = ["/product", '/checkout', '/order'];
-
-  // const hideBottomNav = hideBottomNavRoutes.some((path) =>
-  //   location.pathname.startsWith(path)
-  // );
 
   return (
     <>

@@ -50,7 +50,7 @@ export const createProduct = asyncHandler(
     });
 
     await newProduct.save();
-    res.status(200).json(newProduct);
+    res.status(201).json(newProduct);
   },
 );
 

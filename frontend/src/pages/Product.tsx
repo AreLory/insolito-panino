@@ -29,7 +29,7 @@ export default function Product() {
   const itemsQuantity = useSelector(selectTotalItems);
 
   const { id } = useParams<{ id: string }>();
-  const product = useProduct(id);
+  const {product} = useProduct(id);
 
   const [ingredientsExpanded, setIngredientsExpanded] = useState(false);
   const [extrasExpanded, setExtrasExpanded] = useState(false);
@@ -92,7 +92,7 @@ export default function Product() {
     showAlert("success", "Item successfully added to cart");
   };
 
-  if (!product) return <Loader/>
+  if (!product) return <Loader />;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -137,16 +137,18 @@ export default function Product() {
           />
         )}
 
-        {product.ingredients.length > 0 && <IngredientSelector
-          ingredients={product.ingredients}
-          isExpanded={ingredientsExpanded}
-          removedIngredients={removedIngredients}
-          onSetIngredientsExpanded={setIngredientsExpanded}
-          onToggleIngredient={removeIngredient}
-        />}
+        {product.ingredients.length > 0 && (
+          <IngredientSelector
+            ingredients={product.ingredients}
+            isExpanded={ingredientsExpanded}
+            removedIngredients={removedIngredients}
+            onSetIngredientsExpanded={setIngredientsExpanded}
+            onToggleIngredient={removeIngredient}
+          />
+        )}
 
         <ExtraSelector
-          extras={product.availableExtras.sort((a, b)=> a.price - b.price )}
+          extras={product.availableExtras.sort((a, b) => a.price - b.price)}
           isExpanded={extrasExpanded}
           selectedExtras={selectedExtras}
           onSetExpanded={setExtrasExpanded}

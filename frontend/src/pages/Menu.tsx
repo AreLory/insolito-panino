@@ -15,6 +15,7 @@ import type { Category } from "../types/products";
 
 import { ArrowLeft, ShoppingCart } from "lucide-react";
 import Loader from "../components/shared/Loader";
+import { handleAxiosError } from "../utils/errorHandler";
 
 export default function Menu() {
   const { showAlert } = useAlert();
@@ -36,7 +37,7 @@ export default function Menu() {
         setSelectedCategory(res.data[0]);
       }
     } catch (error) {
-      showAlert("error", "Error to fetch categories:" + error);
+      handleAxiosError(error, showAlert);
     } finally {
       setLoading(false);
     }
@@ -47,14 +48,14 @@ export default function Menu() {
   }, []);
 
   if (loading) return <Loader />;
-  if (!selectedCategory) return;
+  if (!selectedCategory) return <Loader />;
 
   return (
     <div className="w-screen h-screen flex flex-col">
       <MiniNavBar
         leftChild={<ArrowLeft />}
         rightChild={<ShoppingCart />}
-        pageName='Menu'
+        pageName="Menu"
         badgeCount={itemsQuantity}
         goBack="/"
         goTo="/cart"

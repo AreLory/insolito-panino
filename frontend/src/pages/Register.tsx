@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { redirect } from "react-router";
+import { useNavigate } from "react-router";
 
 import { useAlert } from "../context/AlertContext";
 
@@ -8,15 +8,17 @@ import Input from "../components/shared/Input";
 
 import axios from "axios";
 import API_BASE_URL from "../config/api";
+import { handleAxiosError } from "../utils/errorHandler";
 
 export default function Register() {
   const { showAlert } = useAlert();
+  const navigate = useNavigate()
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [street, setStreet] = useState("");
+  const [address, setAddress] = useState("");
 
   const [loading, setLoading] = useState(false);
 
@@ -40,7 +42,7 @@ export default function Register() {
       value: phoneNumber,
       setter: setPhoneNumber,
     },
-    { label: "Street Name (optional)", value: street, setter: setStreet },
+    { label: "Street Name (optional)", value: address, setter: setAddress },
   ];
 
   const userRegister = async (e: React.FormEvent) => {
@@ -50,31 +52,14 @@ export default function Register() {
       const response = await axios.post(`${API_BASE_URL}/auth/register`, {
         fullName,
         phoneNumber,
-        street,
+        address,
         email,
         password,
       });
-      showAlert("success", `Successfully registered`);
-      redirect("/");
+      showAlert('success', `Successfully registered. Welcome ${response.data.fullName}`)
+      navigate("/");
     } catch (error: unknown) {
-      if (axios.isAxiosError(error) && error.response) {
-        switch (error.response.status) {
-          case 400:
-            showAlert("error", "Bad request: missing fields");
-            break;
-          case 409:
-            showAlert("error", `Conflict: ${error.response.data.error}`);
-            break;
-          case 500:
-            showAlert("error", error.message);
-            break;
-          default:
-            showAlert("error", `Unexpected error: ${error.response.status}`);
-        }
-      } else {
-        showAlert("error", "Network error or unexpected error" + error);
-        return { error: "Network error" };
-      }
+      handleAxiosError(error, showAlert)
     } finally {
       setLoading(false);
     }

@@ -7,11 +7,27 @@ import type { Products } from "../types/products";
 
 export function useProduct(id?: string) {
   const [product, setProduct] = useState<Products | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<any | null>(null);
+
+  const getProduct = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const res = await axios.get(`${API_BASE_URL}/products/${id}`);
+        setProduct(res.data);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
   useEffect(() => {
     if (!id) return;
-    axios.get(`${API_BASE_URL}/products/${id}`).then(res => setProduct(res.data));
+    getProduct()
   }, [id]);
 
-  return product;
+  return {product, loading, error};
 }

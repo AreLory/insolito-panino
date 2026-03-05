@@ -1,5 +1,5 @@
 import IUser from "../types/IUser";
-import User from "../models/user";
+import User, { createUserSchema } from "../models/user";
 import { asyncHandler } from "../middlewares/errorHandler";
 
 import { Request, Response } from "express";
@@ -9,8 +9,15 @@ import jwt from "jsonwebtoken";
 const jwtSecret = process.env.JWT as string;
 
 export const createUser = asyncHandler(async (req: Request, res: Response) => {
-  const { fullName, email, password, phoneNumber, address } = req.body;
+  const parsed = createUserSchema.safeParse(req.body);
 
+  if (!parsed.success) {
+    return res.status(400).json({
+      message: "Invalid data",
+      errors: parsed.error.message,
+    });
+  }
+  const { fullName, email, password, phoneNumber, address } = parsed.data;
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     return res.status(409).json({ error: "User already exists" });
@@ -18,20 +25,21 @@ export const createUser = asyncHandler(async (req: Request, res: Response) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const newUser: IUser = new User({
+  const newUser = new User({
     fullName,
     email,
     password: hashedPassword,
     phoneNumber,
     address,
   });
-  await newUser.save();
+
   const token = jwt.sign({ id: newUser._id, email: newUser.email }, jwtSecret, {
     expiresIn: "1h",
   });
 
   res.status(201).send({
     message: "Registration successful",
+    user: newUser,
     token,
   });
 });
@@ -68,12 +76,18 @@ export const getCurrentUser = asyncHandler(
 );
 
 export const updateUser = asyncHandler(async (req: Request, res: Response) => {
-  const allowedUpdates = ["fullName", "phoneNumber", "address", "password"];
-  const change: any = {};
-
-  for (const key of allowedUpdates) {
-    if (req.body[key] !== undefined) change[key] = req.body[key];
+  if (!req.userId) {
+    res.status(401);
+    throw new Error("Unauthorized");
   }
+
+  const { fullName, phoneNumber, address, password } = req.body;
+  const change: Record<string, any> = {};
+
+  if (fullName !== undefined) change.fullName = fullName;
+  if (phoneNumber !== undefined) change.phoneNumber = phoneNumber;
+  if (address !== undefined) change.address = address;
+  if (password !== undefined) change.password = password;
 
   if (change.password) {
     change.password = await bcrypt.hash(change.password, 10);

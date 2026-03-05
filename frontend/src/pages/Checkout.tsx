@@ -26,6 +26,7 @@ import {
   ShoppingBag,
   Utensils,
 } from "lucide-react";
+import { handleAxiosError } from "../utils/errorHandler";
 
 export default function Checkout() {
   const { showAlert } = useAlert();
@@ -110,11 +111,8 @@ export default function Checkout() {
       dispatch(clearCart());
       dispatch(resetOrder());
       navigate("/");
-    } catch (error: any) {
-      showAlert(
-        "error",
-        `Error ${error.response.status}: ${error.response.data.message}`,
-      );
+    } catch (error) {
+      handleAxiosError(error, showAlert)
     }
   };
 

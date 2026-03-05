@@ -12,6 +12,7 @@ import { api } from "../config/axios";
 import type IProfile from "../types/profile";
 
 import { ArrowLeft, Home } from "lucide-react";
+import { handleAxiosError } from "../utils/errorHandler";
 
 export default function Profile() {
   const { logout } = useAuth();
@@ -75,7 +76,7 @@ export default function Profile() {
 
       setUser({ fullName, email, phoneNumber, address });
     } catch (error) {
-      console.log("Error", error);
+      handleAxiosError(error, showAlert)
     }finally{
       setLoading(false)
     }
@@ -113,7 +114,7 @@ export default function Profile() {
       showAlert("success", "Profile successfully updated");
       setIsEditing(false);
     } catch (error) {
-      showAlert("error", `Failed to update profile. Please try again`);
+      handleAxiosError(error, showAlert)
     } finally {
       setLoading(false);
     }

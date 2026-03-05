@@ -4,12 +4,12 @@ import { useAuth } from "../context/AuthContext";
 import { useAlert } from "../context/AlertContext";
 
 import Input from "../components/shared/Input";
-import axios from "axios";
 import Loader from "../components/shared/Loader";
+import { handleAxiosError } from "../utils/errorHandler";
 
 const Login = () => {
   const { login } = useAuth();
-  const {showAlert}= useAlert()
+  const { showAlert } = useAlert();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,39 +20,29 @@ const Login = () => {
     setLoading(true);
     try {
       await login(email, password);
-      showAlert('success', 'Login succesful')
-    } catch (error:unknown) {
-      if (axios.isAxiosError(error) && error.response){
-        switch(error.response.status){
-          case 401: 
-          showAlert('error', `Error: ${error.response.data.error}`)
-          break;
-          case 404:
-            showAlert('error', `Error: ${error.response.data.error}`)
-            break;
-           case 500:
-            showAlert("error", error.message);
-            break;
-          default:
-            showAlert("error", `Unexpected error: ${error.response.status}`);
-        }
-      } else {
-        showAlert("error", "Network error or unexpected error" + error);
-        return { error: "Network error" };
-      }
+      showAlert("success", "Login succesful");
+    } catch (error: unknown) {
+      handleAxiosError(error, showAlert);
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return <Loader/>
+  if (loading) return <Loader />;
 
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md flex flex-col items-center">
-        <form onSubmit={userLogin} className="bg-white rounded-2xl shadow-xl p-8 w-full">
-          <h1 className="text-3xl text-shade font-bold text-center">Welcome back!</h1>
-          <p className="text-gray-500 text-center">Log in here for fantastic features</p>
+        <form
+          onSubmit={userLogin}
+          className="bg-white rounded-2xl shadow-xl p-8 w-full"
+        >
+          <h1 className="text-3xl text-shade font-bold text-center">
+            Welcome back!
+          </h1>
+          <p className="text-gray-500 text-center">
+            Log in here for fantastic features
+          </p>
           <Input
             key={"email"}
             label={"Email"}

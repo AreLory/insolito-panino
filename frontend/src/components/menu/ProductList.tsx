@@ -7,8 +7,11 @@ import ProductCard from "./ProductCard";
 import axios from "axios";
 import API_BASE_URL from "../../config/api";
 
+import { handleAxiosError } from "../../utils/errorHandler";
+
 import type { Category, Products } from "../../types/products";
 import Loader from "../shared/Loader";
+
 
 interface Props {
   category: Category;
@@ -31,7 +34,7 @@ export default function ProductList({ category }: Props) {
       }));
       setProductList(productsWithId);
     } catch (error) {
-      showAlert("error", "Error to fetch products. Please try again");
+      handleAxiosError(error, showAlert)
     } finally {
       setLoading(false);
     }

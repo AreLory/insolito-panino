@@ -1,12 +1,14 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { selectCartSubtotal } from "../cart/cartSelectors";
 
-export const selectOrderType = (state: any) => {
+import type { RootState } from "../../store/store";
+
+export const selectOrderType = (state: RootState) => {
   if (!state?.order?.orderType) return [];
   return state?.order?.orderType
 };
 
-export const selectOrder =(state: any) => {
+export const selectOrder =(state: RootState) => {
   if (!state?.order) return [];
   return state?.order
 };

@@ -11,6 +11,7 @@ import type { Order } from "../types/order";
 
 import { ArrowLeft, HomeIcon } from "lucide-react";
 import Loader from "../components/shared/Loader";
+import { handleAxiosError } from "../utils/errorHandler";
 
 
 
@@ -26,7 +27,7 @@ export default function OrdersHistory() {
       const res = await api.get("/orders");
       setOrdersList(res.data);
     } catch (error) {
-      showAlert( 'error' , "Error to fetch orders" + error);
+      handleAxiosError(error, showAlert)
     }finally{
       setLoading(false)
     }

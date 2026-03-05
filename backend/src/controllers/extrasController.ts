@@ -26,7 +26,7 @@ export const createExtra = asyncHandler(async (req: Request, res: Response) => {
   });
 
   await newExtra.save();
-  res.status(200).json(newExtra);
+  res.status(201).json(newExtra);
 });
 
 export const deleteExtra = asyncHandler(async (req: Request, res: Response) => {
