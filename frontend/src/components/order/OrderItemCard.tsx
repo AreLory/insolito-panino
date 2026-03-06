@@ -57,9 +57,9 @@ const OrderItemCard = ({ item }: OrderItemCardProps) => {
                 </span>
               </div>
             ))}
-            {item.selectedExtras.map((e) => (
+            {item.selectedExtras?.map((e) => (
               <div
-                key={`${e.extraId}-${item.product}`}
+                key={`${e.extraId}-${item.productId}`}
                 className="flex items-center gap-2"
               >
                 <CirclePlus size={14} className="text-green-400" />

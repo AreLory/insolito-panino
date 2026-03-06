@@ -84,7 +84,7 @@ const OrderTracking = () => {
         <div className="space-y-4">
           {order.items.map((item: OrderItem) => (
             <OrderItemCard
-              key={`${item.product}-${item.selectedSize?.label}`}
+              key={`${item.productId}-${item.selectedSize?.label}`}
               item={item}
             />
           ))}

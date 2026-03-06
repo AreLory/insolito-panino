@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { fetchCategories } from "../../features/categories/categoriesSlice";
 import {
@@ -12,9 +12,10 @@ import { fetchProducts } from "../../features/products/productsSlice";
 import type { Category } from "../../types/products";
 
 import { ChevronRight, UtensilsIcon } from "lucide-react";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
 
 export default function MenuCategories() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const categories = useSelector(selectCategories);
   const loading = useSelector(selectCategoriesLoading);
 
