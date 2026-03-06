@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link } from "react-router";
+import { useAppDispatch } from "../hooks/useAppDispatch";
 
 import {
   selectActiveOrder,
@@ -23,7 +24,7 @@ import {
 } from "lucide-react";
 
 const OrderTracking = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const order: Order | null = useSelector(selectActiveOrder);
   const loading = useSelector(selectActiveOrderLoading);
 

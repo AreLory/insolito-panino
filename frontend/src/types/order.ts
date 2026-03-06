@@ -1,17 +1,16 @@
 export interface OrderItem {
-  product: string;
+  productId: string;
   quantity: number;
-  name:string;
-  unitPrice:number;
-
+  name: string;
+  unitPrice: number;
 
   selectedSize: {
     label: string;
-    price: number;
+    price?: number;
   } | null;
 
-  removedIngredients: string[];
-  selectedExtras: { extraId:string, name: string; price: number }[];
+  removedIngredients?: string[];
+  selectedExtras?: { _id?: string; extraId?: string; name: string; price: number }[];
 }
 
 export interface Order {
@@ -20,11 +19,11 @@ export interface Order {
 
   items: OrderItem[];
 
-  status: OrderStatus
-  subtotal: number
+  status: OrderStatus;
+  subtotal: number;
   total: number;
 
-  paymentStatus: PaymentStatus
+  paymentStatus: PaymentStatus;
   orderType: OrderType;
   paymentMethod: PaymentMethod;
 

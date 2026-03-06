@@ -13,7 +13,7 @@ import Select from "../components/checkout/Select";
 
 import { api } from "../config/axios";
 
-import type { CreateOrderDTO, Order, OrderItem } from "../types/order";
+import type { CreateOrderDTO, Order, OrderItem, PaymentMethod, OrderType } from "../types/order";
 import type { CartItem } from "../types/cart";
 
 import {
@@ -94,6 +94,8 @@ export default function Checkout() {
       const formattedItems: OrderItem[] = cart.map((item: CartItem) => ({
         productId: item._id,
         quantity: item.quantity,
+        name: item.name,
+        unitPrice: item.unitPrice,
         selectedSize: item.selectedSize,
         removedIngredients: item.removedIngredients,
         selectedExtras: item.selectedExtras,
@@ -138,7 +140,7 @@ export default function Checkout() {
                 <h2 className="text-lg font-semibold">Choose a Payment Method</h2>
                 <Select
                   selectedOption={selectedPaymentOption}
-                  onChooseOption={(option) => changePaymentMethod(option.value)}
+                  onChooseOption={(option) => changePaymentMethod(option.value as PaymentMethod)}
                   optionList={paymentMethodsList}
                 />
               </div>
@@ -146,7 +148,7 @@ export default function Checkout() {
                 <h2 className="text-lg font-semibold">Choose a Order Type</h2>
                 <Select
                   selectedOption={selectedOrderTypeOption}
-                  onChooseOption={(option) => changeOrderType(option.value)}
+                  onChooseOption={(option) => changeOrderType(option.value as OrderType)}
                   optionList={orderTypesList}
                 />
               </div>

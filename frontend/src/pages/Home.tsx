@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../hooks/useAppDispatch";
 
 import { fetchActiveOrder } from "../features/activeOrder/activeOrderSlice";
 import {
@@ -20,7 +21,7 @@ import BrandStory from "../components/home/BrandStory";
 import Loader from "../components/shared/Loader";
 
 const Home = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const order = useSelector(selectActiveOrder);
   const loading = useSelector(selectActiveOrderLoading);
   const cart = useSelector(selectCartItems);

@@ -5,13 +5,13 @@ import { setOrderType, setPaymentMethod, setNotes } from "../features/checkout/c
 import { selectFinalTotal, selectOrder } from "../features/checkout/checkoutSelectors";
 import { selectCartSubtotal } from "../features/cart/cartSelectors";
 
-import type { Order, OrderType, PaymentMethod } from "../types/order";
+import type { OrderCheckoutState, OrderType, PaymentMethod } from "../types/order";
 
 export function useOrder(){
     const dispatch = useDispatch();
-    const order:Order = useSelector(selectOrder)
+    const order: OrderCheckoutState = useSelector(selectOrder) as OrderCheckoutState;
     const total: number = useSelector(selectFinalTotal);
-    const subtotal:number = useSelector(selectCartSubtotal);
+    const subtotal: number = useSelector(selectCartSubtotal);
 
     const changeOrderType = (orderType: OrderType)=>{
         dispatch(setOrderType(orderType))
