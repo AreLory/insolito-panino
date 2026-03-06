@@ -1,13 +1,4 @@
-// todo: SPA -> React + React Router
-// todo: API RESTful -> Node + Express
-// todo: Registration (name, email, password), Login, Logout
-
-// todo: Pages (register, login, menu, cart, profile, orders)
-// todo: User session management
-// todo: Axios
-// todo: User Feedback
-import { Route, HashRouter, Routes, useLocation } from "react-router";
-import { useAuth } from "./context/AuthContext";
+import { Route, HashRouter, Routes } from "react-router";
 
 // Pages
 import Home from "./pages/Home";
