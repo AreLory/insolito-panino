@@ -56,7 +56,7 @@ const Home = () => {
       <BrandStory
         title="Our Story"
         story="Born from a passion for authentic street food, we bring unique flavors and uncompromising quality to Italian squares. Every ingredient is carefully selected, and every recipe is the result of years of experience."
-        imageUrl="https://images.pexels.com/photos/4253320/pexels-photo-4253320.jpeg?auto=compress&cs=tinysrgb&w=800"
+        imageUrl="https://lh3.googleusercontent.com/gps-cs-s/AHVAweoQwEW6j0xhLE52XBA11qhYqDIzXPOGMd7LPGMWSyjHuBfWDbuIDR3vdTwNlgYXUQ_my8FpBalV2GzViw6_d1H5ESkyzst82Jbqf4L9W4YpvV77ndX8ftsSdU-oFCtpjlwHCoeYbA=s1360-w1360-h1020"
       />
       <div className="sticky bottom-0 p-4 bg-linear-to-t from-gray-50 to-transparent">
         {cart.length > 0 && (
