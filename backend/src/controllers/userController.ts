@@ -33,6 +33,8 @@ export const createUser = asyncHandler(async (req: Request, res: Response) => {
     address,
   });
 
+    await newUser.save();
+
   const token = jwt.sign({ id: newUser._id, email: newUser.email }, jwtSecret, {
     expiresIn: "1h",
   });
