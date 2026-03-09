@@ -1,14 +1,7 @@
 export interface Products {
   _id: string;
   name: string;
-  category:
-    | "burger"
-    | "panino"
-    | "wrap"
-    | "fries"
-    | "fried"
-    | "arrosticini"
-    | "vegetarian";
+  category: Category;
   basePrice: number;
   sizes?: Size[];
   ingredients: Ingredient[];

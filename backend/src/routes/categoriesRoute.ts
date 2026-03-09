@@ -1,15 +1,14 @@
 import express from 'express'
 import { getAllCategories, createCategories, updateCategories, deleteCategories } from '../controllers/categoriesController'
-
+import { authMiddleware } from '../middlewares/authMiddleware'
+import { adminMiddleware } from '../middlewares/adminMiddleware'
 
 const router = express.Router()
 
 router.get('/categories', getAllCategories)
 
-
-// ! Admin only
-router.post('/categories', createCategories)
-router.delete('/categories', deleteCategories )
-router.patch('/categories', updateCategories)
+router.post('/categories',authMiddleware, adminMiddleware,  createCategories)
+router.delete('/categories',authMiddleware, adminMiddleware,  deleteCategories )
+router.patch('/categories',authMiddleware, adminMiddleware,  updateCategories)
 
 export default router;

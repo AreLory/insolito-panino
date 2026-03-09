@@ -8,6 +8,8 @@ import {
   updateOrder,
 } from "../controllers/ordersController";
 import { authMiddleware } from "../middlewares/authMiddleware";
+import { adminMiddleware } from "../middlewares/adminMiddleware";
+
 const router = express.Router();
 
 router.post("/orders", authMiddleware, createOrder);
@@ -16,8 +18,6 @@ router.get("/orders/active", authMiddleware, getActiveOrder);
 router.get("/orders/:id", getOrder);
 router.delete("/orders/:id", deleteOrder);
 
-// ! Admin only
-
-router.patch("/admin/orders/:id", updateOrder);
+router.patch("/admin/orders/:id",authMiddleware, adminMiddleware,  updateOrder);
 
 export default router;

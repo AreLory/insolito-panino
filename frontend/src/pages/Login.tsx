@@ -10,11 +10,11 @@ import Loader from "../components/shared/Loader";
 import { handleAxiosError } from "../utils/errorHandler";
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, role } = useAuth();
   const { showAlert } = useAlert();
 
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ const Login = () => {
     try {
       await login(email, password);
       showAlert("success", "Login succesful");
-      navigate('/')
+      role === "admin" ? navigate("/admin") : navigate("/");
     } catch (error: unknown) {
       handleAxiosError(error, showAlert);
     } finally {

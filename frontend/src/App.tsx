@@ -1,15 +1,5 @@
-// todo: SPA -> React + React Router
-// todo: API RESTful -> Node + Express
-// todo: Registration (name, email, password), Login, Logout
+import { Route, HashRouter, Routes } from "react-router";
 
-// todo: Pages (register, login, menu, cart, profile, orders)
-// todo: User session management
-// todo: Axios
-// todo: User Feedback
-import { Route, HashRouter, Routes, useLocation } from "react-router";
-import { useAuth } from "./context/AuthContext";
-
-// Pages
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
 import Cart from "./pages/Cart";
@@ -22,6 +12,7 @@ import OrderTracking from "./pages/OrderTracking";
 import OrdersHistory from "./pages/OrdersHistory";
 import { AlertContainer } from "./components/shared/Alert";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import AdminRoutes from "./admin/routes/AdminRoutes";
 
 function AppLayout() {
   return (
@@ -32,7 +23,10 @@ function AppLayout() {
         <Route path="/product/:id" element={<Product />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        
+
+        <Route path="/admin/*" element={<AdminRoutes/>} />
+
+
         <Route element={<ProtectedRoute />}>
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />

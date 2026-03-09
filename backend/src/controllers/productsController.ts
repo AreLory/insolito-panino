@@ -12,7 +12,9 @@ export const getAllProducts = asyncHandler(
       ? { category: new mongoose.Types.ObjectId(category) }
       : {};
 
-    const products = await Products.find(filter).populate("category");
+    const products = await Products.find(filter)
+      .populate("category", "name slug")
+      .populate("availableExtras", "name");
     res.status(200).json(products);
   },
 );

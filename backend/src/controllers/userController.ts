@@ -29,17 +29,26 @@ export const createUser = asyncHandler(async (req: Request, res: Response) => {
     fullName,
     email,
     password: hashedPassword,
+    role: "user",
     phoneNumber,
     address,
   });
 
-  const token = jwt.sign({ id: newUser._id, email: newUser.email }, jwtSecret, {
+  await newUser.save();
+
+  const token = jwt.sign({ id: newUser._id, email: newUser.email, role:newUser.role }, jwtSecret, {
     expiresIn: "1h",
   });
 
   res.status(201).send({
     message: "Registration successful",
-    user: newUser,
+    user: {
+      fullName: newUser.fullName,
+      email: newUser.email,
+      role: newUser.role,
+      phoneNumber: newUser.phoneNumber,
+      address: newUser.address,
+    },
     token,
   });
 });
@@ -57,7 +66,9 @@ export const userLogin = asyncHandler(async (req: Request, res: Response) => {
     return res.status(401).json({ error: "Invalid credentials" });
   }
 
-  const token = jwt.sign({ id: user._id }, jwtSecret, { expiresIn: "1h" });
+const token = jwt.sign({ id: user._id, email: user.email, role:user.role }, jwtSecret, {
+    expiresIn: "1h",
+  });
   res.status(200).json({ message: "Login successful", token });
 });
 
