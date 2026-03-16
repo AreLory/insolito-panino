@@ -81,173 +81,187 @@ const ProductForm: React.FC<Props> = ({
     );
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="p-4 bg-gray-50 rounded-lg space-y-4"
-    >
-      <Input
-        label="Nome prodotto"
-        value={name}
-        onChange={setName}
-        type="text"
-        required
-      />
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Categoria
-        </label>
-        <select
-          value={category?._id}
-          onChange={(e) => {
-            const selected = categories?.find((c) => c._id === e.target.value);
-            setCategory(selected);
-          }}
-          className="w-full px-4 py-2 border rounded-lg bg-white"
+    <div>
+      <div className="fixed inset-0 z-40">
+        <div className="w-full h-full bg-black opacity-20"></div>
+      </div>
+      <div className="absolute inset-0 flex justify-center items-start z-50">
+        <form
+          onSubmit={handleSubmit}
+          className="p-6 bg-white rounded-lg space-y-4 w-[50vw] max-w-3xl shadow-lg"
         >
-          {categories?.map((c) => (
-            <option key={c._id} value={c._id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-      </div>
+          <Input
+            label="Nome prodotto"
+            value={name}
+            onChange={setName}
+            type="text"
+            required
+          />
 
-      <Input
-        label="Prezzo base"
-        value={basePrice.toString()}
-        onChange={(v) => setBasePrice(Number(v))}
-        type="number"
-        required
-      />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Categoria
+            </label>
 
-      <Input
-        label="URL immagine"
-        value={imageUrl}
-        onChange={setImageUrl}
-        type="text"
-      />
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Descrizione
-        </label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full px-4 py-2 border rounded-lg bg-white"
-        />
-      </div>
-
-      <label className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          checked={available}
-          onChange={(e) => setAvailable(e.target.checked)}
-          className="w-4 h-4"
-        />
-        Disponibile
-      </label>
-
-      <div className="border p-2 rounded-lg space-y-2 bg-white">
-        <h4 className="font-semibold">Ingredienti</h4>
-        {ingredients.map((ing, i) => (
-          <div key={i} className="flex gap-2 items-center">
-            <Input
-              label={`Ingrediente ${i + 1}`}
-              value={ing.name}
-              onChange={(val) => updateIngredient(i, val)}
-              type="text"
-            />
-            <button
-              type="button"
-              onClick={() => removeIngredient(i)}
-              className="px-2 py-1 bg-red-500 text-white rounded"
+            <select
+              value={category?._id || ""}
+              onChange={(e) => {
+                const selected = categories?.find(
+                  (c) => c._id === e.target.value,
+                );
+                if (selected) setCategory(selected);
+              }}
+              className="w-full px-4 py-2 border rounded-lg bg-white"
             >
-              x
-            </button>
-          </div>
-        ))}
-        <button
-          type="button"
-          onClick={addIngredient}
-          className="px-2 py-1 bg-blue-500 text-white rounded"
-        >
-          + Aggiungi ingrediente
-        </button>
-      </div>
+              <option value="">Seleziona categoria</option>
 
-      <div className="border p-2 rounded-lg space-y-2 bg-white">
-        <h4 className="font-semibold">Taglie</h4>
-        {sizes.map((size, i) => (
-          <div key={i} className="flex gap-2 items-center">
-            <Input
-              label="Label"
-              value={size.label}
-              onChange={(val) => updateSize(i, "label", val)}
-              type="text"
-            />
-            <Input
-              label="Prezzo"
-              value={size.price.toString()}
-              onChange={(val) => updateSize(i, "price", Number(val))}
-              type="number"
-            />
-            <Input
-              label="gr di carne"
-              value={size.meatWeight?.toString()}
-              onChange={(val) => updateSize(i, "meatWeight", Number(val))}
-              type="number"
-            />
-            <button
-              type="button"
-              onClick={() => removeSize(i)}
-              className="px-2 py-1 bg-red-500 text-white rounded"
-            >
-              x
-            </button>
+              {categories?.map((c) => (
+                <option key={c._id} value={c._id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
           </div>
-        ))}
-        <button
-          type="button"
-          onClick={addSize}
-          className="px-2 py-1 bg-blue-500 text-white rounded"
-        >
-          + Aggiungi taglia
-        </button>
-      </div>
 
-      <div className="border p-2 rounded-lg space-y-2 bg-white">
-        <h4 className="font-semibold">Extra disponibili</h4>
-        {extras && extras.map((extra) => (
-          <label key={extra._id} className="flex gap-2 items-center">
+          <Input
+            label="Prezzo base"
+            value={basePrice.toString()}
+            onChange={(v) => setBasePrice(Number(v))}
+            type="number"
+            required
+          />
+
+          <Input
+            label="URL immagine"
+            value={imageUrl}
+            onChange={setImageUrl}
+            type="text"
+          />
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Descrizione
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full px-4 py-2 border rounded-lg bg-white"
+            />
+          </div>
+
+          <label className="flex items-center gap-2">
             <input
               type="checkbox"
-              checked={selectedExtras.includes(extra._id)}
-              onChange={() => toggleExtra(extra._id)}
-              className="w-5 h-5 text-orange-500 border-gray-300 rounded focus:ring-orange-500 accent-orange-500 cursor-pointer"
+              checked={available}
+              onChange={(e) => setAvailable(e.target.checked)}
+              className="w-4 h-4"
             />
-            {extra.name.toUpperCase()} {extra.price === 0 ? `` : `+€ ${extra.price}`}
+            Disponibile
           </label>
-        ))}
-      </div>
 
-      <div className="flex gap-2 mt-4">
-        <button
-          type="submit"
-          className="px-4 py-2 bg-green-500 text-white rounded"
-        >
-          Salva
-        </button>
-        <button
-          type="button"
-          onClick={onClose}
-          className="px-4 py-2 bg-gray-300 rounded"
-        >
-          Annulla
-        </button>
+          <div className="border p-2 rounded-lg space-y-2 bg-white">
+            <h4 className="font-semibold">Ingredienti</h4>
+            {ingredients.map((ing, i) => (
+              <div key={i} className="flex gap-2 items-center">
+                <Input
+                  label={`Ingrediente ${i + 1}`}
+                  value={ing.name}
+                  onChange={(val) => updateIngredient(i, val)}
+                  type="text"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeIngredient(i)}
+                  className="px-2 py-1 bg-red-500 text-white rounded"
+                >
+                  x
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addIngredient}
+              className="px-2 py-1 bg-blue-500 text-white rounded"
+            >
+              + Aggiungi ingrediente
+            </button>
+          </div>
+
+          <div className="border p-2 rounded-lg space-y-2 bg-white">
+            <h4 className="font-semibold">Taglie</h4>
+            {sizes.map((size, i) => (
+              <div key={i} className="flex gap-2 items-center">
+                <Input
+                  label="Label"
+                  value={size.label}
+                  onChange={(val) => updateSize(i, "label", val)}
+                  type="text"
+                />
+                <Input
+                  label="Prezzo"
+                  value={size.price.toString()}
+                  onChange={(val) => updateSize(i, "price", Number(val))}
+                  type="number"
+                />
+                <Input
+                  label="gr di carne"
+                  value={size.meatWeight?.toString()}
+                  onChange={(val) => updateSize(i, "meatWeight", Number(val))}
+                  type="number"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeSize(i)}
+                  className="px-2 py-1 bg-red-500 text-white rounded"
+                >
+                  x
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addSize}
+              className="px-2 py-1 bg-blue-500 text-white rounded"
+            >
+              + Aggiungi taglia
+            </button>
+          </div>
+
+          <div className="border p-2 rounded-lg space-y-2 bg-white">
+            <h4 className="font-semibold">Extra disponibili</h4>
+            {extras &&
+              extras.map((extra) => (
+                <label key={extra._id} className="flex gap-2 items-center">
+                  <input
+                    type="checkbox"
+                    checked={selectedExtras.includes(extra._id)}
+                    onChange={() => toggleExtra(extra._id)}
+                    className="w-5 h-5 text-orange-500 border-gray-300 rounded focus:ring-orange-500 accent-orange-500 cursor-pointer"
+                  />
+                  {extra.name.toUpperCase()}{" "}
+                  {extra.price === 0 ? `` : `+€ ${extra.price}`}
+                </label>
+              ))}
+          </div>
+
+          <div className="flex gap-2 mt-4">
+            <button
+              type="submit"
+              className="px-4 py-2 bg-green-500 text-white rounded"
+            >
+              Salva
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 bg-gray-300 rounded"
+            >
+              Annulla
+            </button>
+          </div>
+        </form>
       </div>
-    </form>
+    </div>
   );
 };
 

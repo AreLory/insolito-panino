@@ -43,7 +43,7 @@ const ProductTable: React.FC<Props> = ({ products, onEdit, onDelete }) => {
 
             <td className="border p-2">{product.name}</td>
 
-            <td className="border p-2 capitalize">{product.category.name}</td>
+            <td className="border p-2 capitalize">{product.category?.name}</td>
 
             <td className="border p-2">€{product.basePrice.toFixed(2)}</td>
 

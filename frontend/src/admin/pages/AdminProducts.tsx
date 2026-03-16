@@ -6,6 +6,7 @@ import {
   deleteProduct,
   fetchProducts,
   updateProduct,
+  createProduct,
 } from "../../features/products/productsSlice";
 import { selectCategories } from "../../features/categories/categoriesSelectors";
 import { fetchCategories } from "../../features/categories/categoriesSlice";
@@ -26,7 +27,9 @@ export default function AdminProducts() {
   const extras = useSelector((state: RootState) => state.extras.data);
 
   const [editingProduct, setEditingProduct] = useState<Products | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
@@ -35,17 +38,17 @@ export default function AdminProducts() {
     dispatch(fetchExtras());
   }, [dispatch]);
 
-    const filteredProducts = useMemo(() => {
+  const filteredProducts = useMemo(() => {
     if (!selectedCategory) return products;
     if (products)
-    return products.filter(
-      (product) => product.category._id === selectedCategory,
-    );
+      return products.filter(
+        (product) => product.category._id === selectedCategory,
+      );
   }, [products, selectedCategory]);
 
   const handleEdit = (product: Products) => {
     setEditingProduct(product);
-    setIsModalOpen(true);
+    setIsEditing(true);
   };
 
   const handleDelete = (id: string) => {
@@ -55,8 +58,13 @@ export default function AdminProducts() {
   const handleUpdate = (data: Partial<Products>) => {
     if (!editingProduct) return;
     dispatch(updateProduct({ id: editingProduct._id, data }));
-    setIsModalOpen(false);
+    setIsEditing(false);
     setEditingProduct(null);
+  };
+
+  const handleCreate = (data: Partial<Products>) => {
+    dispatch(createProduct(data));
+    setIsCreating(false);
   };
 
   if (!products) {
@@ -107,6 +115,9 @@ export default function AdminProducts() {
           </button>
         ))}
       </div>
+      <div>
+        <button onClick={()=>setIsCreating(true)} className="px-2 py-1 bg-red-500 text-white rounded" >Aggiuni nuovo</button>
+      </div>
 
       <ProductTable
         products={filteredProducts}
@@ -114,13 +125,22 @@ export default function AdminProducts() {
         onDelete={handleDelete}
       />
 
-      {isModalOpen && editingProduct && (
+      {isEditing && editingProduct && (
         <ProductForm
           initialValues={editingProduct}
           categories={categories}
           extras={extras}
           onSubmit={handleUpdate}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => setIsEditing(false)}
+        />
+      )}
+
+      {isCreating && (
+        <ProductForm
+          categories={categories}
+          extras={extras}
+          onSubmit={handleCreate}
+          onClose={() => setIsCreating(false)}
         />
       )}
     </div>
