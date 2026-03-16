@@ -149,7 +149,6 @@ const ProductForm: React.FC<Props> = ({
         Disponibile
       </label>
 
-      {/* Ingredienti */}
       <div className="border p-2 rounded-lg space-y-2 bg-white">
         <h4 className="font-semibold">Ingredienti</h4>
         {ingredients.map((ing, i) => (
@@ -178,7 +177,6 @@ const ProductForm: React.FC<Props> = ({
         </button>
       </div>
 
-      {/* Taglie */}
       <div className="border p-2 rounded-lg space-y-2 bg-white">
         <h4 className="font-semibold">Taglie</h4>
         {sizes.map((size, i) => (
@@ -197,7 +195,7 @@ const ProductForm: React.FC<Props> = ({
             />
             <Input
               label="gr di carne"
-              value={size.price.toString()}
+              value={size.meatWeight?.toString()}
               onChange={(val) => updateSize(i, "meatWeight", Number(val))}
               type="number"
             />
@@ -219,21 +217,20 @@ const ProductForm: React.FC<Props> = ({
         </button>
       </div>
 
-      {/* fetchare tutti gli extra */}
-      {/* <div className="border p-2 rounded-lg space-y-2 bg-white">
+      <div className="border p-2 rounded-lg space-y-2 bg-white">
         <h4 className="font-semibold">Extra disponibili</h4>
-        {extras.map((extra) => (
+        {extras && extras.map((extra) => (
           <label key={extra._id} className="flex gap-2 items-center">
             <input
               type="checkbox"
               checked={selectedExtras.includes(extra._id)}
               onChange={() => toggleExtra(extra._id)}
-              className="w-4 h-4"
+              className="w-5 h-5 text-orange-500 border-gray-300 rounded focus:ring-orange-500 accent-orange-500 cursor-pointer"
             />
-            {extra.name} (+€{extra.price})
+            {extra.name.toUpperCase()} {extra.price === 0 ? `` : `+€ ${extra.price}`}
           </label>
         ))}
-      </div> */}
+      </div>
 
       <div className="flex gap-2 mt-4">
         <button

@@ -1,8 +1,12 @@
-import { IProduct } from "../types/IProducts";
-import Products from "../models/products";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
+
 import { asyncHandler } from "../middlewares/errorHandler";
+
+import Products from "../models/products";
+
+import { IProduct } from "../types/IProducts";
+
 
 export const getAllProducts = asyncHandler(
   async (req: Request, res: Response) => {

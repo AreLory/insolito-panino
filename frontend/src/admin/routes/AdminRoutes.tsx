@@ -1,14 +1,17 @@
 import { Route, Routes } from "react-router";
 
-import Products from "../pages/Products";
+import AdminProducts from "../pages/AdminProducts";
 import ProtectedRoute from "../../utils/ProtectedRoute";
+import AdminHome from "../pages/AdminHome";
+import AdminCategories from "../pages/AdminCategories";
 
 export default function AdminRoutes() {
   return (
     <Routes>
       <Route element={<ProtectedRoute userRole="admin" />}>
-        {/* <Route path="dashboard" element={<Dashboard />} /> */}
-        <Route path="products" element={<Products />} />
+        <Route path="" element={<AdminHome />}/>
+        <Route path="products" element={<AdminProducts />} />
+        <Route path="categories" element={<AdminCategories />} />
         {/* <Route path="orders" element={<Orders />} /> */}
       </Route>
     </Routes>

@@ -40,16 +40,16 @@ export const updateCategories = asyncHandler(
   async (req: Request, res: Response) => {
     const { id } = req.params;
     const change = req.body;
-    const categories = await Categories.findByIdAndUpdate(
+    const category = await Categories.findByIdAndUpdate(
       id,
       { $set: change },
       { new: true },
     );
 
-    if (!categories) {
-      return res.status(404).json({ error: "Extra not found" });
+    if (!category) {
+      return res.status(404).json({ error: "Category not found" });
     }
 
-    res.status(200).json(categories);
+    res.status(200).json(category);
   },
 );

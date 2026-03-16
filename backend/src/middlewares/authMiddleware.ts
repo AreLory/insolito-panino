@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 interface JwtPayload {
   id: string;
+  role: string;
 }
 
 export const authMiddleware = (
@@ -22,6 +23,7 @@ export const authMiddleware = (
     const decoded = jwt.verify(token, process.env.JWT as string) as JwtPayload;
 
     req.userId = new mongoose.Types.ObjectId(decoded.id);
+    req.role = decoded.role;
 
     next();
   } catch (error) {
