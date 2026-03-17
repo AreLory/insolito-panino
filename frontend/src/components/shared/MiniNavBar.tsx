@@ -5,7 +5,7 @@ type Props = {
   rightChild?: any;
   badgeCount?: number;
   pageName: string;
-  goTo: string;
+  goTo?: string;
   goBack: string;
   onClickAction?: () => void;
 };
@@ -43,7 +43,7 @@ export default function MiniNavBar({
           </button>
         ) : (
           <Link
-            to={goTo}
+            to={goTo || ''}
             className="p-2 hover:bg-gray-800 rounded-full transition-colors relative"
           >
             {rightChild}

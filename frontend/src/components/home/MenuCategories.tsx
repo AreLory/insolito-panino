@@ -10,11 +10,13 @@ import {
 import { fetchProducts } from "../../features/products/productsSlice";
 
 import type { Category } from "../../types/products";
+import type { AppDispatch } from "../../store/store";
 
 import { ChevronRight, UtensilsIcon } from "lucide-react";
 
+
 export default function MenuCategories() {
-  const dispatch = useDispatch();
+  const dispatch:AppDispatch = useDispatch();
   const categories = useSelector(selectCategories);
   const loading = useSelector(selectCategoriesLoading);
 

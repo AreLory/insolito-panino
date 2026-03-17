@@ -19,8 +19,10 @@ import QuickAccess from "../components/home/QuickAccess";
 import BrandStory from "../components/home/BrandStory";
 import Loader from "../components/shared/Loader";
 
+import type { AppDispatch } from "../store/store";
+
 const Home = () => {
-  const dispatch = useDispatch();
+  const dispatch:AppDispatch = useDispatch();
   const order = useSelector(selectActiveOrder);
   const loading = useSelector(selectActiveOrderLoading);
   const cart = useSelector(selectCartItems);

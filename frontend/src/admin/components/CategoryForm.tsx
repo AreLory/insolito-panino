@@ -4,7 +4,7 @@ import type { Category } from "../../types/products";
 
 type Props = {
   initialValues?: Category | null;
-  onSubmit: (id: string, data: Partial<Category>) => void;
+  onSubmit: (data: Partial<Category>) => void;
   onClose: () => void;
 };
 
@@ -31,11 +31,9 @@ const CategoryForm: React.FC<Props> = ({
     }
   }, [initialValues]);
 
-  if (!initialValues?._id) return null;
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(initialValues._id, {
+    onSubmit({
       name,
       description,
       slug,

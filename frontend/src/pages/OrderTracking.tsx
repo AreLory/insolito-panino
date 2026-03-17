@@ -13,6 +13,7 @@ import OrderInfo from "../components/order/OrderInfo";
 import Loader from "../components/shared/Loader";
 
 import type { Order, OrderItem } from "../types/order";
+import type { AppDispatch } from "../store/store";
 
 import {
   ChevronLeft,
@@ -22,8 +23,9 @@ import {
   Bike,
 } from "lucide-react";
 
+
 const OrderTracking = () => {
-  const dispatch = useDispatch();
+  const dispatch:AppDispatch = useDispatch();
   const order: Order | null = useSelector(selectActiveOrder);
   const loading = useSelector(selectActiveOrderLoading);
 

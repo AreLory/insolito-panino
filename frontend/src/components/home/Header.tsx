@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 
-import { ShoppingCart, Menu, User } from "lucide-react";
+import { ShoppingCart, User } from "lucide-react";
 
 interface Props {
   cartItemCount: number;

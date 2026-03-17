@@ -15,12 +15,15 @@ import { fetchExtras } from "../../features/extras/extrasSlice";
 import ProductTable from "../components/ProductTable";
 import ProductForm from "../components/ProductForm";
 import Loader from "../../components/shared/Loader";
+import MiniNavBar from "../../components/shared/MiniNavBar";
 
 import type { Products } from "../../types/products";
-import type { RootState } from "../../store/store";
+import type { AppDispatch, RootState } from "../../store/store";
+
+import { ChevronLeft } from "lucide-react";
 
 export default function AdminProducts() {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const products = useSelector(selectProducts);
   const categories = useSelector(selectCategories);
 
@@ -39,11 +42,13 @@ export default function AdminProducts() {
   }, [dispatch]);
 
   const filteredProducts = useMemo(() => {
+    if (!products) return [];
+
     if (!selectedCategory) return products;
-    if (products)
-      return products.filter(
-        (product) => product.category._id === selectedCategory,
-      );
+
+    return products.filter(
+      (product) => product.category._id === selectedCategory,
+    );
   }, [products, selectedCategory]);
 
   const handleEdit = (product: Products) => {
@@ -67,7 +72,7 @@ export default function AdminProducts() {
     setIsCreating(false);
   };
 
-  if (!products) {
+  if (!products && !filteredProducts) {
     return <Loader />;
   }
 
@@ -79,8 +84,15 @@ export default function AdminProducts() {
   }
 
   return (
-    <div>
-      <div className="flex gap-3 overflow-x-auto pb-2 md:justify-center">
+    <div className="flex flex-col pt-18 justify-center items-center overflow-x-hidden">
+      <MiniNavBar
+        leftChild={<ChevronLeft />}
+        goBack="/admin"
+        pageName="Products List"
+        rightChild={"+ Nuovo"}
+        onClickAction={() => setIsCreating(true)}
+      />
+      <div className="flex gap-3 overflow-x-auto p-2 md:justify-center">
         <button
           onClick={() => setSelectedCategory(null)}
           className={`
@@ -115,15 +127,14 @@ export default function AdminProducts() {
           </button>
         ))}
       </div>
-      <div>
-        <button onClick={()=>setIsCreating(true)} className="px-2 py-1 bg-red-500 text-white rounded" >Aggiuni nuovo</button>
-      </div>
 
-      <ProductTable
-        products={filteredProducts}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      <div className="px-2">
+        <ProductTable
+          products={filteredProducts}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      </div>
 
       {isEditing && editingProduct && (
         <ProductForm

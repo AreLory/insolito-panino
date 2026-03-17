@@ -27,7 +27,6 @@ export interface Category {
   _id: string;
   name: string;
   slug: string;
-  emoji: string;
   img: string;
   description: string;
   active: boolean;
@@ -37,5 +36,5 @@ export interface AvailableExtra {
   _id: string;
   name: string;
   price: number;
-  available?: true;
+  available?: boolean;
 }

@@ -3,7 +3,8 @@ import { useEffect } from "react";
 import ProductCard from "./ProductCard";
 
 import type { Category, Products } from "../../types/products";
-// import Loader from "../shared/Loader";
+import type { AppDispatch } from "../../store/store";
+
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../features/products/productsSlice";
 import { selectProducts } from "../../features/products/productsSelectors";
@@ -13,7 +14,7 @@ interface Props {
 }
 
 export default function ProductList({ category }: Props) {
-  const dispatch = useDispatch()
+  const dispatch:AppDispatch = useDispatch()
   const productList = useSelector(selectProducts)
 
   useEffect(() => {

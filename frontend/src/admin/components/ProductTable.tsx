@@ -1,93 +1,177 @@
 import React from "react";
 import type { Products } from "../../types/products";
 import Loader from "../../components/shared/Loader";
-
+import {PenBox, Trash } from "lucide-react";
 
 type Props = {
-  products: Products[]|null;
+  products: Products[] | undefined;
   onEdit: (product: Products) => void;
   onDelete: (id: string) => void;
 };
 
 const ProductTable: React.FC<Props> = ({ products, onEdit, onDelete }) => {
-
-
-  if (!products) return <Loader/>
+  if (!products) return <Loader />;
 
   return (
-    <table className="w-full border-collapse border border-gray-300">
-      <thead>
-        <tr className="bg-gray-100">
-          <th className="border p-2">Img</th>
-          <th className="border p-2">Nome</th>
-          <th className="border p-2">Categoria</th>
-          <th className="border p-2">Prezzo base</th>
-          <th className="border p-2">Taglie</th>
-          <th className="border p-2">Ingredienti</th>
-          <th className="border p-2">Extra Disponibili</th>
-          <th className="border p-2">Disponibile</th>
-          <th className="border p-2">Azioni</th>
-        </tr>
-      </thead>
-
-      <tbody>
+    <div className="w-full">
+      {/* Mobile */}
+      <div className="flex flex-col gap-4 md:hidden">
         {products.map((product) => (
-          <tr key={product._id} className="hover:bg-gray-50">
-            <td className="border p-2 text-center">
+          <div
+            key={product._id}
+            className="bg-white rounded-xl shadow p-4 space-y-3"
+          >
+            <div className="flex items-center gap-3">
               <img
                 src={product.imageUrl}
                 alt={product.name}
-                className="w-12 h-12 object-cover mx-auto rounded"
+                className="w-20 h-20 object-cover rounded-lg border"
               />
-            </td>
+              <div className="flex-1">
+                <h3 className="font-semibold text-lg">{product.name}</h3>
+                <p className="text-sm text-gray-500 capitalize">
+                  {product.category?.name || "-"}
+                </p>
+                <p className="font-medium text-green-600">
+                  €{product.basePrice.toFixed(2)}
+                </p>
+              </div>
+            </div>
 
-            <td className="border p-2">{product.name}</td>
-
-            <td className="border p-2 capitalize">{product.category?.name}</td>
-
-            <td className="border p-2">€{product.basePrice.toFixed(2)}</td>
-
-            <td className="border p-2">
-              {product.sizes?.length
-                ? product.sizes
+            <div className="text-sm space-y-1">
+              {product.sizes?.length ? (
+                <p>
+                  <span className="font-medium">Taglie:</span>{" "}
+                  {product.sizes
                     .map((s) => `${s.label} (€${s.price})`)
-                    .join(", ")
-                : "-"}
-            </td>
+                    .join(", ")}
+                </p>
+              ) : (
+                ""
+              )}
 
-            <td className="border p-2">
-              {product.ingredients.map((i) => i.name).join(", ")}
-            </td>
+              <p>
+                <span className="font-medium">Ingredienti:</span>{" "}
+                {product.ingredients.length}
+              </p>
 
-            <td className="border p-2">
-              {product.availableExtras.map((e) => e.name).join(", ")}
-            </td>
+              <p>
+                <span className="font-medium">Extra Disponibili:</span>{" "}
+                {product.availableExtras.length}
+              </p>
+            </div>
 
-            <td className="border p-2 text-center">
-              {product.available ? "✅" : "❌"}
-            </td>
+            <div className="flex justify-between items-center pt-2">
+              <div>
+                {product.available ? (
+                  <span className="text-green-600 font-medium text-sm">
+                    Disponibile
+                  </span>
+                ) : (
+                  <span className="text-red-600 font-medium text-sm">
+                    Non disponibile
+                  </span>
+                )}
+              </div>
 
-            <td className="border p-2">
-              <div className="flex gap-2 justify-center">
+              <div className="flex gap-2">
                 <button
                   onClick={() => onEdit(product)}
-                  className="px-2 py-1 bg-blue-500 text-white rounded"
+                  className="p-2 bg-blue-500 text-white rounded-lg"
                 >
-                  Modifica
+                  <PenBox size={18} />
                 </button>
 
                 <button
                   onClick={() => onDelete(product._id)}
-                  className="px-2 py-1 bg-red-500 text-white rounded"
+                  className="p-2 bg-red-500 text-white rounded-lg"
                 >
-                  Elimina
+                  <Trash size={18} />
                 </button>
               </div>
-            </td>
-          </tr>
+            </div>
+          </div>
         ))}
-      </tbody>
-    </table>
+      </div>
+
+      {/* Table */}
+      <div className="hidden md:block overflow-x-auto">
+        <table className="w-full border border-gray-200 rounded-lg overflow-hidden">
+          <thead className="bg-gray-100 text-sm">
+            <tr>
+              <th className="p-3 text-left">Prodotto</th>
+              <th className="p-3 text-left">Categoria</th>
+              <th className="p-3 text-center">Prezzo</th>
+              <th className="p-3 text-center">Disponibile</th>
+              <th className="p-3 text-center">Azioni</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {products.map((product) => (
+              <tr
+                key={product._id}
+                className="border-t hover:bg-gray-50 transition"
+              >
+                <td className="p-3">
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={product.imageUrl}
+                      alt={product.name}
+                      className="w-14 h-14 object-cover rounded border"
+                    />
+                    <div>
+                      <p className="font-medium">{product.name}</p>
+                      <p className="text-xs text-gray-500">
+                        {product.ingredients
+                          .map((i) => i.name)
+                          .slice(0, 3)
+                          .join(", ")}
+                        {product.ingredients.length > 3 && "..."}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+
+                <td className="p-3 capitalize">
+                  {product.category?.name || "-"}
+                </td>
+
+                <td className="p-3 text-center font-medium">
+                  €{product.basePrice.toFixed(2)}
+                </td>
+
+                <td className="p-3 text-center">
+                  {product.available ? (
+                    <span className="text-green-600 font-medium">✔</span>
+                  ) : (
+                    <span className="text-red-600 font-medium">✖</span>
+                  )}
+                </td>
+
+                <td className="p-3">
+                  <div className="flex justify-center gap-2">
+                    <button
+                      onClick={() => onEdit(product)}
+                      className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                    >
+                      <PenBox size={16} />
+                    </button>
+
+                    <button
+                      onClick={() => onDelete(product._id)}
+                      className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                    >
+                      <Trash size={16} />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 };
 
