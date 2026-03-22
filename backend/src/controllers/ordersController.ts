@@ -3,12 +3,13 @@ import Orders from "../models/orders";
 import { Request, Response } from "express";
 import Products from "../models/products";
 import Extras from "../models/extras";
+import user from "../models/user";
 import mongoose from "mongoose";
 import { IProduct } from "../types/IProducts";
 import { IExtras } from "../types/IExtras";
 import { asyncHandler } from "../middlewares/errorHandler";
 
-export const getAllOrders = asyncHandler(
+export const getAllUserOrders = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = new mongoose.Types.ObjectId(req.userId);
     const orders = await Orders.find({ user: userId }).sort({ _id: -1 });
@@ -22,6 +23,13 @@ export const getOrder = asyncHandler(async (req: Request, res: Response) => {
   res.status(200).json(order);
 });
 
+export const getAllOrders = asyncHandler(
+  async (req: Request, res: Response) => {
+    const orders = await Orders.find().populate("user", "fullName email");
+    res.status(200).json(orders);
+  },
+);
+
 export const getActiveOrder = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = new mongoose.Types.ObjectId(req.userId);
@@ -31,13 +39,21 @@ export const getActiveOrder = asyncHandler(
   },
 );
 
+// ! Create
+
 export const createOrder = asyncHandler(async (req: Request, res: Response) => {
   if (!req.userId) {
     return res.status(401).json({ error: "User not authenticated" });
   }
-  const { items, paymentMethod, orderType, notes } =
-    req.body as CreateOrderBody;
+  const {
+    items,
+    paymentMethod,
+    orderType,
+    notes,
+    requestedTime: requestedTimeFromClient,
+  } = req.body as CreateOrderBody;
 
+  // check items
   if (!items || items.length === 0) {
     return res.status(400).json({ message: "Empty order" });
   }
@@ -49,7 +65,7 @@ export const createOrder = asyncHandler(async (req: Request, res: Response) => {
         .json({ error: `Invalid quantity for product ${item.productId}` });
     }
   }
-
+  // Recupero prodotti
   const productIds: string[] = items.map((i) => i.productId);
   const products: IProduct[] = await Products.find({
     _id: { $in: productIds },
@@ -62,7 +78,7 @@ export const createOrder = asyncHandler(async (req: Request, res: Response) => {
   if (missing.length > 0) {
     return res.status(400).json({ error: "Invalid product in order", missing });
   }
-
+  // Recupero extra
   const allExtraIds = items
     .flatMap((i) =>
       (i.selectedExtras ?? []).map((e) => (typeof e === "string" ? e : e._id)),
@@ -71,7 +87,7 @@ export const createOrder = asyncHandler(async (req: Request, res: Response) => {
   const extrasFromDb = (await Extras.find({
     _id: { $in: allExtraIds },
   }).lean()) as IExtras[];
-
+  // Costruzione orderItems
   const orderItems: IOrderItem[] = items.map((item) => {
     const product = products.find((p) => p._id.equals(item.productId));
     if (!product) throw new Error(`Invalid product: ${item.productId}`);
@@ -117,7 +133,7 @@ export const createOrder = asyncHandler(async (req: Request, res: Response) => {
       selectedExtras,
     };
   });
-
+  // Totali
   let subtotal = orderItems.reduce((sum, i) => sum + i.itemTotal, 0);
 
   let total = subtotal;
@@ -126,13 +142,30 @@ export const createOrder = asyncHandler(async (req: Request, res: Response) => {
     total += 2.5;
   }
 
+  // LOGICA ORARIO
+  const now = new Date();
+  const DEFAULT_PREP_MINUTES = 15;
+
+  const requestedTime =
+    requestedTimeFromClient && new Date(requestedTimeFromClient) > now
+      ? new Date(requestedTimeFromClient)
+      : new Date(now.getTime() + DEFAULT_PREP_MINUTES * 60000);
+
+  const minutes = requestedTime.getMinutes();
+  const rounded = Math.ceil(minutes / 5) * 5;
+  requestedTime.setMinutes(rounded);
+  requestedTime.setSeconds(0);
+
+  // Creo l'ordine
   const newOrder = new Orders({
     user: req.userId,
     items: orderItems,
     subtotal,
     total,
     paymentMethod,
-    // default = unpaid
+    requestedTime,
+    confirmedTime: null,
+    prepTimeMinutes: null,
     paymentStatus: "unpaid",
     orderType,
     notes,
@@ -143,6 +176,8 @@ export const createOrder = asyncHandler(async (req: Request, res: Response) => {
 
   return res.status(201).json(newOrder);
 });
+
+// ! Delete and Update
 
 export const deleteOrder = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;

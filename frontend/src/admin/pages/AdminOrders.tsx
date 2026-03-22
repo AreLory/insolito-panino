@@ -1,57 +1,65 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { fetchOrders } from "../../features/orders/ordersSlice";
 
+import API_BASE_URL from "../../config/api";
+import { api } from "../../config/axios";
+
+import OrdersTable from "../components/order/OrdersTable";
+import Loader from "../../components/shared/Loader";
+import OrderForm from "../components/order/OrderForm";
 import MiniNavBar from "../../components/shared/MiniNavBar";
 
 import type { AppDispatch, RootState } from "../../store/store";
 
-import { ChevronLeft } from "lucide-react";
-import OrderCard from "../../components/order/OrderCard";
+import type { Order } from "../../types/order";
 
+import { ChevronLeft } from "lucide-react";
 export default function AdminOrders() {
   const dispatch: AppDispatch = useDispatch();
   const orders = useSelector((state: RootState) => state.orders.data);
 
-  useEffect(()=>{
-    dispatch(fetchOrders())
-  }, [dispatch])
-  
-  return (<div className="flex flex-col pt-18 justify-center items-center overflow-x-hidden">
+  const [editingOrder, setEditingOrder] = useState<Order | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
 
+  useEffect(() => {
+    dispatch(fetchOrders());
+  }, [dispatch]);
+
+  const handleEdit = (order: Order) => {
+    setEditingOrder(order);
+    setIsEditing(true);
+  };
+
+  const handleUpdate = async (data: Partial<Order>) => {
+    if (!editingOrder?._id) return;
+    try {
+      await api.patch(`${API_BASE_URL}/orders/${editingOrder._id}`, data);
+      dispatch(fetchOrders());
+
+      setIsEditing(false);
+      setEditingOrder(null);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <div className="flex flex-col pt-18 justify-center items-center overflow-x-hidden">
       <MiniNavBar
         leftChild={<ChevronLeft />}
         goBack="/admin"
         pageName="Orders List"
       />
-      
-      {orders?.map((order)=><OrderCard  order={order}/>)}
-      {/* <div className="px-2">
-        <ProductTable
-          products={filteredProducts}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-      </div>
 
-      {isEditing && editingProduct && (
-        <ProductForm
-          initialValues={editingProduct}
-          categories={categories}
-          extras={extras}
-          onSubmit={handleUpdate}
-          onClose={() => setIsEditing(false)}
-        />
+      {orders ? (
+        <OrdersTable orders={orders} handleEdit={handleEdit} />
+      ) : (
+        <Loader />
       )}
 
-      {isCreating && (
-        <ProductForm
-          categories={categories}
-          extras={extras}
-          onSubmit={handleCreate}
-          onClose={() => setIsCreating(false)}
-        />
-      )} */}
-    </div>);
+      {isEditing && editingOrder && <OrderForm onSubmit={handleUpdate} onClose={()=>setIsEditing(false)} initialValues={editingOrder} />}
+    </div>
+  );
 }

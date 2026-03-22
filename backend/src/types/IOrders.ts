@@ -9,8 +9,13 @@ export interface IOrder extends Document {
   items: IOrderItem[];
 
   status: OrderStatus;
-  subtotal:number
+  subtotal: number;
   total: number;
+
+  requestedTime: Date;
+  confirmedTime: Date;
+
+  prepTimeMinutes: number;
 
   paymentMethod: PaymentMethod;
   paymentStatus: PaymentStatus;
@@ -25,7 +30,7 @@ export interface IOrderItem {
   name: string;
 
   unitPrice: number;
-  itemTotal:number
+  itemTotal: number;
 
   quantity: number;
 
@@ -36,7 +41,7 @@ export interface IOrderItem {
 
   removedIngredients: string[];
 
-  selectedExtras:  {
+  selectedExtras: {
     extraId: Types.ObjectId;
     name: string;
     price: number;
@@ -45,7 +50,7 @@ export interface IOrderItem {
 
 export enum OrderStatus {
   PENDING = "pending",
-  CONFIRMED = "confirmed",
+  ACCEPTED = "accepted",
   IN_PREPARATION = "in_preparation",
   READY = "ready",
   COMPLETED = "completed",
@@ -78,7 +83,8 @@ export interface CreateOrderBody {
     removedIngredients?: string[];
     selectedExtras?: IExtras[];
   }[];
-  paymentMethod: PaymentMethod
-  orderType: OrderType
+  paymentMethod: PaymentMethod;
+  orderType: OrderType;
+  requestedTime:Date;
   notes?: string;
 }

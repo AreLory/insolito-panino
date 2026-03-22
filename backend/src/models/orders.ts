@@ -1,7 +1,6 @@
 import { Schema, model } from "mongoose";
 import { IOrder, IOrderItem } from "../types/IOrders";
 
-
 const OrderItemSchema = new Schema<IOrderItem>(
   {
     product: {
@@ -21,7 +20,7 @@ const OrderItemSchema = new Schema<IOrderItem>(
     },
     itemTotal: {
       type: Number,
-      required: true
+      required: true,
     },
 
     quantity: {
@@ -42,7 +41,7 @@ const OrderItemSchema = new Schema<IOrderItem>(
 
     selectedExtras: [
       {
-        extraId: { type: Schema.Types.ObjectId, ref: 'Extras' },
+        extraId: { type: Schema.Types.ObjectId, ref: "Extras" },
         name: { type: String, required: true },
         price: { type: Number, required: true },
       },
@@ -55,8 +54,7 @@ const OrdersSchema = new Schema<IOrder>(
   {
     user: {
       type: Schema.Types.ObjectId,
-      ref: "Users",
-      required: true,
+      ref: "User",
     },
 
     items: {
@@ -72,7 +70,7 @@ const OrdersSchema = new Schema<IOrder>(
       type: String,
       enum: [
         "pending",
-        "confirmed",
+        "accepted",
         "in_preparation",
         "ready",
         "completed",
@@ -89,6 +87,21 @@ const OrdersSchema = new Schema<IOrder>(
     total: {
       type: Number,
       required: true,
+    },
+
+    requestedTime: {
+      type: Date,
+      required: true,
+    },
+
+    confirmedTime: {
+      type: Date,
+      default: null,
+    },
+
+    prepTimeMinutes: {
+      type: Number,
+      default: null,
     },
 
     paymentMethod: {
@@ -117,4 +130,4 @@ const OrdersSchema = new Schema<IOrder>(
   { timestamps: true },
 );
 
-export default model<IOrder>("Orders", OrdersSchema);
+export default model<IOrder>("Order", OrdersSchema);

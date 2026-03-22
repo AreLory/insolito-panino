@@ -1,7 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
-import { selectCartItems, selectTotalItems } from "../features/cart/cartSelectors";
+import {
+  selectCartItems,
+  selectTotalItems,
+} from "../features/cart/cartSelectors";
 import { clearCart } from "../features/cart/cartSlice";
 import { resetOrder } from "../features/checkout/checkoutSlice";
 
@@ -34,7 +37,7 @@ export default function Checkout() {
   const navigate = useNavigate();
 
   const cart = useSelector(selectCartItems);
-  const itemCount = useSelector(selectTotalItems)
+  const itemCount = useSelector(selectTotalItems);
   const dispatch = useDispatch();
 
   const {
@@ -44,6 +47,8 @@ export default function Checkout() {
     changePaymentMethod,
     changeNotes,
     changeOrderType,
+    changeRequestedTime,
+    requestedTimeDate,
   } = useOrder();
 
   const paymentMethodsList = [
@@ -99,11 +104,16 @@ export default function Checkout() {
         selectedExtras: item.selectedExtras,
       }));
 
+      const requestedTimeDate = order.requestedTime
+        ? new Date(order.requestedTime)
+        : null;
+
       const orderDTO: CreateOrderDTO = {
         items: formattedItems,
         paymentMethod: order.paymentMethod!,
         orderType: order.orderType,
         notes: order.notes,
+        requestedTime: requestedTimeDate || new Date(),
       };
 
       const res = await api.post<Order>("/orders", orderDTO);
@@ -112,7 +122,7 @@ export default function Checkout() {
       dispatch(resetOrder());
       navigate("/");
     } catch (error) {
-      handleAxiosError(error, showAlert)
+      handleAxiosError(error, showAlert);
     }
   };
 
@@ -135,7 +145,9 @@ export default function Checkout() {
           <div className="flex w-full shadow-2xl max-w-3xl rounded-2xl">
             <div className="flex flex-col items-center w-full gap-4">
               <div className="w-full flex flex-col items-center p-4">
-                <h2 className="text-lg font-semibold">Choose a Payment Method</h2>
+                <h2 className="text-lg font-semibold">
+                  Choose a Payment Method
+                </h2>
                 <Select
                   selectedOption={selectedPaymentOption}
                   onChooseOption={(option) => changePaymentMethod(option.value)}
@@ -158,6 +170,42 @@ export default function Checkout() {
                   placeholder="Add a note..."
                   className="w-full px-8 border accent-orange-500 rounded-lg"
                 />
+              </div>
+              <div className="w-full flex flex-col items-center py-4 px-8">
+                <h2 className="text-lg font-semibold mb-2">Seleziona orario</h2>
+                <input
+                  type="time"
+                  value={
+                    requestedTimeDate
+                      ? requestedTimeDate.toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                      : ""
+                  }
+                  onChange={(e) => {
+                    const [hours, minutes] = e.target.value
+                      .split(":")
+                      .map(Number);
+                    const newTime = new Date();
+                    newTime.setHours(hours, minutes, 0, 0);
+
+                    // arrotonda ai 5 minuti
+                    const roundedMinutes =
+                      Math.ceil(newTime.getMinutes() / 5) * 5;
+                    newTime.setMinutes(roundedMinutes);
+                    newTime.setSeconds(0);
+
+                    changeRequestedTime(newTime); 
+                  }}
+                  className="w-32 px-4 py-2 border rounded-lg text-center text-lg"
+                />
+                <span className="text-sm text-gray-500 mt-1">
+                  Orario selezionato:{" "}
+                  {requestedTimeDate
+                    ? `${requestedTimeDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+                    : "--:--"}
+                </span>
               </div>
             </div>
           </div>

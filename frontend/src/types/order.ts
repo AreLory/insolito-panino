@@ -1,9 +1,10 @@
+import type User from "./profile";
+
 export interface OrderItem {
   product: string;
   quantity: number;
-  name:string;
-  unitPrice:number;
-
+  name: string;
+  unitPrice: number;
 
   selectedSize: {
     label: string;
@@ -11,20 +12,25 @@ export interface OrderItem {
   } | null;
 
   removedIngredients: string[];
-  selectedExtras: { extraId:string, name: string; price: number }[];
+  selectedExtras: { extraId: string; name: string; price: number }[];
 }
 
 export interface Order {
   _id: string;
-  user: string;
+  user: User;
 
   items: OrderItem[];
 
-  status: OrderStatus
-  subtotal: number
+  status: OrderStatus;
+  subtotal: number;
   total: number;
 
-  paymentStatus: PaymentStatus
+  requestedTime:string;
+  confirmedTime:string;
+
+  prepTimeMinutes: number;
+
+  paymentStatus: PaymentStatus;
   orderType: OrderType;
   paymentMethod: PaymentMethod;
 
@@ -35,12 +41,11 @@ export interface Order {
   // ! string from db, not Date
 }
 
-
 export type OrderType = "take_away" | "dine_in" | "delivery";
 export type PaymentMethod = "cash" | "card" | "online";
 export type OrderStatus =
   | "pending"
-  | "confirmed"
+  | "accepted"
   | "in_preparation"
   | "ready"
   | "completed"
@@ -52,12 +57,13 @@ export interface OrderCheckoutState {
   orderType: OrderType;
   paymentMethod: PaymentMethod | null;
   notes: string;
+  requestedTime: string | null;
 }
-
 
 export interface CreateOrderDTO {
   items: OrderItem[];
   orderType: OrderType;
   paymentMethod: PaymentMethod;
   notes?: string;
+  requestedTime: Date;
 }

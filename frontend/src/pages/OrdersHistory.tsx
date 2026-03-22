@@ -24,7 +24,7 @@ export default function OrdersHistory() {
   const getOrdersList = async () => {
     setLoading(true)
     try {
-      const res = await api.get("/orders");
+      const res = await api.get("/myorders");
       setOrdersList(res.data);
     } catch (error) {
       handleAxiosError(error, showAlert)
