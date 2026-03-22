@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import Input from "../../components/shared/Input";
+import Input from "../../../components/shared/Input";
 import type {
   Products,
   Size,
   Ingredient,
   AvailableExtra,
   Category,
-} from "../../types/products";
+} from "../../../types/products";
 
 type Props = {
   initialValues?: Products | null;

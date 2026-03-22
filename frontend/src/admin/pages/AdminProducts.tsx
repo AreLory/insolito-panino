@@ -12,8 +12,8 @@ import { selectCategories } from "../../features/categories/categoriesSelectors"
 import { fetchCategories } from "../../features/categories/categoriesSlice";
 import { fetchExtras } from "../../features/extras/extrasSlice";
 
-import ProductTable from "../components/ProductTable";
-import ProductForm from "../components/ProductForm";
+import ProductTable from "../components/product/ProductTable";
+import ProductForm from "../components/product/ProductForm";
 import Loader from "../../components/shared/Loader";
 import MiniNavBar from "../../components/shared/MiniNavBar";
 

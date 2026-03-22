@@ -7,9 +7,9 @@ import API_BASE_URL from "../../config/api";
 import { fetchExtras } from "../../features/extras/extrasSlice";
 import type { AppDispatch, RootState } from "../../store/store";
 
-import ExtraTable from "../components/ExtraTable";
+import ExtraTable from "../components/extra/ExtraTable";
 import MiniNavBar from "../../components/shared/MiniNavBar";
-import ExtraForm from "../components/ExtraForm";
+import ExtraForm from "../components/extra/ExtraForm";
 
 
 import type { AvailableExtra } from "../../types/products";
@@ -71,7 +71,7 @@ export default function AdminExtras() {
       <MiniNavBar
         leftChild={<ChevronLeft />}
         goBack="/admin"
-        pageName="Categories List"
+        pageName="Extras List"
         rightChild={"+ Nuovo"}
         onClickAction={() => setIsCreating(true)}
       />

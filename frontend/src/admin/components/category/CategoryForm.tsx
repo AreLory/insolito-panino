@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Input from "../../components/shared/Input";
-import type { Category } from "../../types/products";
+import Input from "../../../components/shared/Input";
+import type { Category } from "../../../types/products";
 
 type Props = {
   initialValues?: Category | null;

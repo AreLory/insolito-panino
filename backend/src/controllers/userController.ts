@@ -116,3 +116,16 @@ export const getUsers = asyncHandler(async (req: Request, res: Response) => {
   const allUsers = await User.find();
   res.status(200).json(allUsers);
 });
+
+export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const user = await User.findByIdAndDelete(id);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(204).send();
+  },
+);

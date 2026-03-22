@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import type { AvailableExtra } from "../../types/products";
-import Input from "../../components/shared/Input";
+import type { AvailableExtra } from "../../../types/products";
+import Input from "../../../components/shared/Input";
 
 type Props = {
   initialValues?: AvailableExtra | null;

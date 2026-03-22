@@ -7,7 +7,7 @@ const initialState: OrderCheckoutState = {
     notes: "",
 }
 
-const orderSlice = createSlice({
+const orderCheckoutSlice = createSlice({
     name: 'order',
     initialState,
     reducers: {
@@ -28,6 +28,6 @@ const orderSlice = createSlice({
 })
 
 
-export const {setOrderType, setPaymentMethod, setNotes, resetOrder} = orderSlice.actions;
+export const {setOrderType, setPaymentMethod, setNotes, resetOrder} = orderCheckoutSlice.actions;
 
-export default orderSlice.reducer
+export default orderCheckoutSlice.reducer

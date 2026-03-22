@@ -1,5 +1,5 @@
-import Loader from "../../components/shared/Loader";
-import type { Category } from "../../types/products";
+import Loader from "../../../components/shared/Loader";
+import type { Category } from "../../../types/products";
 import { PenBox, Trash } from "lucide-react";
 
 type Props = {

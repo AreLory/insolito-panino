@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectCategories } from "../../features/categories/categoriesSelectors";
 import { fetchCategories } from "../../features/categories/categoriesSlice";
 
-import CategoryTable from "../components/CategoryTable";
-import CategoryForm from "../components/CategoryForm";
+import CategoryTable from "../components/category/CategoryTable";
+import CategoryForm from "../components/category/CategoryForm";
 import Loader from "../../components/shared/Loader";
 import MiniNavBar from "../../components/shared/MiniNavBar";
 

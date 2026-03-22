@@ -1,6 +1,6 @@
 import React from "react";
-import type { Products } from "../../types/products";
-import Loader from "../../components/shared/Loader";
+import type { Products } from "../../../types/products";
+import Loader from "../../../components/shared/Loader";
 import {PenBox, Trash } from "lucide-react";
 
 type Props = {
