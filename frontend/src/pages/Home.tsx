@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useAuth } from "../context/AuthContext";
+import { socket } from "../socket/socket";
 
-import { fetchActiveOrder } from "../features/activeOrder/activeOrderSlice";
+import { fetchActiveOrder, setActiveOrder } from "../features/activeOrder/activeOrderSlice";
 import {
   selectActiveOrder,
   selectActiveOrderLoading,
@@ -38,7 +39,49 @@ const Home = () => {
     }
   }, [order, dispatch]);
 
-const getRemainingMinutes = (confirmedTime) => {
+    useEffect(() => {
+      const handleUpdate = (updatedOrder: any) => {
+        console.log("📡 socket update:", updatedOrder);
+        dispatch(setActiveOrder(updatedOrder));
+      };
+  
+      if (socket.connected) {
+        socket.on("order-status", handleUpdate);
+      } else {
+        const setupListener = () => {
+          socket.on("order-status", handleUpdate);
+        };
+        socket.once("connect", setupListener);
+        return () => socket.off("connect", setupListener);
+      }
+  
+      return () => {
+        socket.off("order-status", handleUpdate);
+      };
+    }, [dispatch]);
+  
+    useEffect(() => {
+      if (!order?._id) return;
+  
+      const joinOrderRoom = () => {
+        socket.emit("join-order", order._id);
+        console.log("👤 joined order room:", order._id);
+      };
+  
+      if (socket.connected) {
+        joinOrderRoom();
+      } else {
+        socket.once("connect", joinOrderRoom);
+      }
+  
+      socket.on("connect", joinOrderRoom);
+  
+      return () => {
+        socket.off("connect", joinOrderRoom);
+      };
+    }, [order?._id]);
+
+const getRemainingMinutes = (confirmedTime:string) => {
   const now = new Date();
   const confirmedDate = new Date(confirmedTime);
 

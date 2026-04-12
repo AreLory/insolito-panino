@@ -46,13 +46,15 @@ export default function AdminOrders2() {
     }
   };
 
-  if(!orders) return
+  if (!orders) return;
 
-  const filteredOrders = orders.filter(order =>
-  order.items.some(item =>
-    item.name.toLowerCase().includes("arrosticini")
-  )
-);
+  const filteredOrders = orders.filter((order) =>
+    order.items.some((item) => item.name.toLowerCase().includes("arrosticini")),
+  );
+
+  const todoOrders = filteredOrders.filter(
+    (order) => !order.status.includes("completed"),
+  );
 
   return (
     <div className="flex flex-col pt-18 justify-center items-center overflow-x-hidden">
@@ -63,12 +65,18 @@ export default function AdminOrders2() {
       />
 
       {filteredOrders ? (
-        <OrdersTable orders={filteredOrders} handleEdit={handleEdit} />
+        <OrdersTable orders={todoOrders} handleEdit={handleEdit} />
       ) : (
         <Loader />
       )}
 
-      {isEditing && editingOrder && <OrderForm onSubmit={handleUpdate} onClose={()=>setIsEditing(false)} initialValues={editingOrder} />}
+      {isEditing && editingOrder && (
+        <OrderForm
+          onSubmit={handleUpdate}
+          onClose={() => setIsEditing(false)}
+          initialValues={editingOrder}
+        />
+      )}
     </div>
   );
 }

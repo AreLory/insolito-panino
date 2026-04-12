@@ -41,6 +41,9 @@ const activeOrderSlice = createSlice({
       state.data = null;
       state.error = null;
     },
+    setActiveOrder: (state, action) => {
+      state.data = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -59,6 +62,6 @@ const activeOrderSlice = createSlice({
   },
 });
 
-export const { clearActiveOrder } = activeOrderSlice.actions;
+export const { clearActiveOrder, setActiveOrder } = activeOrderSlice.actions;
 
 export default activeOrderSlice.reducer;

@@ -65,7 +65,23 @@ export const updateOrder = createAsyncThunk<
 const OrdersSlice = createSlice({
   name: "orders",
   initialState,
-  reducers: {},
+  reducers: {
+    orderAddedRealtime: (state, action) => {
+      if (state.data) {
+        state.data.unshift(action.payload);
+      }
+    },
+
+    orderUpdatedRealtime: (state, action) => {
+      if (state.data) {
+        const index = state.data.findIndex((o) => o._id === action.payload._id);
+
+        if (index !== -1) {
+          state.data[index] = action.payload;
+        }
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchOrders.pending, (state) => {
@@ -97,5 +113,7 @@ const OrdersSlice = createSlice({
       });
   },
 });
+
+export const { orderAddedRealtime, orderUpdatedRealtime } = OrdersSlice.actions;
 
 export default OrdersSlice.reducer;

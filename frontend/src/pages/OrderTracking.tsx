@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { socket } from "../socket/socket";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 
@@ -6,7 +7,10 @@ import {
   selectActiveOrder,
   selectActiveOrderLoading,
 } from "../features/activeOrder/activeOrderSelectors";
-import { fetchActiveOrder } from "../features/activeOrder/activeOrderSlice";
+import {
+  fetchActiveOrder,
+  setActiveOrder,
+} from "../features/activeOrder/activeOrderSlice";
 
 import OrderItemCard from "../components/order/OrderItemCard";
 import OrderInfo from "../components/order/OrderInfo";
@@ -23,9 +27,8 @@ import {
   Bike,
 } from "lucide-react";
 
-
 const OrderTracking = () => {
-  const dispatch:AppDispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const order: Order | null = useSelector(selectActiveOrder);
   const loading = useSelector(selectActiveOrderLoading);
 
@@ -33,13 +36,54 @@ const OrderTracking = () => {
     if (!order) {
       dispatch(fetchActiveOrder());
     }
-    console.log(order)
+    console.log(order);
   }, [order, dispatch]);
 
+  useEffect(() => {
+    const handleUpdate = (updatedOrder: any) => {
+      console.log("📡 socket update:", updatedOrder);
+      dispatch(setActiveOrder(updatedOrder));
+    };
+
+    if (socket.connected) {
+      socket.on("order-status", handleUpdate);
+    } else {
+      const setupListener = () => {
+        socket.on("order-status", handleUpdate);
+      };
+      socket.once("connect", setupListener);
+      return () => socket.off("connect", setupListener);
+    }
+
+    return () => {
+      socket.off("order-status", handleUpdate);
+    };
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!order?._id) return;
+
+    const joinOrderRoom = () => {
+      socket.emit("join-order", order._id);
+      console.log("👤 joined order room:", order._id);
+    };
+
+    if (socket.connected) {
+      joinOrderRoom();
+    } else {
+      socket.once("connect", joinOrderRoom);
+    }
+
+    socket.on("connect", joinOrderRoom);
+
+    return () => {
+      socket.off("connect", joinOrderRoom);
+    };
+  }, [order?._id]);
 
   if (!order) return <p>No order found</p>;
 
-  if (loading) return <Loader/>;
+  if (loading) return <Loader />;
 
   return (
     <div className="flex flex-col flex-1 pb-32">
@@ -73,10 +117,13 @@ const OrderTracking = () => {
               <h2 className="text-lg font-bold text-slate-800">
                 {order.status.toLocaleUpperCase()}
               </h2>
-              <p>Ready at: {new Date(order.confirmedTime).toLocaleTimeString([], {
+              <p>
+                Ready at:{" "}
+                {new Date(order.confirmedTime).toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
-                })}</p>
+                })}
+              </p>
             </div>
           </div>
           <div className="text-[#FF3B30] opacity-50">

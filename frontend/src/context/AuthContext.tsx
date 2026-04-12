@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import API_BASE_URL from "../config/api";
 import { jwtDecode } from "jwt-decode";
+import { connectSocket, disconnectSocket } from "../socket/socket";
 
 type JwtPayload = {
   exp: number;
@@ -28,11 +29,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const activeToken = localStorage.getItem("token");
     if (activeToken) {
-      const decoded: JwtPayload & {role?: string} = jwtDecode(activeToken);
+      const decoded: JwtPayload & { role?: string } = jwtDecode(activeToken);
       const currentTime = Date.now() / 1000;
       if (decoded.exp && decoded.exp > currentTime) {
         setToken(activeToken);
         setRole(decoded.role);
+        connectSocket(activeToken);
       } else {
         localStorage.removeItem("token");
         setToken(null);
@@ -55,9 +57,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("token", token);
     setToken(token);
     setRole(decoded.role);
+    connectSocket(token);
   };
 
   const logout = () => {
+    disconnectSocket();
     localStorage.removeItem("token");
     setToken(null);
     setRole(null);

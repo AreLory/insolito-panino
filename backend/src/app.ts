@@ -3,6 +3,8 @@ dotenv.config();
 
 import express from "express";
 import mongoose from "mongoose";
+import { createServer } from "http";
+import { initSocket } from "./socket/socket";
 
 import { errorMiddleware } from "./middlewares/errorHandler";
 
@@ -10,16 +12,14 @@ import userRouter from "./routes/userRoute";
 import ordersRouter from "./routes/ordersRoute";
 import productsRouter from "./routes/productsRoute";
 import extrasRouter from "./routes/extrasRoute";
-import categoriesRouter from './routes/categoriesRoute'
-
+import categoriesRouter from "./routes/categoriesRoute";
 
 const cors = require("cors");
 
-const jwtSecret = process.env.JWT
+const jwtSecret = process.env.JWT;
 if (!jwtSecret) {
   throw new Error("JWT is not defined");
 }
-
 
 const app = express();
 const PORT = Number(process.env.PORT) || 5000;
@@ -36,9 +36,9 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 
 app.use("/api", userRouter);
 app.use("/api", ordersRouter);
@@ -46,14 +46,18 @@ app.use("/api", extrasRouter);
 app.use("/api", productsRouter);
 app.use("/api", categoriesRouter);
 
+const httpServer = createServer(app);
+initSocket(httpServer);
+
 async function startServer() {
   try {
     await mongoose.connect(process.env.MONGO_URI as string);
     console.log("✅ MongoDB connected");
 
-    app.listen(PORT,"0.0.0.0", () => {
+    httpServer.listen(PORT, "0.0.0.0", () => {
       console.log(`🚀 Server running on port ${PORT}`);
     });
+
   } catch (error) {
     console.error("❌ Failed to start server", error);
     process.exit(1);
@@ -61,4 +65,5 @@ async function startServer() {
 }
 
 startServer();
+
 app.use(errorMiddleware);

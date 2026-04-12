@@ -1,6 +1,9 @@
+import { Request, Response } from "express";
+import { getIO } from "../socket/socket";
+
 import { CreateOrderBody, IOrderItem, OrderType } from "../types/IOrders";
 import Orders from "../models/orders";
-import { Request, Response } from "express";
+
 import Products from "../models/products";
 import Extras from "../models/extras";
 import user from "../models/user";
@@ -25,7 +28,10 @@ export const getOrder = asyncHandler(async (req: Request, res: Response) => {
 
 export const getAllOrders = asyncHandler(
   async (req: Request, res: Response) => {
-    const orders = await Orders.find().populate("user", "fullName email");
+    const start = new Date().toDateString()
+    const orders = await Orders.find({
+            createdAt: {$gte : start }
+        }).populate("user", "fullName email");
     res.status(200).json(orders);
   },
 );
@@ -38,8 +44,6 @@ export const getActiveOrder = asyncHandler(
     res.status(200).json(order ?? null);
   },
 );
-
-// ! Create
 
 export const createOrder = asyncHandler(async (req: Request, res: Response) => {
   if (!req.userId) {
@@ -174,10 +178,12 @@ export const createOrder = asyncHandler(async (req: Request, res: Response) => {
 
   await newOrder.save();
 
+  //socket.io
+  getIO().to("kitchen").emit("new-order", newOrder);
+  getIO().to(`order_${newOrder._id}`).emit("order-created", newOrder);
+
   return res.status(201).json(newOrder);
 });
-
-// ! Delete and Update
 
 export const deleteOrder = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -203,6 +209,9 @@ export const updateOrder = asyncHandler(async (req: Request, res: Response) => {
   if (!order) {
     return res.status(404).json({ error: "Order not found" });
   }
+
+  getIO().to("kitchen").emit("order-updated", order);
+  getIO().to(`order_${order._id}`).emit("order-status", order);
 
   res.status(200).json(order);
 });

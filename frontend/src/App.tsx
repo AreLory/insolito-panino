@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { initOrdersSocket } from "./features/orders/ordersSocket";
 import { Route, HashRouter, Routes } from "react-router";
 
 import Home from "./pages/Home";
@@ -24,8 +27,7 @@ function AppLayout() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
-        <Route path="/admin/*" element={<AdminRoutes/>} />
-
+        <Route path="/admin/*" element={<AdminRoutes />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/cart" element={<Cart />} />
@@ -40,6 +42,11 @@ function AppLayout() {
 }
 
 export default function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    initOrdersSocket(dispatch);
+  }, []);
   return (
     <HashRouter>
       <AlertContainer />

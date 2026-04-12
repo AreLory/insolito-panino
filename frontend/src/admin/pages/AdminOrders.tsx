@@ -15,7 +15,7 @@ import type { AppDispatch, RootState } from "../../store/store";
 
 import type { Order } from "../../types/order";
 
-import { ChevronLeft, Van, ShoppingBag, Utensils } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
 export default function AdminOrders() {
   const dispatch: AppDispatch = useDispatch();
@@ -48,11 +48,16 @@ export default function AdminOrders() {
 
   if (!orders) return;
 
-  const filteredOrders = orders.filter(
+const todoOrders = orders
+  .filter(
     (order) =>
-      !order.items.every((item) =>
-        item.name.toLowerCase().includes("arrosticini"),
-      ),
+      !order.items.every(item =>
+        item.name.toLowerCase().includes("arrosticini")
+      ) &&
+      order.status !== "completed"
+  )
+  .sort((a, b) =>
+    new Date(a.confirmedTime) - new Date(b.confirmedTime)
   );
 
   return (
@@ -64,7 +69,7 @@ export default function AdminOrders() {
       />
 
       {orders ? (
-        <OrdersTable orders={filteredOrders} handleEdit={handleEdit} />
+        <OrdersTable orders={todoOrders} handleEdit={handleEdit} />
       ) : (
         <Loader />
       )}
