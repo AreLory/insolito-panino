@@ -14,7 +14,7 @@ export function useProductCart(
   item: Products | null,
   selectedSize: Size | null,
   removedIngredients: string[],
-  selectedExtras: string[] = [], 
+  selectedExtras: string[] = [],
 ) {
   const dispatch = useDispatch();
   const cartItems: CartItem[] = useSelector(selectCartItems);
@@ -30,28 +30,33 @@ export function useProductCart(
   }
 
   const selectedExtrasArray = (selectedExtras ?? []).map((id) => {
-    const found = (item.availableExtras || []).find((ae: AvailableExtra) => ae._id === id);
+    const found = (item.availableExtras || []).find(
+      (ae: AvailableExtra) => ae._id === id,
+    );
     if (found) return { _id: found._id, name: found.name, price: found.price };
     return { _id: id, name: "", price: 0 };
   });
 
   const unit = selectedSize ? selectedSize.price : item.basePrice;
 
-  const totalItemPrice = unit + (selectedExtrasArray.reduce((s, e) => s + (e.price || 0), 0) || 0);
+  const totalItemPrice =
+    unit + (selectedExtrasArray.reduce((s, e) => s + (e.price || 0), 0) || 0);
 
   const selectedItem: CartItem = {
     _id: item._id,
     name: item.name,
     imageUrl: item.imageUrl,
     unitPrice: item.basePrice,
-    selectedSize: selectedSize ? { label: selectedSize.label, price: selectedSize.price } : null,
+    selectedSize: selectedSize
+      ? { label: selectedSize.label, price: selectedSize.price }
+      : null,
     removedIngredients: removedIngredients ?? [],
     selectedExtras: selectedExtrasArray,
     quantity: 1,
     totalItemPrice,
   };
 
-  //Check if selectedItem is already in cart 
+  //Check if selectedItem is already in cart
   const cartItem = cartItems.find((i) => {
     const extrasIds = (i.selectedExtras || [])
       .map((e: any) => (typeof e === "string" ? e : e._id))
@@ -79,12 +84,31 @@ export function useProductCart(
     );
   };
 
+  const addAmount = (amount: number) => {
+    dispatch(
+      addToCart({
+        ...selectedItem,
+        quantity: amount,
+      }),
+    );
+  };
+
   const removeOne = () => {
     if (!cartItem) return;
     dispatch(
       removeFromCart({
         key: getCartItemKey(cartItem),
         quantity: 1,
+      }),
+    );
+  };
+
+  const removeAmount = (amount: number) => {
+    if (!cartItem) return;
+    dispatch(
+      removeFromCart({
+        key: getCartItemKey(cartItem),
+        quantity: amount,
       }),
     );
   };
@@ -103,7 +127,9 @@ export function useProductCart(
     cartItem,
     quantity: cartItem?.quantity ?? 0,
     addOne,
+    addAmount,
     removeOne,
+    removeAmount,
     removeAll,
   };
 }

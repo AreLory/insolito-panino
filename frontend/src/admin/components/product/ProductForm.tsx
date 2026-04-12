@@ -57,12 +57,24 @@ const ProductForm: React.FC<Props> = ({
     });
   };
 
-  const addIngredient = () => setIngredients([...ingredients, { name: "" }]);
-  const updateIngredient = (i: number, val: string) => {
-    const updated = [...ingredients];
-    updated[i].name = val;
-    setIngredients(updated);
+  const addIngredient = () =>
+    setIngredients([
+      ...ingredients,
+      { id: crypto.randomUUID(), name: "", removable: true },
+    ]);
+
+  const updateIngredient = (
+    i: number,
+    field: "name" | "removable",
+    value: string | boolean,
+  ) => {
+    setIngredients((prev) =>
+      prev.map((ing, index) =>
+        index === i ? { ...ing, [field]: value } : ing,
+      ),
+    );
   };
+
   const removeIngredient = (i: number) =>
     setIngredients(ingredients.filter((_, index) => index !== i));
 
@@ -162,12 +174,20 @@ const ProductForm: React.FC<Props> = ({
           <div className="border p-2 rounded-lg space-y-2 bg-white">
             <h4 className="font-semibold">Ingredienti</h4>
             {ingredients.map((ing, i) => (
-              <div key={i} className="flex gap-2 items-center">
+              <div key={ing.id} className="flex gap-2 items-center">
                 <Input
                   label={`Ingrediente ${i + 1}`}
                   value={ing.name}
-                  onChange={(val) => updateIngredient(i, val)}
+                  onChange={(val) => updateIngredient(i, "name", val)}
                   type="text"
+                />
+                <input
+                  type="checkbox"
+                  checked={ing.removable}
+                  onChange={(e) =>
+                    updateIngredient(i, "removable", e.target.checked)
+                  }
+                  className="w-5 h-5 text-orange-500 border-gray-300 rounded focus:ring-orange-500 accent-orange-500 cursor-pointer"
                 />
                 <button
                   type="button"

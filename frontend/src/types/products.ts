@@ -19,6 +19,7 @@ export interface Size {
 }
 
 export interface Ingredient {
+  id: string;
   name: string;
   removable?: boolean;
 }

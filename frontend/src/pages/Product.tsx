@@ -17,6 +17,7 @@ import IngredientSelector from "../components/menu/IngredientSelector";
 import ExtraSelector from "../components/menu/ExtraSelector";
 import MiniNavBar from "../components/shared/MiniNavBar";
 import Loader from "../components/shared/Loader";
+import AmountControl from "../components/menu/AmountControl";
 
 import type { Size } from "../types/products";
 
@@ -29,7 +30,7 @@ export default function Product() {
   const itemsQuantity = useSelector(selectTotalItems);
 
   const { id } = useParams<{ id: string }>();
-  const {product} = useProduct(id);
+  const { product } = useProduct(id);
 
   const [ingredientsExpanded, setIngredientsExpanded] = useState(false);
   const [extrasExpanded, setExtrasExpanded] = useState(false);
@@ -38,7 +39,7 @@ export default function Product() {
   const [removedIngredients, setRemovedIngredients] = useState<string[]>([]);
   const [selectedExtras, setSelectedExtras] = useState<Set<string>>(new Set());
 
-  const { quantity, addOne, removeOne } = useProductCart(
+  const { quantity, addOne, removeOne, addAmount, removeAmount } = useProductCart(
     product,
     selectedSize,
     removedIngredients,
@@ -160,16 +161,24 @@ export default function Product() {
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
               Quantity
             </h2>
-            <CartCountingControls
-              onAddToCart={addOne}
-              onRemoveFromCart={removeOne}
-              quantity={quantity}
-            />
+            {product.category.slug === "arrosticini" ? (
+              <AmountControl
+                onAddToCart={addAmount}
+                onRemoveFromCart={removeAmount}
+                quantity={quantity}
+              />
+            ) : (
+              <CartCountingControls
+                onAddToCart={addOne}
+                onRemoveFromCart={removeOne}
+                quantity={quantity}
+              />
+            )}
           </div>
         )}
       </div>
 
-      {isAuthenticated && (
+      {isAuthenticated && product?.category.slug !== 'arrosticini' && (
         <AddToCartBar price={total} onAddToCart={handleAddToCart} />
       )}
     </div>

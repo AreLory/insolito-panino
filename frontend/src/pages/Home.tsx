@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { useAuth } from "../context/AuthContext";
+
 import { fetchActiveOrder } from "../features/activeOrder/activeOrderSlice";
 import {
   selectActiveOrder,
@@ -21,8 +23,10 @@ import Loader from "../components/shared/Loader";
 
 import type { AppDispatch } from "../store/store";
 
+
 const Home = () => {
-  const dispatch:AppDispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
+  const {role} = useAuth()
   const order = useSelector(selectActiveOrder);
   const loading = useSelector(selectActiveOrderLoading);
   const cart = useSelector(selectCartItems);
@@ -34,17 +38,26 @@ const Home = () => {
     }
   }, [order, dispatch]);
 
+const getRemainingMinutes = (confirmedTime) => {
+  const now = new Date();
+  const confirmedDate = new Date(confirmedTime);
+
+  const diffMs = confirmedDate - now;
+  const minutes = Math.ceil(diffMs / 60000);
+
+  return Math.max(0, minutes);
+};
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header cartItemCount={cartItemsQuantity} />
 
       {loading && <Loader />}
 
-      {order && order?.status != 'completed' && (
+      {order && order?.status != "completed" && (
         <OrderStatus
           orderStatus={order.status}
-          // todo: time calculation
-          // estimatedTime={20}
+          estimatedTime={getRemainingMinutes(order.confirmedTime)}
         />
       )}
 
@@ -52,7 +65,7 @@ const Home = () => {
 
       <LocationSection />
 
-      <QuickAccess />
+      <QuickAccess isAdmin={role === 'admin'}/>
 
       <BrandStory
         title="Our Story"

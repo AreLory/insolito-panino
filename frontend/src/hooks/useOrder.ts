@@ -21,9 +21,25 @@ export function useOrder() {
   const total: number = useSelector(selectFinalTotal);
   const subtotal: number = useSelector(selectCartSubtotal);
 
+  const getInitialTime = () => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 10);
+
+    const min = new Date();
+    min.setHours(18, 30, 0, 0);
+
+    const max = new Date();
+    max.setHours(22, 0, 0, 0);
+
+    if (now < min) return min;
+    if (now > max) return max;
+
+    return now;
+  };
+
   const requestedTimeDate = order.requestedTime
     ? new Date(order.requestedTime)
-    : null;
+    : getInitialTime();
 
   const changeOrderType = (orderType: OrderType) => {
     dispatch(setOrderType(orderType));
@@ -49,6 +65,6 @@ export function useOrder() {
     changePaymentMethod,
     changeNotes,
     changeRequestedTime,
-    requestedTimeDate
+    requestedTimeDate,
   };
 }

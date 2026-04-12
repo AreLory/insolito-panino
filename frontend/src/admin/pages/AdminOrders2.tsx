@@ -15,9 +15,9 @@ import type { AppDispatch, RootState } from "../../store/store";
 
 import type { Order } from "../../types/order";
 
-import { ChevronLeft, Van, ShoppingBag, Utensils } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
-export default function AdminOrders() {
+export default function AdminOrders2() {
   const dispatch: AppDispatch = useDispatch();
   const orders = useSelector((state: RootState) => state.orders.data);
 
@@ -46,14 +46,13 @@ export default function AdminOrders() {
     }
   };
 
-  if (!orders) return;
+  if(!orders) return
 
-  const filteredOrders = orders.filter(
-    (order) =>
-      !order.items.every((item) =>
-        item.name.toLowerCase().includes("arrosticini"),
-      ),
-  );
+  const filteredOrders = orders.filter(order =>
+  order.items.some(item =>
+    item.name.toLowerCase().includes("arrosticini")
+  )
+);
 
   return (
     <div className="flex flex-col pt-18 justify-center items-center overflow-x-hidden">
@@ -63,19 +62,13 @@ export default function AdminOrders() {
         pageName="Orders List"
       />
 
-      {orders ? (
+      {filteredOrders ? (
         <OrdersTable orders={filteredOrders} handleEdit={handleEdit} />
       ) : (
         <Loader />
       )}
 
-      {isEditing && editingOrder && (
-        <OrderForm
-          onSubmit={handleUpdate}
-          onClose={() => setIsEditing(false)}
-          initialValues={editingOrder}
-        />
-      )}
+      {isEditing && editingOrder && <OrderForm onSubmit={handleUpdate} onClose={()=>setIsEditing(false)} initialValues={editingOrder} />}
     </div>
   );
 }

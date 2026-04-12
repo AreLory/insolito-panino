@@ -1,9 +1,13 @@
 import { User, History } from "lucide-react";
 import { Link } from "react-router";
 
+interface Props {
+  isAdmin: boolean;
+}
+
 interface QuickAccessItem {
   id: string;
-  icon: "user" | "history"  
+  icon: "user" | "history";
   label: string;
   link: string;
   color: string;
@@ -31,7 +35,7 @@ const quickAccessItems: QuickAccessItem[] = [
   },
 ];
 
-export default function QuickAccess() {
+export default function QuickAccess({ isAdmin }: Props) {
   return (
     <div className="mx-4 mt-8">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">Quick Access</h2>
@@ -56,6 +60,22 @@ export default function QuickAccess() {
             </Link>
           );
         })}
+
+        {isAdmin && (
+          <Link
+            to={"/admin"}
+            className="bg-white rounded-2xl p-5 shadow-lg hover:shadow-xl transition group"
+          >
+            <div
+              className={`w-12 h-12 bg-linear-to-br from-blue-400 to-cyan-400 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition`}
+            >
+              <User size={24} className="text-white" />
+            </div>
+            <div className="text-left">
+              <p className="font-bold text-gray-800">Admin</p>
+            </div>
+          </Link>
+        )}
       </div>
     </div>
   );

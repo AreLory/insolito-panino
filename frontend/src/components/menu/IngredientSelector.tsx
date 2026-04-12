@@ -26,7 +26,7 @@ export default function IngredientSelector({
         <div className="flex items-center gap-3">
           <h2 className="text-lg font-semibold text-gray-900">Ingredients</h2>
           <span className="text-sm text-gray-500">
-            ({ingredients.filter((i) => i.removable).length} removable)
+            {ingredients.filter((i) => i.removable).length == 0 ? '' : `${ingredients.filter((i) => i.removable).length} removable`}
           </span>
         </div>
         {isExpanded ? (

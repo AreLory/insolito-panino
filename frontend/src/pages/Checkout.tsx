@@ -104,9 +104,9 @@ export default function Checkout() {
         selectedExtras: item.selectedExtras,
       }));
 
-      const requestedTimeDate = order.requestedTime
-        ? new Date(order.requestedTime)
-        : null;
+      // const requestedTimeDate = order.requestedTime
+      //   ? new Date(order.requestedTime)
+      //   : null;
 
       const orderDTO: CreateOrderDTO = {
         items: formattedItems,
@@ -175,6 +175,8 @@ export default function Checkout() {
                 <h2 className="text-lg font-semibold mb-2">Seleziona orario</h2>
                 <input
                   type="time"
+                  min="18:30"
+                  max="22:00"
                   value={
                     requestedTimeDate
                       ? requestedTimeDate.toLocaleTimeString([], {
@@ -191,12 +193,15 @@ export default function Checkout() {
                     newTime.setHours(hours, minutes, 0, 0);
 
                     // arrotonda ai 5 minuti
-                    const roundedMinutes =
+                    let roundedMinutes =
                       Math.ceil(newTime.getMinutes() / 5) * 5;
+                    if (roundedMinutes === 60) {
+                      newTime.setHours(newTime.getHours() + 1);
+                      roundedMinutes = 0;
+                    }
                     newTime.setMinutes(roundedMinutes);
-                    newTime.setSeconds(0);
 
-                    changeRequestedTime(newTime); 
+                    changeRequestedTime(newTime);
                   }}
                   className="w-32 px-4 py-2 border rounded-lg text-center text-lg"
                 />

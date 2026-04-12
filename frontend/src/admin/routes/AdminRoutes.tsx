@@ -7,6 +7,7 @@ import AdminCategories from "../pages/AdminCategories";
 import AdminExtras from "../pages/AdminExtras";
 import AdminUsers from "../pages/AdminUsers";
 import AdminOrders from "../pages/AdminOrders";
+import AdminOrders2 from "../pages/AdminOrders2";
 
 export default function AdminRoutes() {
   return (
@@ -18,6 +19,7 @@ export default function AdminRoutes() {
         <Route path="extras" element={<AdminExtras />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="orders" element={<AdminOrders />} />
+        <Route path="orders/arrosticini" element={<AdminOrders2 />} />
       </Route>
     </Routes>
   );

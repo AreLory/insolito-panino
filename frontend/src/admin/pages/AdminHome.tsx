@@ -39,6 +39,11 @@ export default function AdminHome() {
             title="Ordini"
             description="Controlla gli ordini ricevuti"
           />
+          <HomeCard
+            to="/admin/orders/arrosticini"
+            title="Ordini Arrosticini"
+            description="Controlla gli ordini di ARROSTICINI ricevuti"
+          />
         </div>
       </HomeSection>
 

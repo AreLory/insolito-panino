@@ -8,6 +8,8 @@ import { api } from "../../../config/axios";
 import type { Order, OrderStatus } from "../../../types/order";
 import type { AppDispatch } from "../../../store/store";
 
+import { Van, ShoppingBag, Utensils } from "lucide-react";
+
 interface Props {
   order: Order;
   onEdit: (order: Order) => void;
@@ -19,6 +21,12 @@ const statusColors = {
   in_preparation: "bg-orange-100 text-orange-800",
   ready: "bg-green-100 text-green-800",
   completed: "bg-gray-200 text-gray-700",
+};
+
+const icons = {
+  take_away: <ShoppingBag />,
+  delivery: <Van />,
+  dine_in: <Utensils />,
 };
 
 export default function OrdersDisplay({ order, onEdit }: Props) {
@@ -54,29 +62,54 @@ export default function OrdersDisplay({ order, onEdit }: Props) {
       case "pending":
         return (
           <>
-            <button onClick={() => quick("accepted", 0)} className="text-xs bg-green-500 text-white px-3 py-1 rounded w-50 h-10">Accetta</button>
+            <button
+              onClick={() => quick("accepted", 0)}
+              className="text-xs bg-green-500 text-white px-3 py-1 rounded w-50 h-10"
+            >
+              Accetta
+            </button>
           </>
         );
 
       case "accepted":
         return (
           <>
-            <button onClick={() => quick("in_preparation", 0)} className="text-xs bg-orange-500 text-white px-3 py-1 rounded w-50 h-10">
+            <button
+              onClick={() => quick("in_preparation", 0)}
+              className="text-xs bg-orange-500 text-white px-3 py-1 rounded w-50 h-10"
+            >
               In preparazione
             </button>
-            <button onClick={() => quick("accepted", 10)} className="text-xs bg-red-500 text-white px-3 py-1 rounded h-10">+10 min</button>
+            <button
+              onClick={() => quick("accepted", 10)}
+              className="text-xs bg-red-500 text-white px-3 py-1 rounded h-10"
+            >
+              +10 min
+            </button>
           </>
         );
 
       case "in_preparation":
         return (
           <>
-            <button onClick={() => quick("ready", 0)} className="text-xs bg-green-500 text-white px-3 py-1 rounded w-50 h-10">Pronto</button>
+            <button
+              onClick={() => quick("ready", 0)}
+              className="text-xs bg-green-500 text-white px-3 py-1 rounded w-50 h-10"
+            >
+              Pronto
+            </button>
           </>
         );
 
       case "ready":
-        return <button onClick={() => quick("completed", 0)} className="text-xs bg-red-500 text-white px-3 py-1 rounded w-50 h-10">Termina</button>;
+        return (
+          <button
+            onClick={() => quick("completed", 0)}
+            className="text-xs bg-red-500 text-white px-3 py-1 rounded w-50 h-10"
+          >
+            Termina
+          </button>
+        );
 
       default:
         return null;
@@ -85,7 +118,6 @@ export default function OrdersDisplay({ order, onEdit }: Props) {
 
   return (
     <div className="bg-white rounded-2xl shadow-md flex flex-col gap-4 border border-gray-300">
-      {/* HEADER */}
       <div>
         <div
           className={`flex justify-between items-start ${statusColors[order.status]} rounded-t-2xl p-3`}
@@ -125,12 +157,12 @@ export default function OrdersDisplay({ order, onEdit }: Props) {
             </div>
           )}
         </div>
-        <div className="px-2">
-          Order type: {order.orderType.toLocaleUpperCase()}
+        <div className="px-2 py-1 flex gap-2">
+          <p>Order type: {order.orderType.toLocaleUpperCase()}</p>{" "}
+          {icons[order.orderType] || <ShoppingBag />}
         </div>
       </div>
 
-      {/* ITEMS */}
       <div className="flex flex-col p-2 gap-1 h-full">
         {order.items.map((item, i) => (
           <div key={i} className="p-2 border-t">
@@ -140,21 +172,18 @@ export default function OrdersDisplay({ order, onEdit }: Props) {
               <span className="text-lg font-bold">x{item.quantity}</span>
             </div>
 
-            {/* VARIANTI */}
             {item.selectedSize && (
               <div className="text-md text-gray-700">
                 Size: {item.selectedSize.label}
               </div>
             )}
 
-            {/* EXTRA */}
             {item.selectedExtras?.length > 0 && (
               <div className="text-md text-green-600">
                 + {item.selectedExtras.map((e) => e.name).join(", ")}
               </div>
             )}
 
-            {/* RIMOSSI */}
             {item.removedIngredients?.length > 0 && (
               <div className="text-md text-red-500">
                 - {item.removedIngredients.join(", ")}
@@ -164,20 +193,22 @@ export default function OrdersDisplay({ order, onEdit }: Props) {
         ))}
       </div>
 
-      {/* NOTE */}
       {order.notes && (
         <div className="bg-red-100 text-red-700 p-2 rounded text-sm">
           📝 {order.notes}
         </div>
       )}
 
-      {/* FOOTER */}
       <div className="flex justify-center items-center mt-2">
-
         <div className="flex gap-2 p-2">
           {renderActions()}
 
-          <button onClick={() => onEdit(order)} className="text-xs bg-blue-500 text-white px-3 py-1 rounded w-50 h-10">Gestisci</button>
+          <button
+            onClick={() => onEdit(order)}
+            className="text-xs bg-blue-500 text-white px-3 py-1 rounded w-50 h-10"
+          >
+            Gestisci
+          </button>
         </div>
       </div>
     </div>

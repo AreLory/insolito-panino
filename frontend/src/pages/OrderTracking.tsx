@@ -33,7 +33,9 @@ const OrderTracking = () => {
     if (!order) {
       dispatch(fetchActiveOrder());
     }
+    console.log(order)
   }, [order, dispatch]);
+
 
   if (!order) return <p>No order found</p>;
 
@@ -69,8 +71,12 @@ const OrderTracking = () => {
                 Status
               </p>
               <h2 className="text-lg font-bold text-slate-800">
-                {order.status}
+                {order.status.toLocaleUpperCase()}
               </h2>
+              <p>Ready at: {new Date(order.confirmedTime).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}</p>
             </div>
           </div>
           <div className="text-[#FF3B30] opacity-50">
