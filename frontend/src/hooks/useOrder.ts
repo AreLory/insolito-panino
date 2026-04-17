@@ -31,6 +31,11 @@ export function useOrder() {
     const max = new Date();
     max.setHours(22, 0, 0, 0);
 
+    
+    console.log('Now is', now)
+    console.log('Min:',min);
+    console.log('Max:',max);
+    
     if (now < min) return min;
     if (now > max) return max;
 

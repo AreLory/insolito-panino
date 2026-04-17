@@ -48,17 +48,17 @@ export default function AdminOrders() {
 
   if (!orders) return;
 
-const todoOrders = orders
-  .filter(
-    (order) =>
-      !order.items.every(item =>
-        item.name.toLowerCase().includes("arrosticini")
-      ) &&
-      order.status !== "completed"
-  )
-  .sort((a, b) =>
-    new Date(a.confirmedTime) - new Date(b.confirmedTime)
-  );
+  const todoOrders = orders
+    .filter(
+      (order) =>
+        !order.items.every((item) =>
+          item.name.toLowerCase().includes("arrosticini"),
+        ),
+    )
+    .sort((a, b) =>
+  new Date(a.confirmedTime ?? 0).getTime() -
+  new Date(b.confirmedTime ?? 0).getTime()
+);
 
   return (
     <div className="flex flex-col pt-18 justify-center items-center overflow-x-hidden">

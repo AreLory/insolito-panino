@@ -65,5 +65,5 @@ export interface CreateOrderDTO {
   orderType: OrderType;
   paymentMethod: PaymentMethod;
   notes?: string;
-  requestedTime: Date;
+  requestedTime: string;
 }

@@ -24,8 +24,96 @@ import {
   MoreHorizontal,
   Utensils,
   CreditCard,
-  Bike,
+  Landmark,
+  Coins,
+  ShoppingBag,
+  Van,
 } from "lucide-react";
+
+const statusStyles:any = {
+  pending: {
+    bg: "bg-gradient-to-r from-gray-500 to-gray-300",
+    text: "text-gray-700",
+    icon: "text-gray-600",
+  },
+  accepted: {
+    bg: "bg-gradient-to-r from-blue-600 to-blue-400",
+    text: "text-blue-700",
+    icon: "text-blue-600",
+  },
+  in_preparation: {
+    bg: "bg-gradient-to-r from-orange-700 to-orange-500",
+    text: "text-orange-600",
+    icon: "text-orange-500",
+    shimmer: true,
+  },
+  ready: {
+    bg: "bg-gradient-to-r from-green-600 to-green-400",
+    text: "text-green-700",
+    icon: "text-green-600",
+  },
+  completed: {
+    bg: "bg-gradient-to-r from-emerald-700 to-emerald-500",
+    text: "text-emerald-700",
+    icon: "text-emerald-600",
+  },
+};
+
+const statusCardBg:any = {
+  pending: "bg-gray-50 border-gray-200",
+  accepted: "bg-blue-50 border-blue-200",
+  in_preparation: "bg-orange-50 border-orange-200",
+  ready: "bg-green-50 border-green-200",
+  completed: "bg-emerald-50 border-emerald-200",
+};
+
+const orderTypeStyles = {
+  take_away: {
+    bg: "bg-amber-100",
+    text: "text-amber-700",
+    icon: "text-amber-600",
+  },
+  delivery: {
+    bg: "bg-indigo-100",
+    text: "text-indigo-700",
+    icon: "text-indigo-600",
+  },
+  dine_in: {
+    bg: "bg-rose-100",
+    text: "text-rose-700",
+    icon: "text-rose-600",
+  },
+};
+
+const paymentStyles = {
+  cash: {
+    bg: "bg-green-100",
+    text: "text-green-700",
+    icon: "text-green-600",
+  },
+  card: {
+    bg: "bg-blue-100",
+    text: "text-blue-700",
+    icon: "text-blue-600",
+  },
+  online: {
+    bg: "bg-purple-100",
+    text: "text-purple-700",
+    icon: "text-purple-600",
+  },
+};
+
+const orderTypeIcons = {
+  take_away: <ShoppingBag />,
+  delivery: <Van />,
+  dine_in: <Utensils />,
+};
+
+const paymentIcons = {
+  cash: <Coins/>,
+  card: <CreditCard/>,
+  online: <Landmark/>
+}
 
 const OrderTracking = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -85,6 +173,11 @@ const OrderTracking = () => {
 
   if (loading) return <Loader />;
 
+  const bgStatus = statusCardBg[order.status]
+  const status = statusStyles[order.status];
+  const payment = paymentStyles[order.paymentMethod];
+  const type = orderTypeStyles[order.orderType];
+
   return (
     <div className="flex flex-col flex-1 pb-32">
       <div className="px-6 py-8 flex items-center relative">
@@ -105,17 +198,20 @@ const OrderTracking = () => {
       </div>
 
       <div className="px-6 space-y-6">
-        <div className="p-5 bg-[#FFF2F2] border border-[#FFECEC] rounded-[2.5rem] flex items-center justify-between">
+        <div className={`p-5 ${bgStatus} border border-[#FFECEC] rounded-[2.5rem] flex items-center justify-between`}>
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-[#FF3B30] rounded-full flex items-center justify-center text-white">
-              <Utensils size={24} fill="currentColor" />
+            <div
+              className={`relative w-12 h-12 rounded-full flex items-center justify-center text-white ${status.bg}`}
+            >
+              {status.shimmer && <div className="absolute inset-0 shimmer" />}
+              <Utensils size={24} className="relative z-10" />
             </div>
             <div>
               <p className="text-[10px] uppercase tracking-widest text-[#FF3B30] font-bold">
                 Status
               </p>
-              <h2 className="text-lg font-bold text-slate-800">
-                {order.status.toLocaleUpperCase()}
+              <h2 className={`text-lg font-bold ${status.text}`}>
+                {order.status.toUpperCase()}
               </h2>
               <p>
                 Ready at:{" "}
@@ -146,18 +242,19 @@ const OrderTracking = () => {
 
         <div className="grid grid-cols-2 gap-4">
           <OrderInfo
-            icon={<CreditCard size={18} />}
+            icon={paymentIcons[order.paymentMethod]}
             label="Payment"
             value={order.paymentMethod}
-            iconBg="bg-blue-100"
-            iconColor="text-blue-600"
+            iconBg={payment.bg}
+            iconColor={payment.icon}
           />
+
           <OrderInfo
-            icon={<Bike size={18} />}
+            icon={orderTypeIcons[order.orderType]}
             label="Type"
             value={order.orderType}
-            iconBg="bg-purple-100"
-            iconColor="text-purple-600"
+            iconBg={type.bg}
+            iconColor={type.icon}
           />
         </div>
 

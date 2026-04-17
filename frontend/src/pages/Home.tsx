@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "../context/AuthContext";
 import { socket } from "../socket/socket";
 
-import { fetchActiveOrder, setActiveOrder } from "../features/activeOrder/activeOrderSlice";
+import {
+  fetchActiveOrder,
+  setActiveOrder,
+} from "../features/activeOrder/activeOrderSlice";
 import {
   selectActiveOrder,
   selectActiveOrderLoading,
@@ -24,72 +27,71 @@ import Loader from "../components/shared/Loader";
 
 import type { AppDispatch } from "../store/store";
 
-
 const Home = () => {
   const dispatch: AppDispatch = useDispatch();
-  const {role} = useAuth()
+  const { role } = useAuth();
   const order = useSelector(selectActiveOrder);
   const loading = useSelector(selectActiveOrderLoading);
   const cart = useSelector(selectCartItems);
   const cartItemsQuantity = useSelector(selectTotalItems);
 
   useEffect(() => {
-    if (!order) {
+    if (!order?._id) {
       dispatch(fetchActiveOrder());
     }
-  }, [order, dispatch]);
+  }, [order?._id, dispatch]);
 
-    useEffect(() => {
-      const handleUpdate = (updatedOrder: any) => {
-        console.log("📡 socket update:", updatedOrder);
-        dispatch(setActiveOrder(updatedOrder));
-      };
-  
-      if (socket.connected) {
+  useEffect(() => {
+    const handleUpdate = (updatedOrder: any) => {
+      console.log("📡 socket update:", updatedOrder);
+      dispatch(setActiveOrder(updatedOrder));
+    };
+
+    if (socket.connected) {
+      socket.on("order-status", handleUpdate);
+    } else {
+      const setupListener = () => {
         socket.on("order-status", handleUpdate);
-      } else {
-        const setupListener = () => {
-          socket.on("order-status", handleUpdate);
-        };
-        socket.once("connect", setupListener);
-        return () => socket.off("connect", setupListener);
-      }
-  
-      return () => {
-        socket.off("order-status", handleUpdate);
       };
-    }, [dispatch]);
-  
-    useEffect(() => {
-      if (!order?._id) return;
-  
-      const joinOrderRoom = () => {
-        socket.emit("join-order", order._id);
-        console.log("👤 joined order room:", order._id);
-      };
-  
-      if (socket.connected) {
-        joinOrderRoom();
-      } else {
-        socket.once("connect", joinOrderRoom);
-      }
-  
-      socket.on("connect", joinOrderRoom);
-  
-      return () => {
-        socket.off("connect", joinOrderRoom);
-      };
-    }, [order?._id]);
+      socket.once("connect", setupListener);
+      return () => socket.off("connect", setupListener);
+    }
 
-const getRemainingMinutes = (confirmedTime:string) => {
-  const now = new Date();
-  const confirmedDate = new Date(confirmedTime);
+    return () => {
+      socket.off("order-status", handleUpdate);
+    };
+  }, [dispatch, socket]);
 
-  const diffMs = confirmedDate - now;
-  const minutes = Math.ceil(diffMs / 60000);
+  useEffect(() => {
+    if (!order?._id) return;
 
-  return Math.max(0, minutes);
-};
+    const joinOrderRoom = () => {
+      socket.emit("join-order", order._id);
+      console.log("👤 joined order room:", order._id);
+    };
+
+    if (socket.connected) {
+      joinOrderRoom();
+    } else {
+      socket.once("connect", joinOrderRoom);
+    }
+
+    socket.once("connect", joinOrderRoom);
+
+    return () => {
+      socket.off("connect", joinOrderRoom);
+    };
+  }, [order?._id]);
+
+  const getRemainingMinutes = (confirmedTime: string) => {
+    const now = new Date();
+    const confirmedDate = new Date(confirmedTime);
+
+    const diffMs = confirmedDate.getTime() - now.getTime();
+    const minutes = Math.ceil(diffMs / 60000);
+
+    return Math.max(0, minutes);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -108,7 +110,7 @@ const getRemainingMinutes = (confirmedTime:string) => {
 
       <LocationSection />
 
-      <QuickAccess isAdmin={role === 'admin'}/>
+      <QuickAccess isAdmin={role === "admin"} />
 
       <BrandStory
         title="Our Story"

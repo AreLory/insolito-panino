@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
@@ -13,6 +14,7 @@ import { useAlert } from "../context/AlertContext";
 
 import MiniNavBar from "../components/shared/MiniNavBar";
 import Select from "../components/checkout/Select";
+import TimeSlotSelector from "../components/checkout/TimeSlotSelector";
 
 import { api } from "../config/axios";
 
@@ -33,7 +35,6 @@ import { handleAxiosError } from "../utils/errorHandler";
 
 export default function Checkout() {
   const { showAlert } = useAlert();
-
   const navigate = useNavigate();
 
   const cart = useSelector(selectCartItems);
@@ -48,42 +49,18 @@ export default function Checkout() {
     changeNotes,
     changeOrderType,
     changeRequestedTime,
-    requestedTimeDate,
   } = useOrder();
 
   const paymentMethodsList = [
-    {
-      name: "Cash",
-      value: "cash",
-      img: <Coins />,
-    },
-    {
-      name: "Card",
-      value: "card",
-      img: <CreditCard />,
-    },
-    {
-      name: "Online",
-      value: "online",
-      img: <Landmark />,
-    },
+    { name: "Cash", value: "cash", img: <Coins /> },
+    { name: "Card", value: "card", img: <CreditCard /> },
+    { name: "Online", value: "online", img: <Landmark /> },
   ];
+
   const orderTypesList = [
-    {
-      name: "Take Away",
-      value: "take_away",
-      img: <ShoppingBag />,
-    },
-    {
-      name: "Dine In",
-      value: "dine_in",
-      img: <Utensils />,
-    },
-    {
-      name: "Delivery",
-      value: "delivery",
-      img: <Van />,
-    },
+    { name: "Take Away", value: "take_away", img: <ShoppingBag /> },
+    { name: "Dine In", value: "dine_in", img: <Utensils /> },
+    { name: "Delivery", value: "delivery", img: <Van /> },
   ];
 
   const selectedPaymentOption = paymentMethodsList.find(
@@ -95,6 +72,7 @@ export default function Checkout() {
   );
   const submitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
       const formattedItems: OrderItem[] = cart.map((item: CartItem) => ({
         productId: item._id,
@@ -104,19 +82,16 @@ export default function Checkout() {
         selectedExtras: item.selectedExtras,
       }));
 
-      // const requestedTimeDate = order.requestedTime
-      //   ? new Date(order.requestedTime)
-      //   : null;
-
       const orderDTO: CreateOrderDTO = {
         items: formattedItems,
         paymentMethod: order.paymentMethod!,
         orderType: order.orderType,
         notes: order.notes,
-        requestedTime: requestedTimeDate || new Date(),
+        requestedTime: order.requestedTime
       };
 
       const res = await api.post<Order>("/orders", orderDTO);
+
       showAlert("success", "Order: " + res.statusText);
       dispatch(clearCart());
       dispatch(resetOrder());
@@ -126,6 +101,9 @@ export default function Checkout() {
     }
   };
 
+  // ==============================
+  // UI
+  // ==============================
   return (
     <div className="w-screen h-screen flex justify-center bg-white">
       <MiniNavBar
@@ -136,14 +114,15 @@ export default function Checkout() {
         goBack="/cart"
         goTo="/cart"
       />
+
       <div className="pt-20 pb-32 max-w-3xl w-full">
         <form
-          action="submit"
           onSubmit={submitOrder}
           className="flex flex-col w-full items-center justify-center"
         >
           <div className="flex w-full shadow-2xl max-w-3xl rounded-2xl">
             <div className="flex flex-col items-center w-full gap-4">
+              {/* PAYMENT */}
               <div className="w-full flex flex-col items-center p-4">
                 <h2 className="text-lg font-semibold">
                   Choose a Payment Method
@@ -154,6 +133,8 @@ export default function Checkout() {
                   optionList={paymentMethodsList}
                 />
               </div>
+
+              {/* ORDER TYPE */}
               <div className="w-full flex flex-col items-center p-4">
                 <h2 className="text-lg font-semibold">Choose a Order Type</h2>
                 <Select
@@ -162,58 +143,27 @@ export default function Checkout() {
                   optionList={orderTypesList}
                 />
               </div>
+
+              {/* SLOT PICKER */}
+              <TimeSlotSelector
+                reqTime={order.requestedTime}
+                onChange={changeRequestedTime}
+              />
+
+              {/* NOTES */}
               <div className="w-full flex flex-col items-center py-4 px-8">
                 <h2 className="text-lg font-semibold">Add a note</h2>
                 <textarea
                   value={order.notes}
                   onChange={(e) => changeNotes(e.target.value)}
+                  className="w-full px-4 border rounded-lg"
                   placeholder="Add a note..."
-                  className="w-full px-8 border accent-orange-500 rounded-lg"
                 />
-              </div>
-              <div className="w-full flex flex-col items-center py-4 px-8">
-                <h2 className="text-lg font-semibold mb-2">Seleziona orario</h2>
-                <input
-                  type="time"
-                  min="18:30"
-                  max="22:00"
-                  value={
-                    requestedTimeDate
-                      ? requestedTimeDate.toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })
-                      : ""
-                  }
-                  onChange={(e) => {
-                    const [hours, minutes] = e.target.value
-                      .split(":")
-                      .map(Number);
-                    const newTime = new Date();
-                    newTime.setHours(hours, minutes, 0, 0);
-
-                    // arrotonda ai 5 minuti
-                    let roundedMinutes =
-                      Math.ceil(newTime.getMinutes() / 5) * 5;
-                    if (roundedMinutes === 60) {
-                      newTime.setHours(newTime.getHours() + 1);
-                      roundedMinutes = 0;
-                    }
-                    newTime.setMinutes(roundedMinutes);
-
-                    changeRequestedTime(newTime);
-                  }}
-                  className="w-32 px-4 py-2 border rounded-lg text-center text-lg"
-                />
-                <span className="text-sm text-gray-500 mt-1">
-                  Orario selezionato:{" "}
-                  {requestedTimeDate
-                    ? `${requestedTimeDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
-                    : "--:--"}
-                </span>
               </div>
             </div>
           </div>
+
+          {/* SUMMARY */}
           <div className="fixed bottom-0 w-full flex justify-center">
             <div className="w-full max-w-3xl bg-white rounded-t-2xl shadow-2xl">
               <div className="w-full pt-6 space-y-3 pb-4 px-6">
@@ -221,27 +171,28 @@ export default function Checkout() {
                   <span>Subtotal</span>
                   <span>${subtotal.toFixed(2)}</span>
                 </div>
+
                 {order.orderType === "delivery" && (
                   <div className="flex justify-between text-slate-500 text-sm font-medium">
                     <span>Delivery Fee</span>
-                    <span>+ ${(2.5).toFixed(2)}</span>
+                    <span>+ 2.50</span>
                   </div>
                 )}
-                <div className="flex justify-between items-center pt-4 border-t border-slate-100">
-                  <span className="text-xl font-bold text-slate-800">
-                    Total
-                  </span>
+
+                <div className="flex justify-between items-center pt-4 border-t">
+                  <span className="text-xl font-bold">Total</span>
                   <span className="text-3xl font-bold text-[#FF3B30]">
                     ${total.toFixed(2)}
                   </span>
                 </div>
               </div>
+
               <div className="px-6 pb-6 pt-4">
                 <button
                   type="submit"
-                  className="w-full bg-linear-to-r from-orange-700 to-orange-500 text-white py-4 sm:py-5 rounded-3xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-orange-200 hover:from-orange-800 hover:to-orange-700 transition-all active:scale-[0.98]"
+                  className="w-full bg-linear-to-r from-orange-700 to-orange-500 text-white py-4 rounded-3xl font-bold"
                 >
-                  <span>Submit Order</span>
+                  Submit Order
                 </button>
               </div>
             </div>
